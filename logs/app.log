@@ -1,0 +1,33 @@
+2026-09-04 15:34:19,310 - INFO - event_ticketing - Application startup complete
+2026-09-04 15:34:28,875 - INFO - event_ticketing - Application startup complete
+2026-09-04 15:34:40,379 - INFO - event_ticketing - Registered new user f2b28ef8-54ba-4bcc-9da5-0f9b0cc75b0b (test_1788532479@example.com)
+2026-09-04 15:34:40,444 - INFO - event_ticketing - POST /auth/register -> 201 (921.3ms)
+2026-09-04 15:34:40,688 - INFO - event_ticketing - User f2b28ef8-54ba-4bcc-9da5-0f9b0cc75b0b (test_1788532479@example.com) logged in
+2026-09-04 15:34:40,706 - INFO - event_ticketing - POST /auth/login -> 200 (240.2ms)
+2026-09-04 15:34:41,033 - WARNING - event_ticketing - Failed login attempt for test_1788532479@example.com
+2026-09-04 15:34:41,034 - INFO - event_ticketing - POST /auth/login -> 401 (237.4ms)
+2026-09-04 15:34:41,063 - INFO - event_ticketing - GET /auth/me -> 200 (8.1ms)
+2026-09-04 15:34:41,087 - INFO - event_ticketing - GET /auth/me -> 401 (2.2ms)
+2026-09-04 15:34:41,115 - INFO - event_ticketing - GET /auth/me -> 401 (2.5ms)
+2026-09-04 15:34:41,142 - INFO - event_ticketing - GET /auth/me -> 401 (1.8ms)
+2026-09-04 15:34:41,167 - WARNING - event_ticketing - Registration attempted for existing email test_1788532479@example.com
+2026-09-04 15:34:41,169 - INFO - event_ticketing - POST /auth/register -> 409 (6.2ms)
+2026-09-04 15:34:41,192 - INFO - event_ticketing - GET /does-not-exist -> 404 (2.8ms)
+2026-09-04 15:34:51,559 - INFO - event_ticketing - GET /auth/me -> 401 (2.1ms)
+2026-09-04 15:34:51,753 - INFO - event_ticketing - Password reset requested for test_1788532479@example.com (token issued: True)
+2026-09-04 15:34:51,754 - INFO - event_ticketing - POST /auth/forgot-password -> 200 (172.9ms)
+2026-09-04 15:34:51,860 - INFO - event_ticketing - Password reset requested for nobody@nowhere.com (token issued: False)
+2026-09-04 15:34:51,862 - INFO - event_ticketing - POST /auth/forgot-password -> 200 (5.6ms)
+2026-09-04 15:34:52,216 - INFO - event_ticketing - Password reset completed for token 7FF2-SG0...
+2026-09-04 15:34:52,217 - INFO - event_ticketing - PATCH /auth/reset-password -> 200 (334.1ms)
+2026-09-04 15:34:52,513 - INFO - event_ticketing - User f2b28ef8-54ba-4bcc-9da5-0f9b0cc75b0b (test_1788532479@example.com) logged in
+2026-09-04 15:34:52,514 - INFO - event_ticketing - POST /auth/login -> 200 (274.8ms)
+2026-09-04 15:34:52,549 - WARNING - event_ticketing - Invalid or expired password reset token used
+2026-09-04 15:34:52,552 - INFO - event_ticketing - PATCH /auth/reset-password -> 400 (6.9ms)
+2026-09-04 15:34:52,715 - INFO - event_ticketing - Application shutdown
+2026-09-04 15:41:57,633 - INFO - event_ticketing - Application shutdown
+2026-09-04 15:42:24,026 - INFO - event_ticketing - Application startup complete
+2026-09-04 15:46:55,178 - WARNING - event_ticketing - Registration attempted for existing email ewherheakpesiri+5@gmail.com
+2026-09-04 15:46:55,185 - INFO - event_ticketing - POST /auth/register -> 409 (155.0ms)
+2026-09-04 15:47:03,539 - INFO - event_ticketing - Registered new user 62a756f7-e8fa-4ac7-90cf-e7563a5bea9f (ewherheakpesiri+6@gmail.com)
+2026-09-04 15:47:03,633 - INFO - event_ticketing - POST /auth/register -> 201 (428.6ms)
