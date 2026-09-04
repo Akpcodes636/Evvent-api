@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = "sqlite:///./event_ticketing.db"
+    DATABASE_URL: str 
     RESET_TOKEN_EXPIRES_MINUTES: int = 15
     JWT_SECRET: str = "change-this-development-secret-before-production"
     ACCESS_TOKEN_EXPIRES_MINUTES: int = 60
