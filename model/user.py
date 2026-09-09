@@ -23,6 +23,10 @@ class User(SQLModel, table=True):
         default=UserRole.user,
         sa_column=Column(SqlEnum(UserRole, name="user_role_enum"), nullable=False, index=True),
     )
+    phone: str | None = Field(default=None, max_length=32)
+    organization: str | None = Field(default=None, max_length=200)
+    bank_name: str | None = Field(default=None, max_length=100)
+    bank_account_number: str | None = Field(default=None, max_length=34)
     password_hash: str = Field(exclude=True, max_length=512)
     created_at: datetime = Field(
         default_factory=datetime.utcnow,

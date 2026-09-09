@@ -3,12 +3,17 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.exc import SQLAlchemyError
 
+from admin.controller import router as admin_router
 from auth.controller import router as auth_router
+from booking.controller import router as booking_router
 from database.init_db import init_db
 from core.exceptions import AppError
+from event.controller import categories_router, router as event_router
 from logger import logger
+from utils.uploads import UPLOAD_ROOT
 
 
 @asynccontextmanager
@@ -42,7 +47,14 @@ async def log_requests(request: Request, call_next):
     return response
 
 
+UPLOAD_ROOT.mkdir(exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=UPLOAD_ROOT), name="uploads")
+
 app.include_router(auth_router)
+app.include_router(event_router)
+app.include_router(categories_router)
+app.include_router(booking_router)
+app.include_router(admin_router)
 
 
 @app.get("/")

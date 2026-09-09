@@ -41,3 +41,27 @@
 2026-09-04 16:20:41,302 - INFO - event_ticketing - GET /docs -> 200 (1.3ms)
 2026-09-04 16:20:41,402 - INFO - event_ticketing - GET /openapi.json -> 200 (78.9ms)
 2026-09-04 16:20:41,605 - INFO - event_ticketing - Application shutdown
+2026-09-09 10:23:36,594 - INFO - event_ticketing - Application startup complete
+2026-09-09 10:23:56,922 - INFO - event_ticketing - GET / -> 200 (138.8ms)
+2026-09-09 10:23:57,009 - INFO - event_ticketing - GET /favicon.ico -> 404 (6.8ms)
+2026-09-09 10:24:01,144 - INFO - event_ticketing - GET /docs -> 200 (1.1ms)
+2026-09-09 10:24:03,323 - INFO - event_ticketing - GET /openapi.json -> 200 (533.8ms)
+2026-09-09 10:25:16,942 - INFO - event_ticketing - GET /openapi.json -> 200 (1.5ms)
+2026-09-09 10:25:17,024 - INFO - event_ticketing - GET /favicon.ico -> 404 (9.2ms)
+2026-09-09 10:37:13,895 - INFO - event_ticketing - Application shutdown
+2026-09-09 10:37:20,445 - INFO - event_ticketing - Application startup complete
+2026-09-09 10:37:46,872 - INFO - event_ticketing - Application shutdown
+2026-09-09 10:37:52,946 - INFO - event_ticketing - Application startup complete
+2026-09-09 10:38:03,587 - INFO - event_ticketing - Application shutdown
+2026-09-09 10:38:10,198 - INFO - event_ticketing - Application startup complete
+2026-09-09 10:38:20,592 - INFO - event_ticketing - Application shutdown
+2026-09-09 10:38:25,350 - INFO - event_ticketing - Application startup complete
+2026-09-09 10:39:48,011 - INFO - event_ticketing - Application shutdown
+2026-09-09 10:39:53,852 - INFO - event_ticketing - Application startup complete
+2026-09-09 10:41:29,862 - INFO - event_ticketing - Application shutdown
+2026-09-09 10:41:38,732 - INFO - event_ticketing - Application startup complete
+2026-09-09 10:45:09,019 - INFO - event_ticketing - Application shutdown
+2026-09-09 10:45:14,595 - INFO - event_ticketing - Application startup complete
+2026-09-09 11:01:30,541 - INFO - event_ticketing - GET /docs -> 200 (3.2ms)
+2026-09-09 11:01:31,611 - INFO - event_ticketing - GET /openapi.json -> 200 (558.7ms)
+2026-09-09 11:04:38,400 - INFO - event_ticketing - Application shutdown

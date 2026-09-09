@@ -6,7 +6,7 @@ from core.exceptions import AppError
 from core.security import decode_access_token
 from database.session import get_session
 from logger import logger
-from model.user import User
+from model.user import User, UserRole
 
 bearer_scheme = HTTPBearer(auto_error=False)
 
@@ -25,3 +25,15 @@ def get_current_user(
         raise AppError("Not authenticated", status_code=401)
 
     return user
+
+
+def require_roles(*roles: UserRole):
+    """Return a dependency that only allows users whose role is in ``roles``."""
+
+    def _check(current_user: User = Depends(get_current_user)) -> User:
+        if current_user.role not in roles:
+            logger.warning("User %s with role %s denied access", current_user.uuid, current_user.role)
+            raise AppError("You do not have permission to perform this action", status_code=403)
+        return current_user
+
+    return _check

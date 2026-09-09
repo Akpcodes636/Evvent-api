@@ -8,7 +8,7 @@ from sqlmodel import Session, select
 
 from core.config import settings
 from logger import logger
-from model.user import PasswordResetToken, User
+from model.user import PasswordResetToken, User, UserRole
 
 
 def _hash_password(password: str, salt: bytes | None = None) -> str:
@@ -23,12 +23,30 @@ def _password_matches(password: str, stored_hash: str) -> bool:
     return hmac.compare_digest(calculated, digest_hex)
 
 
-def register_user(session: Session, *, email: str, first_name: str, last_name: str, password: str,) -> User:
+def register_user(
+    session: Session,
+    *,
+    email: str,
+    first_name: str,
+    last_name: str,
+    phone: str,
+    password: str,
+    role: UserRole = UserRole.user,
+    organization: str | None = None,
+) -> User:
     email = email.lower()
     if session.exec(select(User).where(User.email == email)).first():
         logger.warning("Registration attempted for existing email %s", email)
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="An account already exists for this email")
-    user = User(email=email, first_name=first_name, last_name=last_name, password_hash=_hash_password(password))
+    user = User(
+        email=email,
+        first_name=first_name,
+        last_name=last_name,
+        phone=phone,
+        role=role,
+        organization=organization,
+        password_hash=_hash_password(password),
+    )
     session.add(user)
     session.commit()
     session.refresh(user)
@@ -71,3 +89,52 @@ def reset_password(session: Session, *, token: str, new_password: str) -> None:
     session.add(user)
     session.add(reset)
     session.commit()
+
+
+def update_profile(
+    session: Session,
+    user: User,
+    *,
+    first_name: str | None = None,
+    last_name: str | None = None,
+    email: str | None = None,
+    phone: str | None = None,
+    organization: str | None = None,
+) -> User:
+    if email is not None:
+        email = email.lower()
+        if email != user.email and session.exec(select(User).where(User.email == email)).first():
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="An account already exists for this email")
+        user.email = email
+    if first_name is not None:
+        user.first_name = first_name
+    if last_name is not None:
+        user.last_name = last_name
+    if phone is not None:
+        user.phone = phone
+    if organization is not None:
+        user.organization = organization
+    user.updated_at = datetime.utcnow()
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+    return user
+
+
+def change_password(session: Session, user: User, *, current_password: str, new_password: str) -> None:
+    if not _password_matches(current_password, user.password_hash):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Current password is incorrect")
+    user.password_hash = _hash_password(new_password)
+    user.updated_at = datetime.utcnow()
+    session.add(user)
+    session.commit()
+
+
+def update_bank_details(session: Session, user: User, *, bank_name: str, bank_account_number: str) -> User:
+    user.bank_name = bank_name
+    user.bank_account_number = bank_account_number
+    user.updated_at = datetime.utcnow()
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+    return user
