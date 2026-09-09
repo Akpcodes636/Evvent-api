@@ -5,6 +5,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.exc import SQLAlchemyError
+from fastapi.middleware.cors import CORSMiddleware
 
 from admin.controller import router as admin_router
 from auth.controller import router as auth_router
@@ -31,6 +32,19 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+origins = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "https://evvnt-ticketer.netlify.app",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
