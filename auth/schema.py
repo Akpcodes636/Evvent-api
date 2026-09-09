@@ -64,6 +64,13 @@ class ForgotPasswordRequest(BaseModel):
 class ResetPasswordRequest(BaseModel):
     token: str = Field(min_length=1, max_length=128)
     new_password: str = Field(min_length=8, max_length=128)
+    confirm_password: str = Field(min_length=8, max_length=128)
+
+    @model_validator(mode="after")
+    def _validate_passwords_match(self):
+        if self.new_password != self.confirm_password:
+            raise ValueError("new_password and confirm_password do not match")
+        return self
 
 
 class UpdateProfileRequest(BaseModel):

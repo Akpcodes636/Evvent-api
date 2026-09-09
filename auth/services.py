@@ -61,10 +61,10 @@ def authenticate_user(session: Session, *, email: str, password: str) -> User:
     return user
 
 
-def create_reset_token(session: Session, *, email: str) -> str | None:
+def create_reset_token(session: Session, *, email: str) -> tuple[User, str] | tuple[None, None]:
     user = session.exec(select(User).where(User.email == email.lower())).first()
     if not user:
-        return None
+        return None, None
     token = secrets.token_urlsafe(32)
     session.add(PasswordResetToken(
         user_id=user.uuid,
@@ -72,7 +72,7 @@ def create_reset_token(session: Session, *, email: str) -> str | None:
         expires_at=datetime.utcnow() + timedelta(minutes=settings.RESET_TOKEN_EXPIRES_MINUTES),
     ))
     session.commit()
-    return token
+    return user, token
 
 
 def reset_password(session: Session, *, token: str, new_password: str) -> None:

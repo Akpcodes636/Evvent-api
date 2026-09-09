@@ -65,3 +65,493 @@
 2026-09-09 11:01:30,541 - INFO - event_ticketing - GET /docs -> 200 (3.2ms)
 2026-09-09 11:01:31,611 - INFO - event_ticketing - GET /openapi.json -> 200 (558.7ms)
 2026-09-09 11:04:38,400 - INFO - event_ticketing - Application shutdown
+2026-09-09 11:21:31,692 - INFO - event_ticketing - Application startup complete
+2026-09-09 11:25:59,765 - ERROR - event_ticketing - Database error on POST /auth/register: (psycopg2.errors.UndefinedColumn) column users.phone does not exist
+LINE 1: ...l, users.first_name, users.last_name, users.role, users.phon...
+                                                             ^
+
+[SQL: SELECT users.uuid, users.email, users.first_name, users.last_name, users.role, users.phone, users.organization, users.bank_name, users.bank_account_number, users.password_hash, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = %(email_1)s]
+[parameters: {'email_1': 'ewherheakpesiri+9@gmail.com'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column users.phone does not exist
+LINE 1: ...l, users.first_name, users.last_name, users.role, users.phon...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2641, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1033, in run
+    result = context.run(func, *args)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/auth/controller.py", line 30, in register
+    user = register_user(session, **data.model_dump())
+  File "/Users/ewherheakpesir/Documents/Evvent-api/auth/services.py", line 38, in register_user
+    if session.exec(select(User).where(User.email == email)).first():
+       ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlmodel/orm/session.py", line 75, in exec
+    results = super().execute(
+        statement,
+    ...<4 lines>...
+        _add_event=_add_event,
+    )
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2373, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2271, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/orm/context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1421, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/sql/elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1643, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 2365, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column users.phone does not exist
+LINE 1: ...l, users.first_name, users.last_name, users.role, users.phon...
+                                                             ^
+
+[SQL: SELECT users.uuid, users.email, users.first_name, users.last_name, users.role, users.phone, users.organization, users.bank_name, users.bank_account_number, users.password_hash, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = %(email_1)s]
+[parameters: {'email_1': 'ewherheakpesiri+9@gmail.com'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-09-09 11:25:59,825 - INFO - event_ticketing - POST /auth/register -> 500 (225.8ms)
+2026-09-09 11:26:09,084 - ERROR - event_ticketing - Database error on POST /auth/register: (psycopg2.errors.UndefinedColumn) column users.phone does not exist
+LINE 1: ...l, users.first_name, users.last_name, users.role, users.phon...
+                                                             ^
+
+[SQL: SELECT users.uuid, users.email, users.first_name, users.last_name, users.role, users.phone, users.organization, users.bank_name, users.bank_account_number, users.password_hash, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = %(email_1)s]
+[parameters: {'email_1': 'ewherheakpesiri+9@gmail.com'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column users.phone does not exist
+LINE 1: ...l, users.first_name, users.last_name, users.role, users.phon...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2641, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1033, in run
+    result = context.run(func, *args)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/auth/controller.py", line 30, in register
+    user = register_user(session, **data.model_dump())
+  File "/Users/ewherheakpesir/Documents/Evvent-api/auth/services.py", line 38, in register_user
+    if session.exec(select(User).where(User.email == email)).first():
+       ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlmodel/orm/session.py", line 75, in exec
+    results = super().execute(
+        statement,
+    ...<4 lines>...
+        _add_event=_add_event,
+    )
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2373, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2271, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/orm/context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1421, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/sql/elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1643, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 2365, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column users.phone does not exist
+LINE 1: ...l, users.first_name, users.last_name, users.role, users.phon...
+                                                             ^
+
+[SQL: SELECT users.uuid, users.email, users.first_name, users.last_name, users.role, users.phone, users.organization, users.bank_name, users.bank_account_number, users.password_hash, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = %(email_1)s]
+[parameters: {'email_1': 'ewherheakpesiri+9@gmail.com'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-09-09 11:26:09,105 - INFO - event_ticketing - POST /auth/register -> 500 (27.6ms)
+2026-09-09 11:27:24,076 - ERROR - event_ticketing - Database error on POST /auth/register: (psycopg2.errors.UndefinedColumn) column users.phone does not exist
+LINE 1: ...l, users.first_name, users.last_name, users.role, users.phon...
+                                                             ^
+
+[SQL: SELECT users.uuid, users.email, users.first_name, users.last_name, users.role, users.phone, users.organization, users.bank_name, users.bank_account_number, users.password_hash, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = %(email_1)s]
+[parameters: {'email_1': 'ewherheakpesiri+9@gmail.com'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column users.phone does not exist
+LINE 1: ...l, users.first_name, users.last_name, users.role, users.phon...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2641, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1033, in run
+    result = context.run(func, *args)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/auth/controller.py", line 30, in register
+    user = register_user(session, **data.model_dump())
+  File "/Users/ewherheakpesir/Documents/Evvent-api/auth/services.py", line 38, in register_user
+    if session.exec(select(User).where(User.email == email)).first():
+       ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlmodel/orm/session.py", line 75, in exec
+    results = super().execute(
+        statement,
+    ...<4 lines>...
+        _add_event=_add_event,
+    )
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2373, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2271, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/orm/context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1421, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/sql/elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1643, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 2365, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column users.phone does not exist
+LINE 1: ...l, users.first_name, users.last_name, users.role, users.phon...
+                                                             ^
+
+[SQL: SELECT users.uuid, users.email, users.first_name, users.last_name, users.role, users.phone, users.organization, users.bank_name, users.bank_account_number, users.password_hash, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = %(email_1)s]
+[parameters: {'email_1': 'ewherheakpesiri+9@gmail.com'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-09-09 11:27:24,095 - INFO - event_ticketing - POST /auth/register -> 500 (64.7ms)
+2026-09-09 11:30:31,948 - INFO - event_ticketing - Application shutdown
+2026-09-09 11:30:47,538 - INFO - event_ticketing - Application startup complete
+2026-09-09 11:30:47,727 - INFO - event_ticketing - Application shutdown
+2026-09-09 11:31:00,553 - INFO - event_ticketing - Application startup complete
+2026-09-09 11:31:00,661 - INFO - event_ticketing - Application shutdown
+2026-09-09 11:31:09,742 - INFO - event_ticketing - Application startup complete
+2026-09-09 11:31:29,377 - INFO - event_ticketing - GET /auth/ -> 200 (92.0ms)
+2026-09-09 11:34:11,543 - INFO - event_ticketing - Registered new UserRole.user ad2f7d44-8f91-488b-b81b-801fd8c75c5c (ewherheakpesiri+9@gmail.com)
+2026-09-09 11:34:11,576 - INFO - event_ticketing - POST /auth/register -> 201 (724.7ms)
+2026-09-09 11:34:11,579 - WARNING - event_ticketing - SMTP_HOST not configured; skipping welcome email to ewherheakpesiri+9@gmail.com
+2026-09-09 11:47:35,054 - INFO - event_ticketing - User ad2f7d44-8f91-488b-b81b-801fd8c75c5c (ewherheakpesiri+9@gmail.com) logged in
+2026-09-09 11:47:35,068 - INFO - event_ticketing - POST /auth/login -> 200 (362.4ms)
+2026-09-09 11:51:02,710 - INFO - event_ticketing - Password reset requested for ewherheakpesiri+9@gmail.com (token issued: True)
+2026-09-09 11:51:02,713 - INFO - event_ticketing - POST /auth/forgot-password -> 200 (60.9ms)
+2026-09-09 11:52:21,263 - INFO - event_ticketing - Application shutdown
+2026-09-09 11:52:26,865 - INFO - event_ticketing - Application startup complete
+2026-09-09 11:53:28,308 - INFO - event_ticketing - Application shutdown
+2026-09-09 11:53:35,311 - INFO - event_ticketing - Application startup complete
+2026-09-09 11:53:41,148 - INFO - event_ticketing - Application shutdown
+2026-09-09 11:53:45,558 - INFO - event_ticketing - Application startup complete
+2026-09-09 11:53:45,768 - INFO - event_ticketing - Application shutdown
+2026-09-09 11:53:52,252 - INFO - event_ticketing - Application startup complete
+2026-09-09 11:53:53,372 - INFO - event_ticketing - Application shutdown
+2026-09-09 11:53:58,162 - INFO - event_ticketing - Application startup complete
+2026-09-09 11:54:21,300 - INFO - event_ticketing - GET /auth/ -> 200 (30.8ms)
+2026-09-09 12:01:00,623 - INFO - event_ticketing - Application shutdown
+2026-09-09 12:01:06,037 - INFO - event_ticketing - Application startup complete
+2026-09-09 12:01:12,937 - INFO - event_ticketing - Password reset requested for ewherheakpesiri+9@gmail.com (token issued: True)
+2026-09-09 12:01:12,957 - INFO - event_ticketing - POST /auth/forgot-password -> 200 (289.4ms)
+2026-09-09 12:01:17,230 - ERROR - event_ticketing - Failed to send password reset email to ewherheakpesiri+9@gmail.com
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/utils/email.py", line 74, in _send
+    smtp.send_message(message)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/smtplib.py", line 987, in send_message
+    return self.sendmail(from_addr, to_addrs, flatmsg, mail_options,
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         rcpt_options)
+                         ^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/smtplib.py", line 888, in sendmail
+    raise SMTPSenderRefused(code, resp, from_addr)
+smtplib.SMTPSenderRefused: (530, b'5.7.1 Authentication required', 'no-reply@evvent.com')
+2026-09-09 12:10:00,785 - INFO - event_ticketing - Application shutdown
+2026-09-09 12:10:08,619 - INFO - event_ticketing - Application startup complete
+2026-09-09 12:10:12,808 - INFO - event_ticketing - Application shutdown
+2026-09-09 12:10:20,884 - INFO - event_ticketing - Application startup complete
+2026-09-09 12:10:25,422 - INFO - event_ticketing - GET /auth/ -> 200 (25.8ms)
+2026-09-09 12:14:44,968 - INFO - event_ticketing - Application shutdown

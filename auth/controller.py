@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, BackgroundTasks, Depends, status
 from sqlmodel import Session
 
 from auth.dependencies import get_current_user, require_roles
@@ -11,11 +11,12 @@ from auth.services import (
     authenticate_user, change_password, create_reset_token, register_user,
     reset_password, update_bank_details, update_profile,
 )
+from core.config import settings
 from core.security import create_access_token
 from database.session import get_session
 from logger import logger
 from model.user import User, UserRole
-from auth.schema import RegisterRequest
+from utils.email import send_password_reset_email, send_welcome_email
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -26,9 +27,14 @@ def auth_root() -> MessageResponse:
 
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-def register(data: RegisterRequest, session: Session = Depends(get_session)) -> UserResponse:
+def register(
+    data: RegisterRequest,
+    background_tasks: BackgroundTasks,
+    session: Session = Depends(get_session),
+) -> UserResponse:
     user = register_user(session, **data.model_dump())
     logger.info("Registered new %s %s (%s)", user.role, user.uuid, user.email)
+    background_tasks.add_task(send_welcome_email, user.email, user.first_name)
     return UserResponse.model_validate(user)
 
 
@@ -95,17 +101,29 @@ def update_current_user_bank_details(
 
 
 @router.post("/forgot-password", response_model=ForgotPasswordResponse)
-def forgot_password(data: ForgotPasswordRequest, session: Session = Depends(get_session)) -> ForgotPasswordResponse:
-    token = create_reset_token(session, email=str(data.email))
+def forgot_password(
+    data: ForgotPasswordRequest,
+    background_tasks: BackgroundTasks,
+    session: Session = Depends(get_session),
+) -> ForgotPasswordResponse:
+    user, token = create_reset_token(session, email=str(data.email))
     logger.info("Password reset requested for %s (token issued: %s)", data.email, token is not None)
+    if user and token:
+        background_tasks.add_task(
+            send_password_reset_email,
+            user.email,
+            user.first_name,
+            token,
+            settings.RESET_TOKEN_EXPIRES_MINUTES,
+        )
     return ForgotPasswordResponse(
-        message="If an account exists, password reset instructions have been created.",
+        message="If an account exists, password reset instructions have been created and sent to your email",
         reset_token=token,
     )
 
 
 @router.patch("/reset-password", response_model=MessageResponse)
 def reset_password_endpoint(data: ResetPasswordRequest, session: Session = Depends(get_session)) -> MessageResponse:
-    reset_password(session, **data.model_dump())
+    reset_password(session, token=data.token, new_password=data.new_password)
     logger.info("Password reset completed for token %s...", data.token[:8])
     return MessageResponse(message="Password reset successful")
