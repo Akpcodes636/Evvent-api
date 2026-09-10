@@ -53,29 +53,62 @@ def _render_password_reset_email(first_name: str, reset_token: str, expires_minu
     return subject, text_body, html_body
 
 
-def _send(to_email: str, subject: str, text_body: str, html_body: str, *, log_label: str) -> None:
+def _send(
+    to_email: str,
+    subject: str,
+    text_body: str,
+    html_body: str,
+    *,
+    log_label: str
+) -> None:
     if not settings.SMTP_HOST:
-        logger.warning("SMTP_HOST not configured; skipping %s to %s", log_label, to_email)
+        logger.warning(
+            "SMTP_HOST not configured; skipping %s to %s",
+            log_label,
+            to_email
+        )
         return
 
     message = EmailMessage()
     message["Subject"] = subject
-    message["From"] = f"{settings.SMTP_FROM_NAME} <{settings.SMTP_FROM_EMAIL}>"
+    message["From"] = (
+        f"{settings.SMTP_FROM_NAME} <{settings.SMTP_FROM_EMAIL}>"
+    )
     message["To"] = to_email
     message.set_content(text_body)
     message.add_alternative(html_body, subtype="html")
 
     try:
-        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=10) as smtp:
+        with smtplib.SMTP(
+            settings.SMTP_HOST,
+            settings.SMTP_PORT,
+            timeout=10,
+        ) as smtp:
+            smtp.ehlo()
+
             if settings.SMTP_USE_TLS:
                 smtp.starttls()
-            if settings.SMTP_USERNAME and settings.SMTP_PASSWORD:
-                smtp.login(settings.SMTP_USERNAME, settings.SMTP_PASSWORD)
-            smtp.send_message(message)
-        logger.info("%s sent to %s", log_label, to_email)
-    except Exception:
-        logger.exception("Failed to send %s to %s", log_label, to_email)
+                smtp.ehlo()
 
+            smtp.login(
+                settings.SMTP_USERNAME,
+                settings.SMTP_PASSWORD,
+            )
+
+            smtp.send_message(message)
+
+        logger.info(
+            "%s sent to %s",
+            log_label,
+            to_email
+        )
+
+    except Exception:
+        logger.exception(
+            "Failed to send %s to %s",
+            log_label,
+            to_email
+        )
 
 def send_welcome_email(to_email: str, first_name: str) -> None:
     subject, text_body, html_body = _render_welcome_email(first_name)

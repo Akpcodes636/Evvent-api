@@ -555,3 +555,116 @@ smtplib.SMTPSenderRefused: (530, b'5.7.1 Authentication required', 'no-reply@evv
 2026-09-09 12:10:20,884 - INFO - event_ticketing - Application startup complete
 2026-09-09 12:10:25,422 - INFO - event_ticketing - GET /auth/ -> 200 (25.8ms)
 2026-09-09 12:14:44,968 - INFO - event_ticketing - Application shutdown
+2026-09-10 10:26:14,906 - INFO - event_ticketing - Application startup complete
+2026-09-10 10:30:56,451 - INFO - event_ticketing - Registered new UserRole.user cc1c738b-822d-4fa1-9f0a-2b4bad3d37fc (ewherheakpesiri+12@gmail.com)
+2026-09-10 10:30:56,466 - INFO - event_ticketing - POST /auth/register -> 201 (645.2ms)
+2026-09-10 10:31:00,695 - ERROR - event_ticketing - Failed to send welcome email to ewherheakpesiri+12@gmail.com
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/utils/email.py", line 73, in _send
+    smtp.login(settings.SMTP_USERNAME, settings.SMTP_PASSWORD)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/smtplib.py", line 751, in login
+    (code, resp) = self.auth(
+                   ~~~~~~~~~^
+        authmethod, getattr(self, method_name),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        initial_response_ok=initial_response_ok)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/smtplib.py", line 649, in auth
+    (code, resp) = self.docmd("AUTH", mechanism + " " + response)
+                   ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/smtplib.py", line 439, in docmd
+    return self.getreply()
+           ~~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/smtplib.py", line 412, in getreply
+    raise SMTPServerDisconnected("Connection unexpectedly closed")
+smtplib.SMTPServerDisconnected: Connection unexpectedly closed
+2026-09-10 10:39:51,229 - INFO - event_ticketing - Registered new UserRole.user 94bedeac-24e9-40d5-b959-03e8c5b9f298 (ewherheakpesiri+44@gmail.com)
+2026-09-10 10:39:51,240 - INFO - event_ticketing - POST /auth/register -> 201 (313.8ms)
+2026-09-10 10:39:54,548 - ERROR - event_ticketing - Failed to send welcome email to ewherheakpesiri+44@gmail.com
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/utils/email.py", line 73, in _send
+    smtp.login(settings.SMTP_USERNAME, settings.SMTP_PASSWORD)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/smtplib.py", line 751, in login
+    (code, resp) = self.auth(
+                   ~~~~~~~~~^
+        authmethod, getattr(self, method_name),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        initial_response_ok=initial_response_ok)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/smtplib.py", line 649, in auth
+    (code, resp) = self.docmd("AUTH", mechanism + " " + response)
+                   ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/smtplib.py", line 439, in docmd
+    return self.getreply()
+           ~~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/smtplib.py", line 412, in getreply
+    raise SMTPServerDisconnected("Connection unexpectedly closed")
+smtplib.SMTPServerDisconnected: Connection unexpectedly closed
+2026-09-10 10:53:09,434 - INFO - event_ticketing - Application shutdown
+2026-09-10 10:53:18,093 - INFO - event_ticketing - Application startup complete
+2026-09-10 10:53:18,204 - INFO - event_ticketing - Application shutdown
+2026-09-10 10:59:56,358 - INFO - event_ticketing - Application startup complete
+2026-09-10 10:59:56,470 - INFO - event_ticketing - Application shutdown
+2026-09-10 11:00:00,127 - INFO - event_ticketing - Application startup complete
+2026-09-10 11:00:34,999 - INFO - event_ticketing - Application shutdown
+2026-09-10 11:00:45,340 - INFO - event_ticketing - Application startup complete
+2026-09-10 11:00:45,447 - INFO - event_ticketing - Application shutdown
+2026-09-10 11:00:54,888 - INFO - event_ticketing - Application startup complete
+2026-09-10 11:00:54,994 - INFO - event_ticketing - Application shutdown
+2026-09-10 11:06:11,081 - INFO - event_ticketing - Application startup complete
+2026-09-10 11:06:11,192 - INFO - event_ticketing - Application shutdown
+2026-09-10 11:06:13,135 - INFO - event_ticketing - Application startup complete
+2026-09-10 11:08:02,975 - INFO - event_ticketing - Application shutdown
+2026-09-10 11:11:03,751 - INFO - event_ticketing - Application startup complete
+2026-09-10 11:11:30,784 - INFO - event_ticketing - Registered new UserRole.user 8ab9317d-af32-4a28-bdf4-18db85e99a6c (ewherheakpesiri+46@gmail.com)
+2026-09-10 11:11:30,797 - INFO - event_ticketing - POST /auth/register -> 201 (427.4ms)
+2026-09-10 11:11:31,794 - ERROR - event_ticketing - Failed to send welcome email to ewherheakpesiri+46@gmail.com
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/utils/email.py", line 80, in _send
+    smtp.eclo()
+    ^^^^^^^^^
+AttributeError: 'SMTP' object has no attribute 'eclo'. Did you mean: 'ehlo'?
+2026-09-10 11:12:12,261 - INFO - event_ticketing - Application shutdown
+2026-09-10 11:12:16,787 - INFO - event_ticketing - Application startup complete
+2026-09-10 11:12:23,104 - INFO - event_ticketing - Application shutdown
+2026-09-10 11:12:28,121 - INFO - event_ticketing - Application startup complete
+2026-09-10 11:13:05,483 - INFO - event_ticketing - Registered new UserRole.user da9f357e-bd79-47f5-be38-4a39d6933f87 (ewherheakpesiri+86@gmail.com)
+2026-09-10 11:13:05,485 - INFO - event_ticketing - POST /auth/register -> 201 (433.3ms)
+2026-09-10 11:13:08,374 - ERROR - event_ticketing - Failed to send welcome email to ewherheakpesiri+86@gmail.com
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/utils/email.py", line 86, in _send
+    smtp.login(
+    ~~~~~~~~~~^
+            settings.SMTP_USERNAME,
+            ^^^^^^^^^^^^^^^^^^^^^^^
+            settings.SMTP_PASSWORD,
+            ^^^^^^^^^^^^^^^^^^^^^^^
+        )
+        ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/smtplib.py", line 751, in login
+    (code, resp) = self.auth(
+                   ~~~~~~~~~^
+        authmethod, getattr(self, method_name),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        initial_response_ok=initial_response_ok)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/smtplib.py", line 652, in auth
+    (code, resp) = self.docmd("AUTH", mechanism)
+                   ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/smtplib.py", line 438, in docmd
+    self.putcmd(cmd, args)
+    ~~~~~~~~~~~^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/smtplib.py", line 385, in putcmd
+    self.send(f'{s}{CRLF}')
+    ~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/smtplib.py", line 372, in send
+    raise SMTPServerDisconnected('please run connect() first')
+smtplib.SMTPServerDisconnected: please run connect() first
+2026-09-10 11:14:46,975 - INFO - event_ticketing - Application shutdown
+2026-09-10 11:14:53,162 - INFO - event_ticketing - Application startup complete
+2026-09-10 11:15:28,734 - INFO - event_ticketing - Registered new UserRole.user ed605154-b61c-4a99-8e21-10358a695a4a (ewherheakpesiri+96@gmail.com)
+2026-09-10 11:15:28,742 - INFO - event_ticketing - POST /auth/register -> 201 (554.5ms)
+2026-09-10 11:15:33,983 - INFO - event_ticketing - welcome email sent to ewherheakpesiri+96@gmail.com
+2026-09-10 11:32:51,723 - INFO - event_ticketing - Application shutdown
