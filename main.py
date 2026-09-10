@@ -10,7 +10,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from admin.controller import router as admin_router
 from auth.controller import router as auth_router
 from booking.controller import router as booking_router
-from database.init_db import init_db
 from core.exceptions import AppError
 from event.controller import categories_router, router as event_router
 from logger import logger
@@ -19,7 +18,6 @@ from utils.uploads import UPLOAD_ROOT
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    init_db()
     logger.info("Application startup complete")
     yield
     logger.info("Application shutdown")
