@@ -4,7 +4,9 @@ from sqlmodel import Session, select
 
 from core.exceptions import AppError
 from event.schema import EventCreate, EventUpdate, TicketTypeUpdate
-from model.event import Category, Event, EventCategoryLink, EventImage, EventStatus, TicketType
+from model.event import (
+    Category, Event, EventCategoryLink, EventImage, EventStatus, TicketType, UserCategoryPreference,
+)
 from model.user import User, UserRole
 
 
@@ -40,6 +42,47 @@ def _get_categories(session: Session, category_ids: list[UUID]) -> list[Category
     return list(categories)
 
 
+def get_user_category_preferences(session: Session, user: User) -> list[Category]:
+    query = (
+        select(Category)
+        .join(UserCategoryPreference, UserCategoryPreference.category_id == Category.uuid)
+        .where(UserCategoryPreference.user_id == user.uuid)
+        .order_by(Category.name)
+    )
+    return list(session.exec(query).all())
+
+
+def set_user_category_preferences(session: Session, user: User, category_ids: list[UUID]) -> list[Category]:
+    categories = _get_categories(session, category_ids)
+    for link in session.exec(
+        select(UserCategoryPreference).where(UserCategoryPreference.user_id == user.uuid)
+    ).all():
+        session.delete(link)
+    for category in categories:
+        session.add(UserCategoryPreference(user_id=user.uuid, category_id=category.uuid))
+    session.commit()
+    return categories
+
+
+def list_events_for_user(
+    session: Session, user: User, *, status: EventStatus | None = EventStatus.published
+) -> list[Event]:
+    category_ids = [c.uuid for c in get_user_category_preferences(session, user)]
+    if not category_ids:
+        return list_events(session, status=status)
+
+    query = (
+        select(Event)
+        .distinct()
+        .join(EventCategoryLink, EventCategoryLink.event_id == Event.uuid)
+        .where(EventCategoryLink.category_id.in_(category_ids))
+    )
+    if status:
+        query = query.where(Event.status == status)
+    query = query.order_by(Event.event_date)
+    return list(session.exec(query).all())
+
+
 def create_event(session: Session, *, organizer: User, data: EventCreate) -> Event:
     categories = _get_categories(session, data.category_ids)
 
@@ -53,6 +96,7 @@ def create_event(session: Session, *, organizer: User, data: EventCreate) -> Eve
         duration=data.duration,
         event_type=data.event_type,
         video_url=data.video_url,
+        
     )
     session.add(event)
     session.flush()
@@ -120,7 +164,6 @@ def update_event(session: Session, event: Event, data: EventUpdate) -> Event:
         setattr(event, field, value)
 
     if data.category_ids is not None:
-        session.exec(select(EventCategoryLink).where(EventCategoryLink.event_id == event.uuid)).all()
         for link in session.exec(select(EventCategoryLink).where(EventCategoryLink.event_id == event.uuid)).all():
             session.delete(link)
         for category in _get_categories(session, data.category_ids):

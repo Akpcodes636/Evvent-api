@@ -8,8 +8,8 @@ from alembic import context
 
 from core.config import settings
 from model.booking import Order, Payment, Payout
-from model.event import Category, Event, EventCategoryLink, EventImage, TicketType
-from model.user import PasswordResetToken, User
+from model.event import Category, Event, EventCategoryLink, EventImage, TicketType, UserCategoryPreference
+from model.user import PasswordResetToken, RefreshToken, User
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

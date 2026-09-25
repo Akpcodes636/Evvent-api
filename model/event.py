@@ -35,6 +35,14 @@ class EventCategoryLink(SQLModel, table=True):
     category_id: uuid.UUID = Field(foreign_key="categories.uuid", primary_key=True)
 
 
+class UserCategoryPreference(SQLModel, table=True):
+    __tablename__ = "user_category_preferences"
+
+    user_id: uuid.UUID = Field(foreign_key="users.uuid", primary_key=True)
+    category_id: uuid.UUID = Field(foreign_key="categories.uuid", primary_key=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow, sa_column=Column(DateTime, nullable=False))
+
+
 class Event(SQLModel, table=True):
     __tablename__ = "events"
 

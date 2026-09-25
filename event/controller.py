@@ -12,7 +12,7 @@ from event.schema import (
 from event.services import (
     add_event_images, create_category, create_event, delete_event, delete_event_image,
     ensure_event_access, feature_event, get_event, get_ticket_type, list_categories,
-    list_events, update_event, update_ticket_type,
+    list_events, list_events_for_user, update_event, update_ticket_type,
 )
 from logger import logger
 from model.event import EventStatus, EventType
@@ -67,6 +67,22 @@ def list_events_endpoint(
         status=EventStatus.published,
         featured=featured,
     )
+    return [
+        EventListItem(
+            uuid=e.uuid, title=e.title, event_date=e.event_date, status=e.status,
+            tickets_sold=sum(t.sold_quantity for t in e.ticket_types),
+            featured=e.featured,
+        )
+        for e in events
+    ]
+
+
+@router.get("/recommended", response_model=list[EventListItem])
+def list_recommended_events_endpoint(
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+) -> list[EventListItem]:
+    events = list_events_for_user(session, current_user)
     return [
         EventListItem(
             uuid=e.uuid, title=e.title, event_date=e.event_date, status=e.status,

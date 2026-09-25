@@ -21,3 +21,5 @@ def validate_email_address(email: str) -> tuple[bool, str]:
         return True, normalized_email
     except EmailNotValidError as e:
         return False, str(e)
+
+

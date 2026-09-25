@@ -5,15 +5,19 @@ from auth.dependencies import get_current_user, require_roles
 from auth.schema import (
     AdminRegisterRequest, BankDetailsRequest, ChangePasswordRequest,
     ForgotPasswordRequest, ForgotPasswordResponse, LoginRequest, LoginResponse,
-    MessageResponse, RegisterRequest, ResetPasswordRequest, UpdateProfileRequest, UserResponse,
+    MessageResponse, RefreshTokenRequest, RegisterRequest, ResetPasswordRequest, SwitchRoleRequest,
+    UpdatePreferencesRequest, UpdateProfileRequest, UserResponse,
 )
 from auth.services import (
-    authenticate_user, change_password, create_reset_token, register_user,
-    reset_password, update_bank_details, update_profile,
+    authenticate_user, bootstrap_admin, change_password, create_refresh_token, create_reset_token,
+    refresh_access_token, register_user, reset_password, revoke_refresh_token, switch_user_role,
+    update_bank_details, update_profile,
 )
 from core.config import settings
 from core.security import create_access_token
 from database.session import get_session
+from event.schema import CategoryResponse
+from event.services import get_user_category_preferences, set_user_category_preferences
 from logger import logger
 from model.user import User, UserRole
 from utils.email import send_password_reset_email, send_welcome_email
@@ -49,16 +53,29 @@ def register_admin(
     return UserResponse.model_validate(user)
 
 
+@router.post("/admin/bootstrap", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+def bootstrap_admin_endpoint(
+    data: AdminRegisterRequest,
+    session: Session = Depends(get_session),
+) -> UserResponse:
+    """Create the first admin account. Fails once any admin already exists."""
+    user = bootstrap_admin(session, **data.model_dump())
+    logger.info("Bootstrapped first admin %s (%s)", user.uuid, user.email)
+    return UserResponse.model_validate(user)
+
+
 @router.post("/login", response_model=LoginResponse)
 def login(data: LoginRequest, session: Session = Depends(get_session)) -> LoginResponse:
     user = authenticate_user(session, **data.model_dump())
+    access_token = create_access_token(user.uuid)
+    refresh_token = create_refresh_token(session, user)
     logger.info("User %s (%s) logged in", user.uuid, user.email)
-    return LoginResponse(message="Login successful", access_token=create_access_token(user.uuid))
+    return LoginResponse(message="Login successful", access_token=access_token, refresh_token=refresh_token)
 
 
 @router.post("/logout", response_model=MessageResponse)
-def logout(current_user: User = Depends(get_current_user)) -> MessageResponse:
-    logger.info("User %s (%s) logged out", current_user.uuid, current_user.email)
+def logout(data: RefreshTokenRequest, session: Session = Depends(get_session)) -> MessageResponse:
+    revoke_refresh_token(session, data.refresh_token)
     return MessageResponse(message="Logout successful")
 
 
@@ -118,7 +135,6 @@ def forgot_password(
         )
     return ForgotPasswordResponse(
         message="If an account exists, password reset instructions have been created and sent to your email",
-        reset_token=token,
     )
 
 
@@ -127,3 +143,63 @@ def reset_password_endpoint(data: ResetPasswordRequest, session: Session = Depen
     reset_password(session, token=data.token, new_password=data.new_password)
     logger.info("Password reset completed for token %s...", data.token[:8])
     return MessageResponse(message="Password reset successful")
+
+
+@router.get("/me/preferences", response_model=list[CategoryResponse])
+def get_current_user_preferences(
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+) -> list[CategoryResponse]:
+    categories = get_user_category_preferences(session, current_user)
+    return [CategoryResponse.model_validate(c) for c in categories]
+
+
+@router.put("/me/preferences", response_model=list[CategoryResponse])
+def update_current_user_preferences(
+    data: UpdatePreferencesRequest,
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+) -> list[CategoryResponse]:
+    categories = set_user_category_preferences(session, current_user, data.category_ids)
+    logger.info("User %s set %d event category preference(s)", current_user.uuid, len(categories))
+    return [CategoryResponse.model_validate(c) for c in categories]
+
+
+@router.patch("/me/role", response_model=UserResponse)
+def switch_role(
+    data: SwitchRoleRequest,
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+) -> UserResponse:
+    user = switch_user_role(session, current_user, role=data.role)
+    logger.info("User %s switched role to %s", user.uuid, user.role)
+    return UserResponse.model_validate(user)
+
+
+@router.post("/refresh", response_model=LoginResponse)
+def refresh(data: RefreshTokenRequest, session: Session = Depends(get_session)) -> LoginResponse:
+    access_token, new_refresh_token = refresh_access_token(session, data.refresh_token)
+    return LoginResponse(
+        message="Token refreshed successfully",
+        access_token=access_token,
+        refresh_token=new_refresh_token,
+    )
+
+
+@router.get("/protected", response_model=MessageResponse)
+def protected_route(current_user: User = Depends(get_current_user)) -> MessageResponse:
+    return MessageResponse(message=f"Hello, {current_user.first_name} | You accessed a protected route")
+
+
+@router.get("/organizer/dashboard", response_model=MessageResponse)
+def organizer_dashboard(_: User = Depends(require_roles(UserRole.organizer))) -> MessageResponse:
+    return MessageResponse(message="Organizer dashboard")
+
+
+@router.get("/organizer/test")
+def organizer_test(current_user: User = Depends(require_roles(UserRole.organizer, UserRole.admin))):
+    return {
+        "message": "You have organizer permissions",
+        "user": str(current_user.uuid),
+        "role": current_user.role,
+    }

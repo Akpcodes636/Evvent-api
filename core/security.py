@@ -48,7 +48,7 @@ def decode_access_token(token: str) -> UUID:
         claims = json.loads(_base64url_decode(payload))
         user_id = UUID(claims["sub"])
         expires_at = claims["exp"]
-    except (ValueError, KeyError, json.JSONDecodeError):
+    except (ValueError, KeyError, TypeError):
         raise AppError("Invalid authentication token", status_code=401)
 
     if datetime.now(timezone.utc).timestamp() >= expires_at:
