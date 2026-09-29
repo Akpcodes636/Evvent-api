@@ -65,7 +65,7 @@ def get_booking(session: Session, user: User, order_id: UUID) -> Order:
         raise AppError("Booking not found", status_code=404)
     if user.role == UserRole.user and order.user_id != user.uuid:
         raise AppError("You do not have permission to view this booking", status_code=403)
-    if user.role == UserRole.organizer and order.user_id != user.uuid and order.event.organizer_id != user.uuid:
+    if user.role == UserRole.host and order.user_id != user.uuid and order.event.organizer_id != user.uuid:
         raise AppError("You do not have permission to view this booking", status_code=403)
     return order
 

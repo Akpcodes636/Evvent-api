@@ -2,6 +2,7 @@ import time
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.exc import SQLAlchemyError
@@ -90,6 +91,31 @@ async def catch_all(request: Request, path: str):
         status_code=404,
         content={"message": f"Can't find {path} on this server!"}
     )
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(
+    request: Request,
+    exc: RequestValidationError,
+):
+    """
+    Override FastAPI's default 422 handler so it never tries to
+    JSON-encode raw binary input (e.g. uploaded image bytes), which
+    would crash with a UnicodeDecodeError.
+    """
+    safe_errors = []
+    for error in exc.errors():
+        entry = {k: v for k, v in error.items() if k != "input"}
+        raw = error.get("input")
+        # Only include the input value if it's safely serialisable
+        if isinstance(raw, (str, int, float, bool, type(None), list, dict)):
+            entry["input"] = raw
+        safe_errors.append(entry)
+
+    return JSONResponse(
+        status_code=422,
+        content={"detail": safe_errors},
+    )
+
 
 @app.exception_handler(AppError)
 async def app_error_handler(

@@ -15,6 +15,11 @@ class Settings(BaseSettings):
     SMTP_FROM_EMAIL: str = "no-reply@evvent.com"
     SMTP_FROM_NAME: str = "Evvent"
 
+    MAILJET_APIKEY: str | None = None
+    MAILJET_SECRET_KEY: str | None = None
+    MAILJET_FROM_EMAIL: str = "no-reply@evvent.com"
+    MAILJET_FROM_NAME: str = "Evvent"
+
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

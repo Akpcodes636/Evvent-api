@@ -3,91 +3,220 @@ from uuid import UUID
 from sqlmodel import Session, select
 
 from core.exceptions import AppError
-from event.schema import EventCreate, EventUpdate, TicketTypeUpdate
+from event.schema import (
+    EventCreate,
+    EventUpdate,
+    TicketTypeUpdate,
+)
 from model.event import (
-    Category, Event, EventCategoryLink, EventImage, EventStatus, TicketType, UserCategoryPreference,
+    Category,
+    Event,
+    EventCategoryLink,
+    EventImage,
+    EventStatus,
+    TicketType,
+    UserCategoryPreference,
 )
 from model.user import User, UserRole
 
 
 def ensure_event_access(event: Event, user: User) -> None:
-    """Only the organizer who owns the event, or a platform admin, may manage it."""
+    """
+    Ensure the user is allowed to manage the event.
+
+    Platform admins can manage any event.
+    Hosts can only manage events they own.
+    Attendees cannot manage events.
+    """
     if user.role == UserRole.admin:
         return
-    if event.organizer_id != user.uuid:
-        raise AppError("You do not have permission to manage this event", status_code=403)
+
+    if user.role != UserRole.host:
+        raise AppError(
+            "You do not have permission to manage this event",
+            status_code=403,
+        )
+
+    if event.host_id != user.uuid:
+        raise AppError(
+            "You do not have permission to manage this event",
+            status_code=403,
+        )
 
 
-def create_category(session: Session, *, name: str) -> Category:
-    existing = session.exec(select(Category).where(Category.name == name)).first()
+def create_category(
+    session: Session,
+    *,
+    name: str,
+) -> Category:
+    existing = session.exec(
+        select(Category).where(Category.name == name)
+    ).first()
+
     if existing:
         return existing
+
     category = Category(name=name)
+
     session.add(category)
     session.commit()
     session.refresh(category)
+
     return category
 
 
-def list_categories(session: Session) -> list[Category]:
-    return list(session.exec(select(Category).order_by(Category.name)).all())
+def list_categories(
+    session: Session,
+) -> list[Category]:
+    return list(
+        session.exec(
+            select(Category).order_by(Category.name)
+        ).all()
+    )
 
 
-def _get_categories(session: Session, category_ids: list[UUID]) -> list[Category]:
+def _get_categories(
+    session: Session,
+    category_ids: list[UUID],
+) -> list[Category]:
     if not category_ids:
         return []
-    categories = session.exec(select(Category).where(Category.uuid.in_(category_ids))).all()
+
+    categories = session.exec(
+        select(Category).where(
+            Category.uuid.in_(category_ids)
+        )
+    ).all()
+
     if len(categories) != len(set(category_ids)):
-        raise AppError("One or more categories were not found", status_code=404)
+        raise AppError(
+            "One or more categories were not found",
+            status_code=404,
+        )
+
     return list(categories)
 
 
-def get_user_category_preferences(session: Session, user: User) -> list[Category]:
+def get_user_category_preferences(
+    session: Session,
+    user: User,
+) -> list[Category]:
     query = (
         select(Category)
-        .join(UserCategoryPreference, UserCategoryPreference.category_id == Category.uuid)
-        .where(UserCategoryPreference.user_id == user.uuid)
+        .join(
+            UserCategoryPreference,
+            UserCategoryPreference.category_id == Category.uuid,
+        )
+        .where(
+            UserCategoryPreference.user_id == user.uuid
+        )
         .order_by(Category.name)
     )
-    return list(session.exec(query).all())
+
+    return list(
+        session.exec(query).all()
+    )
 
 
-def set_user_category_preferences(session: Session, user: User, category_ids: list[UUID]) -> list[Category]:
-    categories = _get_categories(session, category_ids)
-    for link in session.exec(
-        select(UserCategoryPreference).where(UserCategoryPreference.user_id == user.uuid)
-    ).all():
-        session.delete(link)
+def set_user_category_preferences(
+    session: Session,
+    user: User,
+    category_ids: list[UUID],
+) -> list[Category]:
+    categories = _get_categories(
+        session,
+        category_ids,
+    )
+
+    existing_preferences = session.exec(
+        select(UserCategoryPreference).where(
+            UserCategoryPreference.user_id == user.uuid
+        )
+    ).all()
+
+    for preference in existing_preferences:
+        session.delete(preference)
+
     for category in categories:
-        session.add(UserCategoryPreference(user_id=user.uuid, category_id=category.uuid))
+        session.add(
+            UserCategoryPreference(
+                user_id=user.uuid,
+                category_id=category.uuid,
+            )
+        )
+
     session.commit()
+
     return categories
 
 
 def list_events_for_user(
-    session: Session, user: User, *, status: EventStatus | None = EventStatus.published
+    session: Session,
+    user: User,
+    *,
+    status: EventStatus | None = EventStatus.published,
 ) -> list[Event]:
-    category_ids = [c.uuid for c in get_user_category_preferences(session, user)]
+    category_ids = [
+        category.uuid
+        for category in get_user_category_preferences(
+            session,
+            user,
+        )
+    ]
+
     if not category_ids:
-        return list_events(session, status=status)
+        return list_events(
+            session,
+            status=status,
+        )
 
     query = (
         select(Event)
         .distinct()
-        .join(EventCategoryLink, EventCategoryLink.event_id == Event.uuid)
-        .where(EventCategoryLink.category_id.in_(category_ids))
+        .join(
+            EventCategoryLink,
+            EventCategoryLink.event_id == Event.uuid,
+        )
+        .where(
+            EventCategoryLink.category_id.in_(category_ids)
+        )
     )
+
     if status:
-        query = query.where(Event.status == status)
-    query = query.order_by(Event.event_date)
-    return list(session.exec(query).all())
+        query = query.where(
+            Event.status == status
+        )
+
+    query = query.order_by(
+        Event.event_date
+    )
+
+    return list(
+        session.exec(query).all()
+    )
 
 
-def create_event(session: Session, *, organizer: User, data: EventCreate) -> Event:
-    categories = _get_categories(session, data.category_ids)
+def create_event(
+    session: Session,
+    *,
+    host: User,
+    data: EventCreate,
+) -> Event:
+    """
+    Create an event owned by the specified host.
+
+    Admins may also create events. In that case the event
+    is still associated with the admin's user ID unless the
+    domain model later introduces a separate platform-owner
+    relationship.
+    """
+    categories = _get_categories(
+        session,
+        data.category_ids,
+    )
 
     event = Event(
-        organizer_id=organizer.uuid,
+        host_id=host.uuid,
         title=data.title,
         host_name=data.host_name,
         description=data.description,
@@ -96,31 +225,50 @@ def create_event(session: Session, *, organizer: User, data: EventCreate) -> Eve
         duration=data.duration,
         event_type=data.event_type,
         video_url=data.video_url,
-        
     )
+
     session.add(event)
     session.flush()
 
     for ticket_type in data.ticket_types:
-        session.add(TicketType(
-            event_id=event.uuid,
-            name=ticket_type.name,
-            price=ticket_type.price,
-            total_quantity=ticket_type.total_quantity,
-        ))
+        session.add(
+            TicketType(
+                event_id=event.uuid,
+                name=ticket_type.name,
+                price=ticket_type.price,
+                total_quantity=ticket_type.total_quantity,
+            )
+        )
 
     for category in categories:
-        session.add(EventCategoryLink(event_id=event.uuid, category_id=category.uuid))
+        session.add(
+            EventCategoryLink(
+                event_id=event.uuid,
+                category_id=category.uuid,
+            )
+        )
 
     session.commit()
     session.refresh(event)
+
     return event
 
 
-def get_event(session: Session, event_id: UUID) -> Event:
-    event = session.get(Event, event_id)
+def get_event(
+    session: Session,
+    event_id: UUID,
+) -> Event:
+    event = session.get(
+        Event,
+        event_id,
+    )
+
     if not event:
-        raise AppError("Event not found", status_code=404)
+        raise AppError(
+            "Event not found",
+            status_code=404,
+        )
+
     return event
 
 
@@ -133,106 +281,269 @@ def list_events(
     event_type: str | None = None,
     status: EventStatus | None = None,
     featured: bool | None = None,
-    organizer_id: UUID | None = None,
+    host_id: UUID | None = None,
 ) -> list[Event]:
     query = select(Event)
 
     if location:
-        query = query.where(Event.location.ilike(f"%{location}%"))
-    if search:
-        query = query.where(Event.title.ilike(f"%{search}%"))
-    if event_type:
-        query = query.where(Event.event_type == event_type)
-    if status:
-        query = query.where(Event.status == status)
-    if featured is not None:
-        query = query.where(Event.featured == featured)
-    if organizer_id:
-        query = query.where(Event.organizer_id == organizer_id)
-    if category_id:
-        query = query.join(EventCategoryLink, EventCategoryLink.event_id == Event.uuid).where(
-            EventCategoryLink.category_id == category_id
+        query = query.where(
+            Event.location.ilike(
+                f"%{location}%"
+            )
         )
 
-    query = query.order_by(Event.event_date)
-    return list(session.exec(query).all())
+    if search:
+        query = query.where(
+            Event.title.ilike(
+                f"%{search}%"
+            )
+        )
+
+    if event_type:
+        query = query.where(
+            Event.event_type == event_type
+        )
+
+    if status:
+        query = query.where(
+            Event.status == status
+        )
+
+    if featured is not None:
+        query = query.where(
+            Event.featured == featured
+        )
+
+    if host_id:
+        query = query.where(
+            Event.host_id == host_id
+        )
+
+    if category_id:
+        query = (
+            query
+            .join(
+                EventCategoryLink,
+                EventCategoryLink.event_id == Event.uuid,
+            )
+            .where(
+                EventCategoryLink.category_id == category_id
+            )
+        )
+
+    query = query.order_by(
+        Event.event_date
+    )
+
+    return list(
+        session.exec(query).all()
+    )
 
 
-def update_event(session: Session, event: Event, data: EventUpdate) -> Event:
-    updates = data.model_dump(exclude_unset=True, exclude={"category_ids"})
+def update_event(
+    session: Session,
+    event: Event,
+    data: EventUpdate,
+) -> Event:
+    updates = data.model_dump(
+        exclude_unset=True,
+        exclude={"category_ids"},
+    )
+
     for field, value in updates.items():
-        setattr(event, field, value)
+        setattr(
+            event,
+            field,
+            value,
+        )
 
     if data.category_ids is not None:
-        for link in session.exec(select(EventCategoryLink).where(EventCategoryLink.event_id == event.uuid)).all():
+        existing_links = session.exec(
+            select(EventCategoryLink).where(
+                EventCategoryLink.event_id == event.uuid
+            )
+        ).all()
+
+        for link in existing_links:
             session.delete(link)
-        for category in _get_categories(session, data.category_ids):
-            session.add(EventCategoryLink(event_id=event.uuid, category_id=category.uuid))
+
+        categories = _get_categories(
+            session,
+            data.category_ids,
+        )
+
+        for category in categories:
+            session.add(
+                EventCategoryLink(
+                    event_id=event.uuid,
+                    category_id=category.uuid,
+                )
+            )
 
     session.add(event)
     session.commit()
     session.refresh(event)
+
     return event
 
 
-def delete_event(session: Session, event: Event) -> None:
-    for link in session.exec(select(EventCategoryLink).where(EventCategoryLink.event_id == event.uuid)).all():
+def delete_event(
+    session: Session,
+    event: Event,
+) -> None:
+    category_links = session.exec(
+        select(EventCategoryLink).where(
+            EventCategoryLink.event_id == event.uuid
+        )
+    ).all()
+
+    for link in category_links:
         session.delete(link)
-    for image in session.exec(select(EventImage).where(EventImage.event_id == event.uuid)).all():
+
+    images = session.exec(
+        select(EventImage).where(
+            EventImage.event_id == event.uuid
+        )
+    ).all()
+
+    for image in images:
         session.delete(image)
-    for ticket_type in session.exec(select(TicketType).where(TicketType.event_id == event.uuid)).all():
+
+    ticket_types = session.exec(
+        select(TicketType).where(
+            TicketType.event_id == event.uuid
+        )
+    ).all()
+
+    for ticket_type in ticket_types:
         session.delete(ticket_type)
+
     session.delete(event)
     session.commit()
 
 
-def feature_event(session: Session, event: Event, *, featured: bool) -> Event:
+def feature_event(
+    session: Session,
+    event: Event,
+    *,
+    featured: bool,
+) -> Event:
     event.featured = featured
+
     session.add(event)
     session.commit()
     session.refresh(event)
+
     return event
 
 
-def add_event_images(session: Session, event: Event, urls: list[str]) -> list[EventImage]:
-    has_primary = bool(session.exec(
-        select(EventImage).where(EventImage.event_id == event.uuid, EventImage.is_primary == True)  # noqa: E712
-    ).first())
+def add_event_images(
+    session: Session,
+    event: Event,
+    urls: list[str],
+) -> list[EventImage]:
+    has_primary = bool(
+        session.exec(
+            select(EventImage).where(
+                EventImage.event_id == event.uuid,
+                EventImage.is_primary == True,  # noqa: E712
+            )
+        ).first()
+    )
 
-    images = []
+    images: list[EventImage] = []
+
     for index, url in enumerate(urls):
-        image = EventImage(event_id=event.uuid, url=url, is_primary=not has_primary and index == 0)
+        image = EventImage(
+            event_id=event.uuid,
+            url=url,
+            is_primary=(
+                not has_primary
+                and index == 0
+            ),
+        )
+
         session.add(image)
         images.append(image)
 
     session.commit()
+
     for image in images:
         session.refresh(image)
+
     return images
 
 
-def delete_event_image(session: Session, event: Event, image_id: UUID) -> None:
-    image = session.get(EventImage, image_id)
+def delete_event_image(
+    session: Session,
+    event: Event,
+    image_id: UUID,
+) -> None:
+    image = session.get(
+        EventImage,
+        image_id,
+    )
+
     if not image or image.event_id != event.uuid:
-        raise AppError("Image not found", status_code=404)
+        raise AppError(
+            "Image not found",
+            status_code=404,
+        )
+
     session.delete(image)
     session.commit()
 
 
-def get_ticket_type(session: Session, event: Event, ticket_type_id: UUID) -> TicketType:
-    ticket_type = session.get(TicketType, ticket_type_id)
-    if not ticket_type or ticket_type.event_id != event.uuid:
-        raise AppError("Ticket type not found", status_code=404)
+def get_ticket_type(
+    session: Session,
+    event: Event,
+    ticket_type_id: UUID,
+) -> TicketType:
+    ticket_type = session.get(
+        TicketType,
+        ticket_type_id,
+    )
+
+    if (
+        not ticket_type
+        or ticket_type.event_id != event.uuid
+    ):
+        raise AppError(
+            "Ticket type not found",
+            status_code=404,
+        )
+
     return ticket_type
 
 
-def update_ticket_type(session: Session, ticket_type: TicketType, data: TicketTypeUpdate) -> TicketType:
-    updates = data.model_dump(exclude_unset=True)
-    if "total_quantity" in updates and updates["total_quantity"] < ticket_type.sold_quantity:
-        raise AppError("Total quantity cannot be less than tickets already sold", status_code=400)
+def update_ticket_type(
+    session: Session,
+    ticket_type: TicketType,
+    data: TicketTypeUpdate,
+) -> TicketType:
+    updates = data.model_dump(
+        exclude_unset=True
+    )
+
+    if (
+        "total_quantity" in updates
+        and updates["total_quantity"]
+        < ticket_type.sold_quantity
+    ):
+        raise AppError(
+            "Total quantity cannot be less than tickets already sold",
+            status_code=400,
+        )
+
     for field, value in updates.items():
-        setattr(ticket_type, field, value)
+        setattr(
+            ticket_type,
+            field,
+            value,
+        )
+
     session.add(ticket_type)
     session.commit()
     session.refresh(ticket_type)
+
     return ticket_type

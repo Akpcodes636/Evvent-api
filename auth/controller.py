@@ -5,12 +5,12 @@ from auth.dependencies import get_current_user, require_roles
 from auth.schema import (
     AdminRegisterRequest, BankDetailsRequest, ChangePasswordRequest,
     ForgotPasswordRequest, ForgotPasswordResponse, LoginRequest, LoginResponse,
-    MessageResponse, RefreshTokenRequest, RegisterRequest, ResetPasswordRequest, SwitchRoleRequest,
+    MessageResponse, RefreshTokenRequest, RegisterRequest, ResetPasswordRequest,
     UpdatePreferencesRequest, UpdateProfileRequest, UserResponse,
 )
 from auth.services import (
     authenticate_user, bootstrap_admin, change_password, create_refresh_token, create_reset_token,
-    refresh_access_token, register_user, reset_password, revoke_refresh_token, switch_user_role,
+    refresh_access_token, register_user, reset_password, revoke_refresh_token,
     update_bank_details, update_profile,
 )
 from core.config import settings
@@ -20,7 +20,7 @@ from event.schema import CategoryResponse
 from event.services import get_user_category_preferences, set_user_category_preferences
 from logger import logger
 from model.user import User, UserRole
-from utils.email import send_password_reset_email, send_welcome_email
+from utils.email import send_password_reset_email, send_password_reset_success_email, send_welcome_email
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -109,7 +109,9 @@ def update_current_user_password(
 @router.patch("/me/bank-details", response_model=UserResponse)
 def update_current_user_bank_details(
     data: BankDetailsRequest,
-    current_user: User = Depends(require_roles(UserRole.admin, UserRole.organizer)),
+   current_user: User = Depends(
+    require_roles(UserRole.admin, UserRole.host)
+),
     session: Session = Depends(get_session),
 ) -> UserResponse:
     user = update_bank_details(session, current_user, **data.model_dump())
@@ -139,9 +141,15 @@ def forgot_password(
 
 
 @router.patch("/reset-password", response_model=MessageResponse)
-def reset_password_endpoint(data: ResetPasswordRequest, session: Session = Depends(get_session)) -> MessageResponse:
-    reset_password(session, token=data.token, new_password=data.new_password)
+def reset_password_endpoint(
+    data: ResetPasswordRequest,
+    background_tasks: BackgroundTasks,
+    session: Session = Depends(get_session),
+) -> MessageResponse:
+    user = reset_password(session, token=data.token, new_password=data.new_password)
     logger.info("Password reset completed for token %s...", data.token[:8])
+    if user:
+        background_tasks.add_task(send_password_reset_success_email, user.email, user.first_name)
     return MessageResponse(message="Password reset successful")
 
 
@@ -165,16 +173,6 @@ def update_current_user_preferences(
     return [CategoryResponse.model_validate(c) for c in categories]
 
 
-@router.patch("/me/role", response_model=UserResponse)
-def switch_role(
-    data: SwitchRoleRequest,
-    current_user: User = Depends(get_current_user),
-    session: Session = Depends(get_session),
-) -> UserResponse:
-    user = switch_user_role(session, current_user, role=data.role)
-    logger.info("User %s switched role to %s", user.uuid, user.role)
-    return UserResponse.model_validate(user)
-
 
 @router.post("/refresh", response_model=LoginResponse)
 def refresh(data: RefreshTokenRequest, session: Session = Depends(get_session)) -> LoginResponse:
@@ -191,15 +189,15 @@ def protected_route(current_user: User = Depends(get_current_user)) -> MessageRe
     return MessageResponse(message=f"Hello, {current_user.first_name} | You accessed a protected route")
 
 
-@router.get("/organizer/dashboard", response_model=MessageResponse)
-def organizer_dashboard(_: User = Depends(require_roles(UserRole.organizer))) -> MessageResponse:
-    return MessageResponse(message="Organizer dashboard")
+@router.get("/host/dashboard", response_model=MessageResponse)
+def organizer_dashboard(_: User = Depends(require_roles(UserRole.host))) -> MessageResponse:
+    return MessageResponse(message="Host dashboard")
 
 
-@router.get("/organizer/test")
-def organizer_test(current_user: User = Depends(require_roles(UserRole.organizer, UserRole.admin))):
+@router.get("/host/test")
+def organizer_test(current_user: User = Depends(require_roles(UserRole.host, UserRole.admin))):
     return {
-        "message": "You have organizer permissions",
+        "message": "You have host permissions",
         "user": str(current_user.uuid),
         "role": current_user.role,
     }

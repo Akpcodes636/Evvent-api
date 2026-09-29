@@ -53,7 +53,7 @@ class PayoutListItem(BaseModel):
 
 
 class PayoutCreate(BaseModel):
-    organizer_id: UUID
+    host_id: UUID
     event_id: UUID | None = None
     amount: int = Field(gt=0)
 
@@ -62,7 +62,7 @@ class PayoutStatusUpdate(BaseModel):
     status: PayoutStatus
 
 
-class OrganizerListItem(BaseModel):
+class HostListItem(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     uuid: UUID
@@ -70,16 +70,14 @@ class OrganizerListItem(BaseModel):
     last_name: str
     email: str
     phone: str | None
-    organization: str | None
     created_at: datetime
 
 
-class OrganizerUpdate(BaseModel):
+class HostUpdate(BaseModel):
     first_name: str | None = Field(default=None, min_length=1, max_length=100)
     last_name: str | None = Field(default=None, min_length=1, max_length=100)
     email: str | None = None
     phone: str | None = Field(default=None, min_length=1, max_length=32)
-    organization: str | None = Field(default=None, max_length=200)
 
 
 class AdminEventListItem(BaseModel):

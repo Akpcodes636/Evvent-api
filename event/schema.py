@@ -19,9 +19,21 @@ class CategoryResponse(BaseModel):
 
 
 class TicketTypeCreate(BaseModel):
-    name: str = Field(default="General", max_length=100)
-    price: int = Field(ge=0)
-    total_quantity: int = Field(gt=0)
+    name: str = Field(
+        max_length=100,
+        examples=["VIP", "Regular", "Early Bird", "Free"],
+        description="Ticket tier name",
+    )
+    price: int = Field(
+        ge=0,
+        description="Price in the smallest currency unit (e.g. kobo). Set 0 for free tickets.",
+        examples=[500000, 100000, 0],
+    )
+    total_quantity: int = Field(
+        gt=0,
+        description="Total number of tickets available for this tier",
+        examples=[50, 200, 100],
+    )
 
 
 class TicketTypeUpdate(BaseModel):
@@ -61,9 +73,23 @@ class EventCreate(BaseModel):
     event_date: datetime
     duration: str = Field(min_length=1, max_length=100)
     event_type: EventType
-    video_url: str | None = Field(default=None, max_length=500)
+    video_url: str | None = Field(
+        default=None,
+        max_length=500,
+        description="Optional external video URL (use the /video upload endpoint to upload a file)",
+    )
     category_ids: list[UUID] = Field(default_factory=list)
-    ticket_types: list[TicketTypeCreate] = Field(min_length=1)
+    ticket_types: list[TicketTypeCreate] = Field(
+        min_length=1,
+        description="At least one ticket tier is required. Add multiple tiers (e.g. VIP, Regular, Free) each with their own name, price, and quantity.",
+        examples=[
+            [
+                {"name": "VIP", "price": 500000, "total_quantity": 50},
+                {"name": "Regular", "price": 150000, "total_quantity": 200},
+                {"name": "Early Bird", "price": 100000, "total_quantity": 100},
+            ]
+        ],
+    )
 
 
 class EventUpdate(BaseModel):

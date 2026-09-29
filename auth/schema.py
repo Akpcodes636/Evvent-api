@@ -4,9 +4,7 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, model_validator
 from model.user import UserRole
 
-SELF_REGISTERABLE_ROLES = {UserRole.user, UserRole.organizer}
-
-SWITCHABLE_ROLES = {UserRole.user, UserRole.organizer}
+SELF_REGISTERABLE_ROLES = {UserRole.attendee, UserRole.host}
 
 
 class RegisterRequest(BaseModel):
@@ -33,21 +31,20 @@ class RegisterRequest(BaseModel):
         max_length=128,
         examples=["Password123!"]
     )
-    role: UserRole = Field(default=UserRole.user, examples=["user"])
+    role: UserRole = Field(default=UserRole.attendee, examples=["attendee"])
     organization: str | None = Field(default=None, max_length=200, examples=["Acme Events Co."])
     category_ids: list[UUID] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def _validate_role_and_organization(self):
         if self.role not in SELF_REGISTERABLE_ROLES:
-            raise ValueError("role must be either 'user' or 'organizer'")
-        if self.role == UserRole.organizer and not self.organization:
-            raise ValueError("organization is required when registering as an organizer")
+            raise ValueError("role must be either 'attendee' or 'host'")
         return self
 
 
 class AdminRegisterRequest(BaseModel):
     email: EmailStr
+
     first_name: str = Field(min_length=1, max_length=100)
     last_name: str = Field(min_length=1, max_length=100)
     phone: str = Field(min_length=1, max_length=32)
@@ -101,7 +98,7 @@ class UserResponse(BaseModel):
     first_name: str
     last_name: str
     phone: str | None = None
-    organization: str | None = None
+ 
     bank_name: str | None = None
     bank_account_number: str | None = None
     role: UserRole
@@ -129,16 +126,4 @@ class ForgotPasswordResponse(MessageResponse):
 
 class UpdatePreferencesRequest(BaseModel):
     category_ids: list[UUID] = Field(default_factory=list)
-
-
-class SwitchRoleRequest(BaseModel):
-    role: UserRole
-
-    @model_validator(mode="after")
-    def validate_switchable_role(self):
-        if self.role not in SWITCHABLE_ROLES:
-            raise ValueError(
-                "Users can only switch between user and organizer roles"
-            )
-        return self
 
