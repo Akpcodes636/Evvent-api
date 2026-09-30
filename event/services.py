@@ -216,7 +216,7 @@ def create_event(
     )
 
     event = Event(
-        host_id=host.uuid,
+        organizer_id=host.uuid,
         title=data.title,
         host_name=data.host_name,
         description=data.description,
@@ -316,7 +316,7 @@ def list_events(
 
     if host_id:
         query = query.where(
-            Event.host_id == host_id
+            Event.organizer_id == host_id
         )
 
     if category_id:

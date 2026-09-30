@@ -2965,3 +2965,252 @@ UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 720: invali
 2026-09-29 17:01:10,865 - INFO - event_ticketing - Application startup complete
 2026-09-29 17:02:01,672 - INFO - event_ticketing - POST /events/ -> 422 (5764.5ms)
 2026-09-29 17:02:19,465 - INFO - event_ticketing - Application shutdown
+2026-09-30 10:06:13,281 - INFO - event_ticketing - Application startup complete
+2026-09-30 10:07:23,772 - INFO - event_ticketing - GET /docs -> 200 (2.1ms)
+2026-09-30 10:07:27,654 - INFO - event_ticketing - GET /openapi.json -> 200 (1161.7ms)
+2026-09-30 10:20:49,054 - WARNING - event_ticketing - Failed login attempt for ewherheakpesiri+10@gmail.com
+2026-09-30 10:20:49,355 - INFO - event_ticketing - POST /auth/login -> 401 (7628.2ms)
+2026-09-30 10:22:02,392 - INFO - event_ticketing - POST /auth/register -> 404 (2009.1ms)
+2026-09-30 10:22:16,845 - INFO - event_ticketing - GET /categories/ -> 200 (1000.7ms)
+2026-09-30 10:22:52,747 - INFO - event_ticketing - Registered new UserRole.host 62ac1f8a-4f81-428e-9b9f-cfc9a967b2a6 (ewherheakpesiri+31@gmail.com)
+2026-09-30 10:22:52,751 - INFO - event_ticketing - POST /auth/register -> 201 (3532.0ms)
+2026-09-30 10:22:54,187 - INFO - event_ticketing - welcome email sent to ewherheakpesiri+31@gmail.com (MessageID: 576460792777508066)
+2026-09-30 10:24:00,741 - INFO - event_ticketing - User 62ac1f8a-4f81-428e-9b9f-cfc9a967b2a6 (ewherheakpesiri+31@gmail.com) logged in
+2026-09-30 10:24:00,742 - INFO - event_ticketing - POST /auth/login -> 200 (3191.9ms)
+2026-09-30 10:26:36,141 - INFO - event_ticketing - POST /events/ -> 400 (172.0ms)
+2026-09-30 10:31:43,824 - INFO - event_ticketing - POST /events/ -> 400 (45.3ms)
+2026-09-30 10:55:23,388 - INFO - event_ticketing - POST /events/ -> 422 (3812.4ms)
+2026-09-30 11:01:42,073 - INFO - event_ticketing - Application shutdown
+2026-09-30 11:01:49,853 - INFO - event_ticketing - Application startup complete
+2026-09-30 11:01:49,967 - INFO - event_ticketing - Application shutdown
+2026-09-30 11:35:19,130 - INFO - event_ticketing - Application startup complete
+2026-09-30 11:35:34,327 - ERROR - event_ticketing - Unexpected error on GET /docs: name 'time' is not defined
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/main.py", line 48, in log_requests
+    start = time.perf_counter()
+            ^^^^
+NameError: name 'time' is not defined. Did you forget to import 'time'?
+2026-09-30 11:35:34,513 - ERROR - event_ticketing - Unexpected error on GET /favicon.ico: name 'time' is not defined
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/main.py", line 48, in log_requests
+    start = time.perf_counter()
+            ^^^^
+NameError: name 'time' is not defined. Did you forget to import 'time'?
+2026-09-30 11:37:11,943 - INFO - event_ticketing - Application shutdown
+2026-09-30 11:38:25,244 - INFO - event_ticketing - Application startup complete
+2026-09-30 11:38:35,100 - ERROR - event_ticketing - Unexpected error on GET /docs: name 'time' is not defined
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/main.py", line 48, in log_requests
+    start = time.perf_counter()
+            ^^^^
+NameError: name 'time' is not defined. Did you forget to import 'time'?
+2026-09-30 11:38:35,178 - ERROR - event_ticketing - Unexpected error on GET /favicon.ico: name 'time' is not defined
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/main.py", line 48, in log_requests
+    start = time.perf_counter()
+            ^^^^
+NameError: name 'time' is not defined. Did you forget to import 'time'?
+2026-09-30 11:39:06,645 - INFO - event_ticketing - Application shutdown
+2026-09-30 11:39:09,825 - INFO - event_ticketing - Application startup complete
+2026-09-30 11:39:15,190 - INFO - event_ticketing - GET /docs -> 200 (0.8ms)
+2026-09-30 11:39:17,155 - INFO - event_ticketing - GET /openapi.json -> 200 (894.3ms)
+2026-09-30 11:42:16,164 - INFO - event_ticketing - GET /categories/ -> 200 (6260.9ms)
+2026-09-30 11:42:49,856 - INFO - event_ticketing - Registered new UserRole.host 4ce1c6c0-287c-4c2c-958e-0ad2dc9f410a (ewherheakpesiri+13@gmail.com)
+2026-09-30 11:42:49,860 - INFO - event_ticketing - POST /auth/register -> 201 (3102.5ms)
+2026-09-30 11:42:50,585 - INFO - event_ticketing - welcome email sent to ewherheakpesiri+13@gmail.com (MessageID: 576460792780528880)
+2026-09-30 11:43:36,052 - INFO - event_ticketing - POST /auth/login -> 422 (3.3ms)
+2026-09-30 11:43:49,880 - INFO - event_ticketing - User 4ce1c6c0-287c-4c2c-958e-0ad2dc9f410a (ewherheakpesiri+13@gmail.com) logged in
+2026-09-30 11:43:49,883 - INFO - event_ticketing - POST /auth/login -> 200 (2357.0ms)
+2026-09-30 11:46:11,144 - INFO - event_ticketing - POST /events/ -> 401 (15.3ms)
+2026-09-30 11:46:40,363 - INFO - event_ticketing - POST /events/ -> 422 (1152.1ms)
+2026-09-30 11:52:30,418 - INFO - event_ticketing - POST /events/ -> 422 (3110.3ms)
+2026-09-30 11:53:04,057 - INFO - event_ticketing - POST /events/ -> 422 (1092.1ms)
+2026-09-30 11:55:55,684 - INFO - event_ticketing - POST /events/ -> 422 (1168.2ms)
+2026-09-30 11:57:14,885 - INFO - event_ticketing - POST /events/ -> 422 (1214.2ms)
+2026-09-30 12:02:45,526 - ERROR - event_ticketing - Database error on POST /events/: (psycopg2.errors.NotNullViolation) null value in column "organizer_id" of relation "events" violates not-null constraint
+DETAIL:  Failing row contains (9e26e906-e598-480c-b744-f81f266df0fc, null, Lagos Tech & Innovation Meetup 2026, Akpesiri Ewherhe, A community meetup for developers, designers, founders, and tech..., Lagos, Nigeria, 2026-10-17 12:00:00, 4 hours, paid, draft, f, null, 2026-09-30 11:02:44.993494, 2026-09-30 11:02:44.994115).
+
+[SQL: INSERT INTO events (uuid, organizer_id, title, host_name, description, location, event_date, duration, event_type, status, featured, video_url, created_at, updated_at) VALUES (%(uuid)s::UUID, %(organizer_id)s::UUID, %(title)s, %(host_name)s, %(description)s, %(location)s, %(event_date)s, %(duration)s, %(event_type)s, %(status)s, %(featured)s, %(video_url)s, %(created_at)s, %(updated_at)s)]
+[parameters: {'uuid': UUID('9e26e906-e598-480c-b744-f81f266df0fc'), 'organizer_id': None, 'title': 'Lagos Tech & Innovation Meetup 2026', 'host_name': 'Akpesiri Ewherhe', 'description': 'A community meetup for developers, designers, founders, and technology enthusiasts to connect, learn, and discuss the future of technology in Nigeria.', 'location': 'Lagos, Nigeria', 'event_date': datetime.datetime(2026, 10, 17, 12, 0, tzinfo=TzInfo(0)), 'duration': '4 hours', 'event_type': 'paid', 'status': 'draft', 'featured': False, 'video_url': None, 'created_at': datetime.datetime(2026, 9, 30, 11, 2, 44, 993494), 'updated_at': datetime.datetime(2026, 9, 30, 11, 2, 44, 994115)}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.NotNullViolation: null value in column "organizer_id" of relation "events" violates not-null constraint
+DETAIL:  Failing row contains (9e26e906-e598-480c-b744-f81f266df0fc, null, Lagos Tech & Innovation Meetup 2026, Akpesiri Ewherhe, A community meetup for developers, designers, founders, and tech..., Lagos, Nigeria, 2026-10-17 12:00:00, 4 hours, paid, draft, f, null, 2026-09-30 11:02:44.993494, 2026-09-30 11:02:44.994115).
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 352, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/event/controller.py", line 132, in create_event_endpoint
+    event = create_event(
+        session,
+        host=current_user,
+        data=event_data,
+    )
+  File "/Users/ewherheakpesir/Documents/Evvent-api/event/services.py", line 231, in create_event
+    session.flush()
+    ~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 4353, in flush
+    self._flush(objects)
+    ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 4488, in _flush
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/util/langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 4449, in _flush
+    flush_context.execute()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/orm/unitofwork.py", line 465, in execute
+    rec.execute(self)
+    ~~~~~~~~~~~^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/orm/unitofwork.py", line 641, in execute
+    util.preloaded.orm_persistence.save_obj(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.mapper,
+        ^^^^^^^^^^^^
+        uow.states_for_mapper_hierarchy(self.mapper, False, False),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        uow,
+        ^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/orm/persistence.py", line 94, in save_obj
+    _emit_insert_statements(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        base_mapper,
+        ^^^^^^^^^^^^
+    ...<3 lines>...
+        insert,
+        ^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/orm/persistence.py", line 1049, in _emit_insert_statements
+    result = connection.execute(
+        statement, multiparams, execution_options=execution_options
+    )
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1421, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/sql/elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1643, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 2365, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.IntegrityError: (psycopg2.errors.NotNullViolation) null value in column "organizer_id" of relation "events" violates not-null constraint
+DETAIL:  Failing row contains (9e26e906-e598-480c-b744-f81f266df0fc, null, Lagos Tech & Innovation Meetup 2026, Akpesiri Ewherhe, A community meetup for developers, designers, founders, and tech..., Lagos, Nigeria, 2026-10-17 12:00:00, 4 hours, paid, draft, f, null, 2026-09-30 11:02:44.993494, 2026-09-30 11:02:44.994115).
+
+[SQL: INSERT INTO events (uuid, organizer_id, title, host_name, description, location, event_date, duration, event_type, status, featured, video_url, created_at, updated_at) VALUES (%(uuid)s::UUID, %(organizer_id)s::UUID, %(title)s, %(host_name)s, %(description)s, %(location)s, %(event_date)s, %(duration)s, %(event_type)s, %(status)s, %(featured)s, %(video_url)s, %(created_at)s, %(updated_at)s)]
+[parameters: {'uuid': UUID('9e26e906-e598-480c-b744-f81f266df0fc'), 'organizer_id': None, 'title': 'Lagos Tech & Innovation Meetup 2026', 'host_name': 'Akpesiri Ewherhe', 'description': 'A community meetup for developers, designers, founders, and technology enthusiasts to connect, learn, and discuss the future of technology in Nigeria.', 'location': 'Lagos, Nigeria', 'event_date': datetime.datetime(2026, 10, 17, 12, 0, tzinfo=TzInfo(0)), 'duration': '4 hours', 'event_type': 'paid', 'status': 'draft', 'featured': False, 'video_url': None, 'created_at': datetime.datetime(2026, 9, 30, 11, 2, 44, 993494), 'updated_at': datetime.datetime(2026, 9, 30, 11, 2, 44, 994115)}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-09-30 12:02:45,593 - INFO - event_ticketing - POST /events/ -> 500 (3851.9ms)
+2026-09-30 12:13:34,344 - INFO - event_ticketing - Application shutdown
+2026-09-30 12:13:42,438 - INFO - event_ticketing - Application startup complete
+2026-09-30 12:13:42,546 - INFO - event_ticketing - Application shutdown
+2026-09-30 12:13:50,849 - INFO - event_ticketing - Application startup complete
+2026-09-30 12:13:50,954 - INFO - event_ticketing - Application shutdown
+2026-09-30 12:13:54,375 - INFO - event_ticketing - Application startup complete
+2026-09-30 12:23:00,128 - INFO - event_ticketing - Host 4ce1c6c0-287c-4c2c-958e-0ad2dc9f410a created event bef71dc0-95e2-4b83-b5a2-6e7285bf9716
+2026-09-30 12:23:01,108 - INFO - event_ticketing - POST /events/ -> 201 (12191.5ms)
+2026-09-30 12:37:27,523 - INFO - event_ticketing - Host 4ce1c6c0-287c-4c2c-958e-0ad2dc9f410a created event 53dd7316-dd7b-4972-b11f-db318083ea21
+2026-09-30 12:37:28,223 - INFO - event_ticketing - POST /events/ -> 201 (9903.1ms)
+2026-09-30 12:41:01,490 - INFO - event_ticketing - Host 4ce1c6c0-287c-4c2c-958e-0ad2dc9f410a created event ff31481b-eb22-4c3f-be2b-2b1bc1eba282
+2026-09-30 12:41:02,413 - INFO - event_ticketing - POST /events/ -> 201 (6650.9ms)
+2026-09-30 12:46:18,888 - INFO - event_ticketing - GET /events/ -> 200 (942.8ms)
+2026-09-30 12:47:58,565 - INFO - event_ticketing - GET /events/ -> 200 (688.4ms)
+2026-09-30 12:48:20,662 - INFO - event_ticketing - GET /events/ -> 200 (691.5ms)
+2026-09-30 12:48:24,234 - INFO - event_ticketing - GET /events/ -> 200 (726.4ms)
+2026-09-30 12:50:32,338 - INFO - event_ticketing - GET /events/ -> 200 (876.8ms)
+2026-09-30 12:50:55,993 - INFO - event_ticketing - GET /events/ -> 200 (799.5ms)
+2026-09-30 12:52:36,346 - INFO - event_ticketing - GET /events/ -> 200 (960.5ms)
+2026-09-30 12:53:15,668 - INFO - event_ticketing - GET /events/ -> 200 (913.3ms)
+2026-09-30 12:55:52,395 - INFO - event_ticketing - Application shutdown
+2026-09-30 12:56:01,225 - INFO - event_ticketing - Application startup complete
+2026-09-30 12:56:01,329 - INFO - event_ticketing - Application shutdown
+2026-09-30 12:56:06,449 - INFO - event_ticketing - Application startup complete
+2026-09-30 12:56:31,255 - INFO - event_ticketing - Application shutdown
+2026-09-30 12:56:37,794 - INFO - event_ticketing - Application startup complete
+2026-09-30 12:57:07,800 - INFO - event_ticketing - GET /events/ -> 200 (5472.1ms)
+2026-09-30 12:57:21,248 - INFO - event_ticketing - GET /events/ -> 200 (863.8ms)
+2026-09-30 12:58:34,731 - INFO - event_ticketing - Application shutdown
