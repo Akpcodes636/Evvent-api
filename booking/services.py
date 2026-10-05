@@ -6,7 +6,7 @@ from sqlmodel import Session, select
 from core.exceptions import AppError
 from model.booking import Order, OrderStatus, Payment, PaymentStatus
 from model.event import Event, EventStatus, TicketType
-from model.user import User, UserRole
+from model.user import AccountType, User
 
 
 def _get_event_and_ticket_type(session: Session, event_id: UUID, ticket_type_id: UUID) -> tuple[Event, TicketType]:
@@ -63,9 +63,9 @@ def get_booking(session: Session, user: User, order_id: UUID) -> Order:
     order = session.get(Order, order_id)
     if not order:
         raise AppError("Booking not found", status_code=404)
-    if user.role == UserRole.user and order.user_id != user.uuid:
-        raise AppError("You do not have permission to view this booking", status_code=403)
-    if user.role == UserRole.host and order.user_id != user.uuid and order.event.organizer_id != user.uuid:
+    if user.account_type == AccountType.admin:
+        return order
+    if order.user_id != user.uuid and order.event.organizer_id != user.uuid:
         raise AppError("You do not have permission to view this booking", status_code=403)
     return order
 

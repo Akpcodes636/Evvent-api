@@ -8,7 +8,7 @@ from admin.schema import DashboardStats, FinanceStats, OrderStats
 from core.exceptions import AppError
 from model.booking import Order, OrderStatus, Payout, PayoutStatus
 from model.event import Event, EventStatus, TicketType
-from model.user import User, UserRole
+from model.user import AccountType, User
 
 
 def _scoped_event_ids(
@@ -21,12 +21,12 @@ def _scoped_event_ids(
     - Admins have unrestricted access and return None.
     - Hosts only have access to events they own.
     """
-    if user.role == UserRole.admin:
+    if user.account_type == AccountType.admin:
         return None
 
     return list(
         session.exec(
-            select(Event.uuid).where(Event.host_id == user.uuid)
+            select(Event.uuid).where(Event.organizer_id == user.uuid)
         ).all()
     )
 
@@ -63,7 +63,7 @@ def get_dashboard_stats(
 
     if event_ids is not None:
         event_query = event_query.where(
-            Event.host_id == user.uuid
+            Event.organizer_id == user.uuid
         )
 
     events = session.exec(event_query).all()
@@ -220,7 +220,7 @@ def get_finance_stats(
         Payout.status == PayoutStatus.paid
     )
 
-    if user.role != UserRole.admin:
+    if user.account_type != AccountType.admin:
         payout_query = payout_query.where(
             Payout.host_id == user.uuid
         )
@@ -249,7 +249,7 @@ def list_payouts(
     """List payouts visible to the current user."""
     query = select(Payout)
 
-    if user.role != UserRole.admin:
+    if user.account_type != AccountType.admin:
         query = query.where(
             Payout.host_id == user.uuid
         )
@@ -271,7 +271,7 @@ def create_payout(
     """Create a payout for a host."""
     host = session.get(User, host_id)
 
-    if not host or host.role != UserRole.host:
+    if not host or host.account_type == AccountType.admin:
         raise AppError(
             "Host not found",
             status_code=404,
@@ -322,11 +322,11 @@ def update_payout_status(
 
 
 def list_hosts(session: Session) -> list[User]:
-    """Return all registered hosts."""
+    """Return all individual and organization accounts (non-admin users)."""
     return list(
         session.exec(
             select(User).where(
-                User.role == UserRole.host
+                User.account_type.in_([AccountType.individual, AccountType.organization])
             )
         ).all()
     )
@@ -336,10 +336,10 @@ def get_host(
     session: Session,
     host_id: UUID,
 ) -> User:
-    """Return a host by ID."""
+    """Return an individual or organization account by ID."""
     host = session.get(User, host_id)
 
-    if not host or host.role != UserRole.host:
+    if not host or host.account_type == AccountType.admin:
         raise AppError(
             "Host not found",
             status_code=404,

@@ -5,6 +5,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from model.booking import OrderStatus, PayoutStatus
 from model.event import EventStatus
+from model.user import AccountType
 
 
 class DashboardStats(BaseModel):
@@ -70,6 +71,8 @@ class HostListItem(BaseModel):
     last_name: str
     email: str
     phone: str | None
+    account_type: AccountType
+    organization: str | None
     created_at: datetime
 
 
@@ -78,6 +81,7 @@ class HostUpdate(BaseModel):
     last_name: str | None = Field(default=None, min_length=1, max_length=100)
     email: str | None = None
     phone: str | None = Field(default=None, min_length=1, max_length=32)
+    organization: str | None = Field(default=None, max_length=200)
 
 
 class AdminEventListItem(BaseModel):

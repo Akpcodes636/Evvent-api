@@ -17,31 +17,30 @@ from model.event import (
     TicketType,
     UserCategoryPreference,
 )
-from model.user import User, UserRole
+from model.user import AccountType, User
 
 
 def ensure_event_access(event: Event, user: User) -> None:
     """
     Ensure the user is allowed to manage the event.
 
-    Platform admins can manage any event.
-    Hosts can only manage events they own.
-    Attendees cannot manage events.
+    Admins can manage any event.
+    Individual and organization accounts can manage their own events (including publishing).
+    All other users are denied.
     """
-    if user.role == UserRole.admin:
+    if user.account_type == AccountType.admin:
         return
 
-    if user.role != UserRole.host:
-        raise AppError(
-            "You do not have permission to manage this event",
-            status_code=403,
-        )
+    if (
+        user.account_type in (AccountType.individual, AccountType.organization)
+        and event.organizer_id == user.uuid
+    ):
+        return
 
-    if event.host_id != user.uuid:
-        raise AppError(
-            "You do not have permission to manage this event",
-            status_code=403,
-        )
+    raise AppError(
+        "You do not have permission to manage this event",
+        status_code=403,
+    )
 
 
 def create_category(
@@ -271,7 +270,6 @@ def get_event(
 
     return event
 
-
 def list_events(
     session: Session,
     *,
@@ -283,20 +281,17 @@ def list_events(
     featured: bool | None = None,
     host_id: UUID | None = None,
 ) -> list[Event]:
+
     query = select(Event)
 
     if location:
         query = query.where(
-            Event.location.ilike(
-                f"%{location}%"
-            )
+            Event.location.ilike(f"%{location}%")
         )
 
     if search:
         query = query.where(
-            Event.title.ilike(
-                f"%{search}%"
-            )
+            Event.title.ilike(f"%{search}%")
         )
 
     if event_type:
@@ -331,14 +326,21 @@ def list_events(
             )
         )
 
-    query = query.order_by(
-        Event.event_date
-    )
+    query = query.order_by(Event.event_date)
 
-    return list(
-        session.exec(query).all()
-    )
+    events = session.exec(query).all()
 
+    print("EVENTS FOUND:", len(events))
+
+    for event in events:
+        print(
+            event.uuid,
+            event.title,
+            event.status,
+            event.event_type,
+        )
+
+    return list(events)
 
 def update_event(
     session: Session,
@@ -429,6 +431,22 @@ def feature_event(
     featured: bool,
 ) -> Event:
     event.featured = featured
+
+    session.add(event)
+    session.commit()
+    session.refresh(event)
+
+    return event
+
+
+def publish_event(
+    session: Session,
+    event: Event,
+) -> Event:
+    if event.status == EventStatus.published:
+        return event
+
+    event.status = EventStatus.published
 
     session.add(event)
     session.commit()

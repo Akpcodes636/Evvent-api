@@ -2,49 +2,40 @@ from datetime import datetime
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, model_validator
-from model.user import UserRole
+from model.user import AccountType
 
-SELF_REGISTERABLE_ROLES = {UserRole.attendee, UserRole.host}
+SELF_REGISTERABLE_TYPES = {AccountType.individual, AccountType.organization}
 
 
 class RegisterRequest(BaseModel):
-    email: EmailStr = Field(
-        examples=["john@example.com"]
+    email: EmailStr = Field(examples=["john@example.com"])
+    first_name: str = Field(min_length=1, max_length=100, examples=["John"])
+    last_name: str = Field(min_length=1, max_length=100, examples=["Doe"])
+    phone: str = Field(min_length=1, max_length=32, examples=["+2348012345678"])
+    password: str = Field(min_length=8, max_length=128, examples=["Password123!"])
+    account_type: AccountType = Field(
+        description="Choose 'individual' for a personal account or 'organization' for a registered business account.",
+        examples=["individual"],
     )
-    first_name: str = Field(
-        min_length=1,
-        max_length=100,
-        examples=["John"]
+    organization: str | None = Field(
+        default=None,
+        max_length=200,
+        description="Business name. Required when account_type is 'organization'.",
+        examples=["Acme Events Co."],
     )
-    last_name: str = Field(
-        min_length=1,
-        max_length=100,
-        examples=["Doe"]
-    )
-    phone: str = Field(
-        min_length=1,
-        max_length=32,
-        examples=["+2348012345678"]
-    )
-    password: str = Field(
-        min_length=8,
-        max_length=128,
-        examples=["Password123!"]
-    )
-    role: UserRole = Field(default=UserRole.attendee, examples=["attendee"])
-    organization: str | None = Field(default=None, max_length=200, examples=["Acme Events Co."])
     category_ids: list[UUID] = Field(default_factory=list)
 
     @model_validator(mode="after")
-    def _validate_role_and_organization(self):
-        if self.role not in SELF_REGISTERABLE_ROLES:
-            raise ValueError("role must be either 'attendee' or 'host'")
+    def _validate(self):
+        if self.account_type not in SELF_REGISTERABLE_TYPES:
+            raise ValueError("account_type must be 'individual' or 'organization'")
+        if self.account_type == AccountType.organization and not self.organization:
+            raise ValueError("organization (business name) is required for organization accounts")
         return self
 
 
 class AdminRegisterRequest(BaseModel):
     email: EmailStr
-
     first_name: str = Field(min_length=1, max_length=100)
     last_name: str = Field(min_length=1, max_length=100)
     phone: str = Field(min_length=1, max_length=32)
@@ -98,10 +89,10 @@ class UserResponse(BaseModel):
     first_name: str
     last_name: str
     phone: str | None = None
- 
+    account_type: AccountType
+    organization: str | None = None
     bank_name: str | None = None
     bank_account_number: str | None = None
-    role: UserRole
     created_at: datetime
 
 
@@ -126,4 +117,3 @@ class ForgotPasswordResponse(MessageResponse):
 
 class UpdatePreferencesRequest(BaseModel):
     category_ids: list[UUID] = Field(default_factory=list)
-

@@ -1,3 +1,3 @@
-from model.user import PasswordResetToken, RefreshToken, User, UserRole
+from model.user import AccountType, PasswordResetToken, RefreshToken, User
 
-__all__ = ["PasswordResetToken", "RefreshToken", "User", "UserRole"]
+__all__ = ["AccountType", "PasswordResetToken", "RefreshToken", "User"]

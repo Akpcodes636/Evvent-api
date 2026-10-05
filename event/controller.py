@@ -12,6 +12,7 @@ from event.schema import (
     CategoryResponse,
     EventCreate,
     EventImageResponse,
+    EventImageUrlsRequest,
     EventListItem,
     EventResponse,
     EventUpdate,
@@ -31,12 +32,13 @@ from event.services import (
     list_categories,
     list_events,
     list_events_for_user,
+    publish_event,
     update_event,
     update_ticket_type,
 )
 from logger import logger
 from model.event import EventStatus, EventType
-from model.user import User, UserRole
+from model.user import AccountType, User
 from utils.uploads import (
     IMAGE_CONTENT_TYPES,
     VIDEO_CONTENT_TYPES,
@@ -85,8 +87,9 @@ def add_category(
     session: Session = Depends(get_session),
     _: User = Depends(
         require_roles(
-            UserRole.admin,
-            UserRole.host,
+            AccountType.admin,
+            AccountType.individual,
+            AccountType.organization,
         )
     ),
 ) -> CategoryResponse:
@@ -115,8 +118,9 @@ async def create_event_endpoint(
     session: Session = Depends(get_session),
     current_user: User = Depends(
         require_roles(
-            UserRole.admin,
-            UserRole.host,
+            AccountType.admin,
+            AccountType.individual,
+            AccountType.organization,
         )
     ),
 ) -> EventResponse:
@@ -189,13 +193,21 @@ def list_events_endpoint(
         EventListItem(
             uuid=event.uuid,
             title=event.title,
+            description=event.description,
+            location=event.location,
             event_date=event.event_date,
+            duration=event.duration,
+            event_type=event.event_type,
             status=event.status,
+            featured=event.featured,
             tickets_sold=sum(
                 ticket.sold_quantity
                 for ticket in event.ticket_types
             ),
-            featured=event.featured,
+            images=[
+                EventImageResponse.model_validate(img)
+                for img in event.images
+            ],
         )
         for event in events
     ]
@@ -219,13 +231,21 @@ def list_recommended_events_endpoint(
         EventListItem(
             uuid=event.uuid,
             title=event.title,
+            description=event.description,
+            location=event.location,
             event_date=event.event_date,
+            duration=event.duration,
+            event_type=event.event_type,
             status=event.status,
+            featured=event.featured,
             tickets_sold=sum(
                 ticket.sold_quantity
                 for ticket in event.ticket_types
             ),
-            featured=event.featured,
+            images=[
+                EventImageResponse.model_validate(img)
+                for img in event.images
+            ],
         )
         for event in events
     ]
@@ -284,6 +304,26 @@ def update_event_endpoint(
     return EventResponse.model_validate(event)
 
 
+@router.post(
+    "/{event_id}/publish",
+    response_model=EventResponse,
+)
+def publish_event_endpoint(
+    event_id: UUID,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+) -> EventResponse:
+    """Make an event live so it appears in the public listing."""
+
+    event = get_event(session, event_id)
+    ensure_event_access(event, current_user)
+    event = publish_event(session, event)
+
+    logger.info("User %s published event %s", current_user.uuid, event.uuid)
+
+    return EventResponse.model_validate(event)
+
+
 @router.delete(
     "/{event_id}",
     status_code=status.HTTP_204_NO_CONTENT,
@@ -328,14 +368,17 @@ def feature_event_endpoint(
     event_id: UUID,
     data: FeatureEventRequest,
     session: Session = Depends(get_session),
-    current_user: User = Depends(
-        require_roles(UserRole.admin)
-    ),
+    current_user: User = Depends(get_current_user),
 ) -> EventResponse:
 
     event = get_event(
         session,
         event_id,
+    )
+
+    ensure_event_access(
+        event,
+        current_user,
     )
 
     event = feature_event(
@@ -345,7 +388,7 @@ def feature_event_endpoint(
     )
 
     logger.info(
-        "Admin %s set event %s featured=%s",
+        "User %s set event %s featured=%s",
         current_user.uuid,
         event.uuid,
         data.featured,
@@ -365,7 +408,7 @@ def feature_event_endpoint(
 )
 async def upload_event_images(
     event_id: UUID,
-    files: list[UploadFile] = File(...),
+    files: Annotated[list[UploadFile], File(description="One or more image files to upload")],
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
 ) -> list[EventImageResponse]:
@@ -406,6 +449,35 @@ async def upload_event_images(
         EventImageResponse.model_validate(image)
         for image in images
     ]
+
+
+@router.post(
+    "/{event_id}/images/urls",
+    response_model=list[EventImageResponse],
+    status_code=status.HTTP_201_CREATED,
+)
+def add_event_image_urls(
+    event_id: UUID,
+    data: EventImageUrlsRequest,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+) -> list[EventImageResponse]:
+    """Attach images to an event by URL instead of file upload."""
+
+    event = get_event(session, event_id)
+
+    ensure_event_access(event, current_user)
+
+    images = add_event_images(session, event, data.urls)
+
+    logger.info(
+        "User %s added %d image URL(s) to event %s",
+        current_user.uuid,
+        len(images),
+        event_id,
+    )
+
+    return [EventImageResponse.model_validate(image) for image in images]
 
 
 @router.delete(

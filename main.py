@@ -104,11 +104,21 @@ async def validation_exception_handler(
     """
     safe_errors = []
     for error in exc.errors():
-        entry = {k: v for k, v in error.items() if k != "input"}
+        entry = {k: v for k, v in error.items() if k not in ("input", "ctx")}
+
+        # Only include input if it's safely serialisable
         raw = error.get("input")
-        # Only include the input value if it's safely serialisable
         if isinstance(raw, (str, int, float, bool, type(None), list, dict)):
             entry["input"] = raw
+
+        # ctx can contain Exception objects (e.g. ValueError) — stringify them
+        ctx = error.get("ctx")
+        if ctx:
+            entry["ctx"] = {
+                k: str(v) if not isinstance(v, (str, int, float, bool, type(None))) else v
+                for k, v in ctx.items()
+            }
+
         safe_errors.append(entry)
 
     return JSONResponse(

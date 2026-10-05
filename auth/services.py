@@ -11,7 +11,7 @@ from core.config import settings
 from core.security import create_access_token
 from event.services import set_user_category_preferences
 from logger import logger
-from model.user import PasswordResetToken, RefreshToken, User, UserRole
+from model.user import AccountType, PasswordResetToken, RefreshToken, User
 
 
 def _hash_password(password: str, salt: bytes | None = None) -> str:
@@ -49,7 +49,7 @@ def register_user(
     last_name: str,
     phone: str,
     password: str,
-    role: UserRole = UserRole.attendee,
+    account_type: AccountType = AccountType.individual,
     organization: str | None = None,
     category_ids: list[UUID] | None = None,
 ) -> User:
@@ -76,7 +76,7 @@ def register_user(
         first_name=first_name,
         last_name=last_name,
         phone=phone,
-        role=role,
+        account_type=account_type,
         organization=organization,
         password_hash=_hash_password(password),
     )
@@ -112,7 +112,7 @@ def bootstrap_admin(
     """
 
     existing_admin = session.exec(
-        select(User).where(User.role == UserRole.admin)
+        select(User).where(User.account_type == AccountType.admin)
     ).first()
 
     if existing_admin:
@@ -131,7 +131,7 @@ def bootstrap_admin(
         last_name=last_name,
         phone=phone,
         password=password,
-        role=UserRole.admin,
+        account_type=AccountType.admin,
     )
 
 

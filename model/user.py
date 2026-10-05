@@ -5,9 +5,10 @@ import uuid
 from sqlalchemy import Column, DateTime, Enum as SqlEnum, String
 from sqlmodel import Field, SQLModel
 
-class UserRole(str,Enum):
-    attendee = "attendee"
-    host = "host"
+
+class AccountType(str, Enum):
+    individual = "individual"
+    organization = "organization"
     admin = "admin"
 
 
@@ -18,9 +19,9 @@ class User(SQLModel, table=True):
     email: str = Field(sa_column=Column(String(320), unique=True, nullable=False, index=True))
     first_name: str = Field(max_length=100)
     last_name: str = Field(max_length=100)
-    role: UserRole = Field(
-        default=UserRole.attendee,
-        sa_column=Column(SqlEnum(UserRole, name="user_role_enum"), nullable=False, index=True),
+    account_type: AccountType = Field(
+        default=AccountType.individual,
+        sa_column=Column(SqlEnum(AccountType, name="account_type_enum"), nullable=False, index=True),
     )
     phone: str | None = Field(default=None, max_length=32)
     organization: str | None = Field(default=None, max_length=200)

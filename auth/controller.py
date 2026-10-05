@@ -19,7 +19,7 @@ from database.session import get_session
 from event.schema import CategoryResponse
 from event.services import get_user_category_preferences, set_user_category_preferences
 from logger import logger
-from model.user import User, UserRole
+from model.user import AccountType, User
 from utils.email import send_password_reset_email, send_password_reset_success_email, send_welcome_email
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -37,7 +37,7 @@ def register(
     session: Session = Depends(get_session),
 ) -> UserResponse:
     user = register_user(session, **data.model_dump())
-    logger.info("Registered new %s %s (%s)", user.role, user.uuid, user.email)
+    # logger.info("Registered new %s %s (%s)", user.role, user.uuid, user.email)
     background_tasks.add_task(send_welcome_email, user.email, user.first_name)
     return UserResponse.model_validate(user)
 
@@ -46,9 +46,9 @@ def register(
 def register_admin(
     data: AdminRegisterRequest,
     session: Session = Depends(get_session),
-    _: User = Depends(require_roles(UserRole.admin)),
+    _: User = Depends(require_roles(AccountType.admin)),
 ) -> UserResponse:
-    user = register_user(session, **data.model_dump(), role=UserRole.admin)
+    user = register_user(session, **data.model_dump(), account_type=AccountType.admin)
     logger.info("Registered new admin %s (%s)", user.uuid, user.email)
     return UserResponse.model_validate(user)
 
@@ -109,9 +109,9 @@ def update_current_user_password(
 @router.patch("/me/bank-details", response_model=UserResponse)
 def update_current_user_bank_details(
     data: BankDetailsRequest,
-   current_user: User = Depends(
-    require_roles(UserRole.admin, UserRole.host)
-),
+    current_user: User = Depends(
+        require_roles(AccountType.individual, AccountType.organization, AccountType.admin)
+    ),
     session: Session = Depends(get_session),
 ) -> UserResponse:
     user = update_bank_details(session, current_user, **data.model_dump())
@@ -190,14 +190,20 @@ def protected_route(current_user: User = Depends(get_current_user)) -> MessageRe
 
 
 @router.get("/host/dashboard", response_model=MessageResponse)
-def organizer_dashboard(_: User = Depends(require_roles(UserRole.host))) -> MessageResponse:
+def organizer_dashboard(
+    _: User = Depends(require_roles(AccountType.individual, AccountType.organization)),
+) -> MessageResponse:
     return MessageResponse(message="Host dashboard")
 
 
 @router.get("/host/test")
-def organizer_test(current_user: User = Depends(require_roles(UserRole.host, UserRole.admin))):
+def organizer_test(
+    current_user: User = Depends(
+        require_roles(AccountType.individual, AccountType.organization, AccountType.admin)
+    ),
+):
     return {
         "message": "You have host permissions",
         "user": str(current_user.uuid),
-        "role": current_user.role,
+        "account_type": current_user.account_type,
     }

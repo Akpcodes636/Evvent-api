@@ -105,6 +105,10 @@ class EventUpdate(BaseModel):
     category_ids: list[UUID] | None = None
 
 
+class EventImageUrlsRequest(BaseModel):
+    urls: list[str] = Field(min_length=1, description="One or more image URLs to attach to the event")
+
+
 class FeatureEventRequest(BaseModel):
     featured: bool
 
@@ -141,13 +145,18 @@ class EventResponse(BaseModel):
 
 
 class EventListItem(BaseModel):
-    """Row shape for the admin/organizer event management table."""
+    """Public event listing card — includes cover images and description."""
 
     model_config = ConfigDict(from_attributes=True)
 
     uuid: UUID
     title: str
+    description: str
+    location: str
     event_date: datetime
+    duration: str
+    event_type: EventType
     status: EventStatus
-    tickets_sold: int
     featured: bool
+    tickets_sold: int
+    images: list[EventImageResponse] = Field(default_factory=list)

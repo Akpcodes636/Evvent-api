@@ -3214,3 +3214,451 @@ DETAIL:  Failing row contains (9e26e906-e598-480c-b744-f81f266df0fc, null, Lagos
 2026-09-30 12:57:07,800 - INFO - event_ticketing - GET /events/ -> 200 (5472.1ms)
 2026-09-30 12:57:21,248 - INFO - event_ticketing - GET /events/ -> 200 (863.8ms)
 2026-09-30 12:58:34,731 - INFO - event_ticketing - Application shutdown
+2026-10-02 14:07:51,410 - INFO - event_ticketing - Application startup complete
+2026-10-02 14:08:15,582 - INFO - event_ticketing - GET / -> 200 (136.5ms)
+2026-10-02 14:08:15,744 - INFO - event_ticketing - GET /favicon.ico -> 404 (6.4ms)
+2026-10-02 14:08:22,820 - INFO - event_ticketing - GET /docs -> 200 (0.7ms)
+2026-10-02 14:08:23,792 - INFO - event_ticketing - GET /openapi.json -> 200 (361.4ms)
+2026-10-02 14:08:43,271 - INFO - event_ticketing - GET /auth/protected -> 401 (7.3ms)
+2026-10-02 14:08:47,662 - INFO - event_ticketing - GET /auth/protected -> 401 (2.6ms)
+2026-10-02 14:24:05,289 - INFO - event_ticketing - Application shutdown
+2026-10-02 14:24:19,580 - INFO - event_ticketing - Application startup complete
+2026-10-02 14:39:55,210 - INFO - event_ticketing - Application shutdown
+2026-10-02 14:40:01,918 - INFO - event_ticketing - Application startup complete
+2026-10-02 15:48:45,651 - INFO - event_ticketing - Application shutdown
+2026-10-02 15:48:55,816 - INFO - event_ticketing - Application startup complete
+2026-10-02 15:50:43,555 - INFO - event_ticketing - Application shutdown
+2026-10-02 15:50:55,214 - INFO - event_ticketing - Application startup complete
+2026-10-02 15:59:51,581 - INFO - event_ticketing - Application shutdown
+2026-10-02 16:30:42,694 - INFO - event_ticketing - Application startup complete
+2026-10-02 16:30:43,991 - INFO - event_ticketing - Application shutdown
+2026-10-02 16:30:55,004 - INFO - event_ticketing - Application startup complete
+2026-10-02 16:30:57,008 - INFO - event_ticketing - Application shutdown
+2026-10-02 16:31:06,092 - INFO - event_ticketing - Application startup complete
+2026-10-02 16:31:21,138 - INFO - event_ticketing - Application shutdown
+2026-10-02 16:31:31,313 - INFO - event_ticketing - Application startup complete
+2026-10-02 16:35:10,324 - INFO - event_ticketing - GET /docs -> 200 (9.7ms)
+2026-10-02 16:35:12,140 - INFO - event_ticketing - GET /openapi.json -> 200 (961.9ms)
+2026-10-02 16:36:23,706 - INFO - event_ticketing - POST /auth/register -> 404 (6959.2ms)
+2026-10-02 16:36:47,859 - INFO - event_ticketing - GET /categories/ -> 200 (950.7ms)
+2026-10-02 16:37:18,879 - ERROR - event_ticketing - Unexpected error on POST /auth/register: 'User' object has no attribute 'role'
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/main.py", line 49, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2641, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1033, in run
+    result = context.run(func, *args)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/auth/controller.py", line 40, in register
+    logger.info("Registered new %s %s (%s)", user.role, user.uuid, user.email)
+                                             ^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/pydantic/main.py", line 1042, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'User' object has no attribute 'role'
+2026-10-02 16:40:28,835 - WARNING - event_ticketing - Registration attempted for existing email ewherheakpesiri+32@gmail.com
+2026-10-02 16:40:29,147 - INFO - event_ticketing - POST /auth/register -> 409 (1214.1ms)
+2026-10-02 16:40:44,090 - ERROR - event_ticketing - Unexpected error on POST /auth/register: 'User' object has no attribute 'role'
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/main.py", line 49, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2641, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1033, in run
+    result = context.run(func, *args)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/auth/controller.py", line 40, in register
+    logger.info("Registered new %s %s (%s)", user.role, user.uuid, user.email)
+                                             ^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/pydantic/main.py", line 1042, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'User' object has no attribute 'role'
+2026-10-02 16:41:30,551 - INFO - event_ticketing - Application shutdown
+2026-10-02 16:41:37,540 - INFO - event_ticketing - Application startup complete
+2026-10-02 16:41:45,426 - WARNING - event_ticketing - Registration attempted for existing email ewherheakpesiri+51@gmail.com
+2026-10-02 16:41:45,635 - INFO - event_ticketing - POST /auth/register -> 409 (5311.6ms)
+2026-10-02 16:42:00,551 - INFO - event_ticketing - POST /auth/register -> 201 (3658.8ms)
+2026-10-02 16:42:01,609 - INFO - event_ticketing - welcome email sent to ewherheakpesiri+81@gmail.com (MessageID: 1152921545164741532)
+2026-10-02 16:56:45,202 - INFO - event_ticketing - User 17ec84a9-3b59-4ba7-a10a-810fccc8500f (ewherheakpesiri+81@gmail.com) logged in
+2026-10-02 16:56:45,207 - INFO - event_ticketing - POST /auth/login -> 200 (5830.8ms)
+2026-10-02 16:57:52,889 - INFO - event_ticketing - User 17ec84a9-3b59-4ba7-a10a-810fccc8500f (ewherheakpesiri+81@gmail.com) logged in
+2026-10-02 16:57:52,890 - INFO - event_ticketing - POST /auth/login -> 200 (2837.5ms)
+2026-10-02 16:58:43,577 - INFO - event_ticketing - GET /events/ -> 200 (1003.6ms)
+2026-10-02 17:02:11,142 - INFO - event_ticketing - POST /events/ -> 422 (1161.7ms)
+2026-10-02 17:03:26,200 - INFO - event_ticketing - POST /events/ -> 422 (1220.8ms)
+2026-10-02 17:04:15,545 - INFO - event_ticketing - Host 17ec84a9-3b59-4ba7-a10a-810fccc8500f created event 24f9467d-a868-41de-b9b0-1ca05bfc5b6d
+2026-10-02 17:04:16,468 - INFO - event_ticketing - POST /events/ -> 201 (6730.8ms)
+2026-10-02 17:05:36,960 - INFO - event_ticketing - GET /events/ -> 200 (844.6ms)
+2026-10-02 17:05:37,208 - INFO - event_ticketing - GET /favicon.ico -> 404 (99.5ms)
+2026-10-02 17:07:01,019 - INFO - event_ticketing - GET /events/ -> 200 (761.5ms)
+2026-10-02 17:10:25,875 - INFO - event_ticketing - Application shutdown
+2026-10-02 17:10:33,690 - INFO - event_ticketing - Application startup complete
+2026-10-02 17:10:46,421 - INFO - event_ticketing - Application shutdown
+2026-10-02 17:10:52,587 - INFO - event_ticketing - Application startup complete
+2026-10-02 17:11:21,013 - INFO - event_ticketing - Application shutdown
+2026-10-02 17:11:27,805 - INFO - event_ticketing - Application startup complete
+2026-10-05 08:50:51,136 - INFO - event_ticketing - Application startup complete
+2026-10-05 08:51:06,798 - INFO - event_ticketing - GET / -> 200 (113.3ms)
+2026-10-05 08:51:06,939 - INFO - event_ticketing - GET /favicon.ico -> 404 (8.3ms)
+2026-10-05 08:51:13,108 - INFO - event_ticketing - GET /docs -> 200 (0.8ms)
+2026-10-05 08:51:14,502 - INFO - event_ticketing - GET /openapi.json -> 200 (377.9ms)
+2026-10-05 08:57:16,642 - WARNING - event_ticketing - Failed login attempt for ewherheakpesiri+81@gmail.com
+2026-10-05 08:57:16,994 - INFO - event_ticketing - POST /auth/login -> 401 (9463.3ms)
+2026-10-05 08:58:26,535 - INFO - event_ticketing - GET /categories/ -> 200 (925.3ms)
+2026-10-05 09:00:09,762 - INFO - event_ticketing - POST /auth/register -> 422 (3.1ms)
+2026-10-05 09:00:16,475 - INFO - event_ticketing - POST /auth/register -> 422 (1.7ms)
+2026-10-05 09:00:25,160 - INFO - event_ticketing - POST /auth/register -> 422 (2.3ms)
+2026-10-05 09:03:04,152 - INFO - event_ticketing - POST /auth/register -> 422 (2.4ms)
+2026-10-05 09:08:36,559 - INFO - event_ticketing - POST /auth/register -> 422 (5.1ms)
+2026-10-05 09:09:15,170 - INFO - event_ticketing - POST /auth/register -> 422 (1.4ms)
+2026-10-05 09:10:56,272 - INFO - event_ticketing - POST /auth/register -> 201 (6399.2ms)
+2026-10-05 09:10:57,451 - INFO - event_ticketing - welcome email sent to ewherheakpesiri+82@gmail.com (MessageID: 576460792954171856)
+2026-10-05 09:11:53,201 - INFO - event_ticketing - User d16237b4-c2ba-40a6-862c-53d719df3316 (ewherheakpesiri+82@gmail.com) logged in
+2026-10-05 09:11:53,203 - INFO - event_ticketing - POST /auth/login -> 200 (2293.9ms)
+2026-10-05 09:20:21,731 - INFO - event_ticketing - POST /events/ -> 422 (3681.2ms)
+2026-10-05 09:30:16,184 - INFO - event_ticketing - Host d16237b4-c2ba-40a6-862c-53d719df3316 created event a119219a-8a3e-410e-abc9-2ec96f8010e6
+2026-10-05 09:30:17,109 - INFO - event_ticketing - POST /events/ -> 201 (11310.7ms)
+2026-10-05 09:31:19,670 - INFO - event_ticketing - GET /events/ -> 200 (1212.8ms)
+2026-10-05 09:32:54,497 - INFO - event_ticketing - GET /events/ -> 200 (900.6ms)
+2026-10-05 09:39:53,407 - INFO - event_ticketing - GET /events/ -> 200 (4039.9ms)
+2026-10-05 09:39:53,496 - INFO - event_ticketing - GET /favicon.ico -> 404 (2.6ms)
+2026-10-05 09:50:34,849 - INFO - event_ticketing - Application shutdown
+2026-10-05 09:50:41,409 - INFO - event_ticketing - Application startup complete
+2026-10-05 09:50:41,518 - INFO - event_ticketing - Application shutdown
+2026-10-05 09:50:44,079 - INFO - event_ticketing - Application startup complete
+2026-10-05 09:50:50,188 - INFO - event_ticketing - GET /events/ -> 200 (6092.9ms)
+2026-10-05 09:50:50,336 - INFO - event_ticketing - GET /favicon.ico -> 404 (85.5ms)
+2026-10-05 09:51:04,731 - INFO - event_ticketing - GET /events/ -> 200 (758.9ms)
+2026-10-05 09:51:04,801 - INFO - event_ticketing - GET /favicon.ico -> 404 (8.7ms)
+2026-10-05 09:51:13,172 - INFO - event_ticketing - GET /docs/ -> 404 (1.0ms)
+2026-10-05 09:51:13,226 - INFO - event_ticketing - GET /favicon.ico -> 404 (9.5ms)
+2026-10-05 09:51:23,217 - INFO - event_ticketing - Application shutdown
+2026-10-05 09:51:27,352 - INFO - event_ticketing - Application startup complete
+2026-10-05 09:51:38,373 - INFO - event_ticketing - GET / -> 200 (99.3ms)
+2026-10-05 09:51:38,467 - INFO - event_ticketing - GET /favicon.ico -> 404 (12.6ms)
+2026-10-05 09:51:45,159 - INFO - event_ticketing - GET /docs -> 200 (0.5ms)
+2026-10-05 09:51:45,928 - INFO - event_ticketing - GET /openapi.json -> 200 (355.6ms)
+2026-10-05 09:52:08,532 - INFO - event_ticketing - GET /events/ -> 200 (5171.8ms)
+2026-10-05 10:11:33,998 - INFO - event_ticketing - GET /events/ -> 200 (2778.4ms)
+2026-10-05 10:11:34,068 - INFO - event_ticketing - GET /favicon.ico -> 404 (5.2ms)
+2026-10-05 10:18:55,277 - INFO - event_ticketing - GET /docs -> 200 (0.8ms)
+2026-10-05 10:18:55,671 - INFO - event_ticketing - GET /openapi.json -> 200 (3.0ms)
+2026-10-05 10:19:46,724 - INFO - event_ticketing - POST /events/17ec84a9-3b59-4ba7-a10a-810fccc8500f/publish -> 401 (7.4ms)
+2026-10-05 10:19:55,073 - INFO - event_ticketing - POST /events/17ec84a9-3b59-4ba7-a10a-810fccc8500f/publish -> 401 (6.1ms)
+2026-10-05 10:20:07,616 - INFO - event_ticketing - POST /events/17ec84a9-3b59-4ba7-a10a-810fccc8500f/publish -> 401 (2.5ms)
+2026-10-05 10:22:26,311 - INFO - event_ticketing - POST /events/40585c54-291a-48bf-959e-e219cf8e8ac2/publish -> 401 (2.8ms)
+2026-10-05 10:22:27,626 - INFO - event_ticketing - POST /events/40585c54-291a-48bf-959e-e219cf8e8ac2/publish -> 401 (2.8ms)
+2026-10-05 10:28:13,402 - INFO - event_ticketing - POST /auth/login -> 422 (4.3ms)
+2026-10-05 10:28:29,415 - INFO - event_ticketing - User d16237b4-c2ba-40a6-862c-53d719df3316 (ewherheakpesiri+82@gmail.com) logged in
+2026-10-05 10:28:29,417 - INFO - event_ticketing - POST /auth/login -> 200 (5312.9ms)
+2026-10-05 10:29:05,666 - INFO - event_ticketing - POST /events/40585c54-291a-48bf-959e-e219cf8e8ac2/publish -> 403 (1650.9ms)
+2026-10-05 11:08:18,797 - INFO - event_ticketing - Application shutdown
+2026-10-05 11:08:26,869 - INFO - event_ticketing - Application startup complete
+2026-10-05 11:08:42,830 - INFO - event_ticketing - POST /events/40585c54-291a-48bf-959e-e219cf8e8ac2/publish -> 403 (6102.7ms)
+2026-10-05 11:10:08,180 - INFO - event_ticketing - GET /docs -> 200 (1.1ms)
+2026-10-05 11:10:09,880 - INFO - event_ticketing - GET /openapi.json -> 200 (755.6ms)
+2026-10-05 11:10:38,144 - INFO - event_ticketing - Application shutdown
+2026-10-05 11:10:43,560 - INFO - event_ticketing - Application startup complete
+2026-10-05 11:11:40,314 - INFO - event_ticketing - GET / -> 200 (146.2ms)
+2026-10-05 11:11:40,391 - INFO - event_ticketing - GET /favicon.ico -> 404 (2.3ms)
+2026-10-05 11:11:45,550 - INFO - event_ticketing - GET /docs -> 200 (0.7ms)
+2026-10-05 11:11:46,156 - INFO - event_ticketing - GET /openapi.json -> 200 (352.4ms)
+2026-10-05 11:13:16,240 - INFO - event_ticketing - User d16237b4-c2ba-40a6-862c-53d719df3316 (ewherheakpesiri+82@gmail.com) logged in
+2026-10-05 11:13:16,245 - INFO - event_ticketing - POST /auth/login -> 200 (7249.8ms)
+2026-10-05 11:14:50,142 - INFO - event_ticketing - POST /events/40585c54-291a-48bf-959e-e219cf8e8ac2/publish -> 403 (1536.8ms)
+2026-10-05 11:40:12,029 - INFO - event_ticketing - Application shutdown
+2026-10-05 11:40:17,644 - INFO - event_ticketing - Application startup complete
+2026-10-05 11:40:22,069 - INFO - event_ticketing - GET / -> 200 (111.4ms)
+2026-10-05 11:40:22,135 - INFO - event_ticketing - GET /favicon.ico -> 404 (9.2ms)
+2026-10-05 11:40:30,180 - INFO - event_ticketing - GET /docs -> 200 (0.6ms)
+2026-10-05 11:40:30,848 - INFO - event_ticketing - GET /openapi.json -> 200 (384.6ms)
+2026-10-05 11:41:25,570 - INFO - event_ticketing - User d16237b4-c2ba-40a6-862c-53d719df3316 (ewherheakpesiri+82@gmail.com) logged in
+2026-10-05 11:41:25,574 - INFO - event_ticketing - POST /auth/login -> 200 (8868.7ms)
+2026-10-05 11:43:54,355 - INFO - event_ticketing - POST /events/40585c54-291a-48bf-959e-e219cf8e8ac2/publish -> 403 (2712.8ms)
+2026-10-05 11:45:29,487 - INFO - event_ticketing - POST /events/40585c54-291a-48bf-959e-e219cf8e8ac2/publish -> 403 (1489.0ms)
+2026-10-05 11:50:17,908 - INFO - event_ticketing - Application shutdown
+2026-10-05 11:50:29,311 - INFO - event_ticketing - Application startup complete
+2026-10-05 11:51:17,445 - INFO - event_ticketing - POST /events/40585c54-291a-48bf-959e-e219cf8e8ac2/publish -> 403 (8027.4ms)
+2026-10-05 11:51:52,908 - INFO - event_ticketing - Application shutdown
+2026-10-05 11:51:57,405 - INFO - event_ticketing - Application startup complete
+2026-10-05 11:52:13,957 - INFO - event_ticketing - GET / -> 200 (196.8ms)
+2026-10-05 11:52:14,041 - INFO - event_ticketing - GET /favicon.ico -> 404 (6.5ms)
+2026-10-05 11:52:20,906 - INFO - event_ticketing - GET /docs -> 200 (0.6ms)
+2026-10-05 11:52:21,552 - INFO - event_ticketing - GET /openapi.json -> 200 (382.7ms)
+2026-10-05 11:53:11,007 - INFO - event_ticketing - User d16237b4-c2ba-40a6-862c-53d719df3316 (ewherheakpesiri+82@gmail.com) logged in
+2026-10-05 11:53:11,045 - INFO - event_ticketing - POST /auth/login -> 200 (6901.0ms)
+2026-10-05 11:54:04,653 - INFO - event_ticketing - POST /events/40585c54-291a-48bf-959e-e219cf8e8ac2/publish -> 401 (8.2ms)
+2026-10-05 11:55:05,420 - INFO - event_ticketing - POST /events/40585c54-291a-48bf-959e-e219cf8e8ac2/publish -> 401 (6.6ms)
+2026-10-05 11:55:52,348 - INFO - event_ticketing - POST /events/40585c54-291a-48bf-959e-e219cf8e8ac2/publish -> 403 (33068.6ms)
+2026-10-05 11:56:41,181 - INFO - event_ticketing - POST /events/40585c54-291a-48bf-959e-e219cf8e8ac2/publish -> 403 (6276.4ms)
+2026-10-05 12:09:16,969 - INFO - event_ticketing - GET /docs -> 200 (8.0ms)
+2026-10-05 12:09:17,536 - INFO - event_ticketing - GET /openapi.json -> 200 (13.8ms)
+2026-10-05 12:11:09,582 - INFO - event_ticketing - POST /events/40585c54-291a-48bf-959e-e219cf8e8ac2/publish -> 403 (620915.7ms)
+2026-10-05 12:11:09,636 - INFO - event_ticketing - Application shutdown
+2026-10-05 12:11:14,049 - INFO - event_ticketing - Application startup complete
+2026-10-05 12:13:15,793 - INFO - event_ticketing - POST /auth/login -> 422 (35.5ms)
+2026-10-05 12:13:31,361 - INFO - event_ticketing - User d16237b4-c2ba-40a6-862c-53d719df3316 (ewherheakpesiri+82@gmail.com) logged in
+2026-10-05 12:13:31,362 - INFO - event_ticketing - POST /auth/login -> 200 (8466.6ms)
+2026-10-05 12:16:16,996 - INFO - event_ticketing - POST /events/40585c54-291a-48bf-959e-e219cf8e8ac2/publish -> 403 (1937.5ms)
+2026-10-05 12:27:38,029 - INFO - event_ticketing - GET /categories/ -> 200 (3382.4ms)
+2026-10-05 12:29:07,910 - INFO - event_ticketing - POST /events/ -> 422 (1479.1ms)
+2026-10-05 12:29:52,762 - INFO - event_ticketing - Host d16237b4-c2ba-40a6-862c-53d719df3316 created event 98144f73-3b83-4ff1-b5e8-2c6f2435f9ac
+2026-10-05 12:29:53,890 - INFO - event_ticketing - POST /events/ -> 201 (9216.8ms)
+2026-10-05 12:31:35,059 - INFO - event_ticketing - User d16237b4-c2ba-40a6-862c-53d719df3316 published event 98144f73-3b83-4ff1-b5e8-2c6f2435f9ac
+2026-10-05 12:31:36,187 - INFO - event_ticketing - POST /events/98144f73-3b83-4ff1-b5e8-2c6f2435f9ac/publish -> 200 (4950.8ms)
+2026-10-05 12:32:39,369 - WARNING - event_ticketing - User d16237b4-c2ba-40a6-862c-53d719df3316 with account_type AccountType.individual denied access
+2026-10-05 12:32:39,777 - INFO - event_ticketing - PATCH /events/98144f73-3b83-4ff1-b5e8-2c6f2435f9ac/feature -> 403 (1598.0ms)
+2026-10-05 12:41:28,984 - INFO - event_ticketing - Application shutdown
+2026-10-05 12:41:41,688 - INFO - event_ticketing - Application startup complete
+2026-10-05 12:42:50,822 - INFO - event_ticketing - User d16237b4-c2ba-40a6-862c-53d719df3316 set event 98144f73-3b83-4ff1-b5e8-2c6f2435f9ac featured=True
+2026-10-05 12:42:53,280 - INFO - event_ticketing - PATCH /events/98144f73-3b83-4ff1-b5e8-2c6f2435f9ac/feature -> 200 (14051.4ms)
+2026-10-05 12:46:35,906 - ERROR - event_ticketing - Unexpected error on POST /events/98144f73-3b83-4ff1-b5e8-2c6f2435f9ac/images: Object of type ValueError is not JSON serializable
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 755, in app
+    raise validation_error
+fastapi.exceptions.RequestValidationError: 1 validation error:
+  {'type': 'value_error', 'loc': ('body', 'files', 0), 'msg': "Value error, Expected UploadFile, received: <class 'str'>", 'input': 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4', 'ctx': {'error': ValueError("Expected UploadFile, received: <class 'str'>")}}
+
+  File "/Users/ewherheakpesir/Documents/Evvent-api/event/controller.py", line 403, in upload_event_images
+    POST /events/{event_id}/images
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/main.py", line 49, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 59, in wrapped_app
+    response = await handler(conn, exc)  # type: ignore[arg-type]
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/main.py", line 114, in validation_exception_handler
+    return JSONResponse(
+        status_code=422,
+        content={"detail": safe_errors},
+    )
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/responses.py", line 192, in __init__
+    super().__init__(content, status_code, headers, media_type, background)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/responses.py", line 45, in __init__
+    self.body = self.render(content)
+                ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/responses.py", line 195, in render
+    return json.dumps(
+           ~~~~~~~~~~^
+        content,
+        ^^^^^^^^
+    ...<3 lines>...
+        separators=(",", ":"),
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ).encode("utf-8")
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/__init__.py", line 242, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/encoder.py", line 202, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/encoder.py", line 263, in iterencode
+    return _iterencode(o, 0)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/encoder.py", line 182, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type ValueError is not JSON serializable
+when serializing dict item 'error'
+when serializing dict item 'ctx'
+when serializing list item 0
+when serializing dict item 'detail'
+2026-10-05 12:50:50,729 - INFO - event_ticketing - Application shutdown
+2026-10-05 12:50:59,803 - INFO - event_ticketing - Application startup complete
+2026-10-05 12:51:01,247 - INFO - event_ticketing - Application shutdown
+2026-10-05 12:51:08,922 - INFO - event_ticketing - Application startup complete
+2026-10-05 12:51:14,078 - INFO - event_ticketing - Application shutdown
+2026-10-05 12:51:20,421 - INFO - event_ticketing - Application startup complete
+2026-10-05 12:51:36,598 - INFO - event_ticketing - Application shutdown
+2026-10-05 12:51:44,234 - INFO - event_ticketing - Application startup complete
+2026-10-05 12:52:36,653 - INFO - event_ticketing - POST /events/98144f73-3b83-4ff1-b5e8-2c6f2435f9ac/images -> 422 (7343.7ms)
+2026-10-05 12:55:43,022 - INFO - event_ticketing - POST /events/98144f73-3b83-4ff1-b5e8-2c6f2435f9ac/images -> 422 (2011.9ms)
+2026-10-05 12:56:24,514 - INFO - event_ticketing - POST /events/98144f73-3b83-4ff1-b5e8-2c6f2435f9ac/images -> 422 (4155.3ms)
+2026-10-05 12:59:21,446 - INFO - event_ticketing - POST /events/98144f73-3b83-4ff1-b5e8-2c6f2435f9ac/images -> 422 (1322.9ms)
+2026-10-05 13:04:01,101 - INFO - event_ticketing - POST /events/98144f73-3b83-4ff1-b5e8-2c6f2435f9ac/images -> 422 (1255.4ms)
+2026-10-05 13:07:05,005 - INFO - event_ticketing - Application shutdown
+2026-10-05 13:07:12,474 - INFO - event_ticketing - Application startup complete
+2026-10-05 13:08:49,734 - INFO - event_ticketing - Application shutdown
+2026-10-05 13:08:56,143 - INFO - event_ticketing - Application startup complete
+2026-10-05 13:09:00,695 - INFO - event_ticketing - GET / -> 200 (185.2ms)
+2026-10-05 13:09:00,832 - INFO - event_ticketing - GET /favicon.ico -> 404 (38.0ms)
+2026-10-05 13:09:13,359 - INFO - event_ticketing - GET /docs -> 200 (0.5ms)
+2026-10-05 13:09:13,979 - INFO - event_ticketing - GET /openapi.json -> 200 (354.9ms)
+2026-10-05 14:04:10,572 - INFO - event_ticketing - POST /auth/login -> 422 (7.6ms)
+2026-10-05 14:04:19,134 - INFO - event_ticketing - POST /auth/login -> 422 (16.1ms)
+2026-10-05 14:04:47,532 - INFO - event_ticketing - User d16237b4-c2ba-40a6-862c-53d719df3316 (ewherheakpesiri+82@gmail.com) logged in
+2026-10-05 14:04:47,533 - INFO - event_ticketing - POST /auth/login -> 200 (8831.0ms)
+2026-10-05 14:06:53,082 - INFO - event_ticketing - POST /events/d16237b4-c2ba-40a6-862c-53d719df3316/images/urls -> 404 (1496.1ms)
+2026-10-05 14:07:32,228 - INFO - event_ticketing - User d16237b4-c2ba-40a6-862c-53d719df3316 added 1 image URL(s) to event 98144f73-3b83-4ff1-b5e8-2c6f2435f9ac
+2026-10-05 14:07:32,230 - INFO - event_ticketing - POST /events/98144f73-3b83-4ff1-b5e8-2c6f2435f9ac/images/urls -> 201 (4189.2ms)
+2026-10-05 14:08:30,162 - INFO - event_ticketing - GET /events/ -> 200 (1320.3ms)
+2026-10-05 14:10:31,506 - INFO - event_ticketing - User d16237b4-c2ba-40a6-862c-53d719df3316 deleted event 98144f73-3b83-4ff1-b5e8-2c6f2435f9ac
+2026-10-05 14:10:31,507 - INFO - event_ticketing - DELETE /events/98144f73-3b83-4ff1-b5e8-2c6f2435f9ac -> 204 (6273.6ms)

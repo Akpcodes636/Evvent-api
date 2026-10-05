@@ -35,7 +35,7 @@ from event.services import list_events
 from logger import logger
 from model.booking import OrderStatus
 from model.event import EventStatus
-from model.user import User, UserRole
+from model.user import AccountType, User
 
 
 router = APIRouter(
@@ -44,12 +44,13 @@ router = APIRouter(
 )
 
 _dashboard_roles = require_roles(
-    UserRole.admin,
-    UserRole.host,
+    AccountType.admin,
+    AccountType.individual,
+    AccountType.organization,
 )
 
 _admin_only = require_roles(
-    UserRole.admin,
+    AccountType.admin,
 )
 
 
@@ -80,7 +81,7 @@ def manage_events(
 
     host_id = (
         None
-        if current_user.role == UserRole.admin
+        if current_user.account_type == AccountType.admin
         else current_user.uuid
     )
 
