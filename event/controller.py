@@ -1,7 +1,7 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile, status
 from pydantic import ValidationError
 from sqlmodel import Session
 
@@ -39,6 +39,7 @@ from event.services import (
 from logger import logger
 from model.event import EventStatus, EventType
 from model.user import AccountType, User
+from core.url import build_file_url
 from utils.uploads import (
     IMAGE_CONTENT_TYPES,
     VIDEO_CONTENT_TYPES,
@@ -55,6 +56,23 @@ categories_router = APIRouter(
     prefix="/categories",
     tags=["Categories"],
 )
+
+
+def build_event_images(
+    event: Event,
+    base_url: str,
+) -> list[EventImageResponse]:
+    return [
+        EventImageResponse(
+            uuid=image.uuid,
+            url=build_file_url(
+                base_url,
+                image.url,
+            ),
+            is_primary=image.is_primary,
+        )
+        for image in event.images
+    ]
 
 
 # ---------------------------------------------------------------------------
@@ -171,6 +189,7 @@ async def create_event_endpoint(
     response_model=list[EventListItem],
 )
 def list_events_endpoint(
+    request:Request,
     location: str | None = None,
     category_id: UUID | None = None,
     search: str | None = None,
@@ -204,10 +223,10 @@ def list_events_endpoint(
                 ticket.sold_quantity
                 for ticket in event.ticket_types
             ),
-            images=[
-                EventImageResponse.model_validate(img)
-                for img in event.images
-            ],
+           images=build_event_images(
+    event,
+    str(request.base_url),
+),
         )
         for event in events
     ]
@@ -257,6 +276,7 @@ def list_recommended_events_endpoint(
 )
 def get_event_endpoint(
     event_id: UUID,
+    request: Request,
     session: Session = Depends(get_session),
 ) -> EventResponse:
 
@@ -265,8 +285,14 @@ def get_event_endpoint(
         event_id,
     )
 
-    return EventResponse.model_validate(event)
+    response = EventResponse.model_validate(event)
 
+    response.images = build_event_images(
+        event,
+        str(request.base_url),
+    )
+
+    return response
 
 @router.patch(
     "/{event_id}",
@@ -408,6 +434,7 @@ def feature_event_endpoint(
 )
 async def upload_event_images(
     event_id: UUID,
+    request:Request,
     files: Annotated[list[UploadFile], File(description="One or more image files to upload")],
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
@@ -446,9 +473,16 @@ async def upload_event_images(
     )
 
     return [
-        EventImageResponse.model_validate(image)
-        for image in images
-    ]
+    EventImageResponse(
+        uuid=image.uuid,
+        url=build_file_url(
+            str(request.base_url),
+            image.url,
+        ),
+        is_primary=image.is_primary,
+    )
+    for image in images
+]
 
 
 @router.post(
