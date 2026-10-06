@@ -1,5 +1,4 @@
 alembic==1.19.2
-mailjet-rest==1.9.0
 annotated-doc==0.0.5
 annotated-types==0.8.0
 anyio==4.14.2
@@ -7,7 +6,9 @@ argon2-cffi==25.1.0
 argon2-cffi-bindings==26.1.0
 certifi==2026.7.22
 cffi==2.1.1
+charset-normalizer==3.5.2
 click==8.4.2
+cloudinary==1.46.3
 cryptography==50.0.0
 detect-installer==0.1.0
 dnspython==2.8.0
@@ -24,9 +25,10 @@ httptools==0.8.0
 httpx==0.28.1
 idna==3.18
 Jinja2==3.1.6
+mailjet-rest==1.9.0
+Mako==1.4.1
 markdown-it-py==4.2.0
 MarkupSafe==3.0.3
-mako==1.4.1
 mdurl==0.1.2
 psycopg2-binary==2.9.12
 pyasn1==0.6.4
@@ -40,6 +42,7 @@ python-dotenv==1.2.2
 python-jose==3.5.0
 python-multipart==0.0.32
 PyYAML==6.0.3
+requests==2.34.2
 rich==15.0.0
 rich-toolkit==0.20.3
 rignore==0.8.0

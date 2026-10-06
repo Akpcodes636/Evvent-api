@@ -1,7 +1,8 @@
+
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile, status
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
 from pydantic import ValidationError
 from sqlmodel import Session
 
@@ -11,8 +12,6 @@ from event.schema import (
     CategoryCreate,
     CategoryResponse,
     EventCreate,
-    EventImageResponse,
-    EventImageUrlsRequest,
     EventListItem,
     EventResponse,
     EventUpdate,
@@ -20,11 +19,9 @@ from event.schema import (
     TicketTypeUpdate,
 )
 from event.services import (
-    add_event_images,
     create_category,
     create_event,
     delete_event,
-    delete_event_image,
     ensure_event_access,
     feature_event,
     get_event,
@@ -39,12 +36,7 @@ from event.services import (
 from logger import logger
 from model.event import EventStatus, EventType
 from model.user import AccountType, User
-from core.url import build_file_url
-from utils.uploads import (
-    IMAGE_CONTENT_TYPES,
-    VIDEO_CONTENT_TYPES,
-    save_upload,
-)
+from utils.cloudinary import upload_image
 
 
 router = APIRouter(
@@ -56,23 +48,6 @@ categories_router = APIRouter(
     prefix="/categories",
     tags=["Categories"],
 )
-
-
-def build_event_images(
-    event: Event,
-    base_url: str,
-) -> list[EventImageResponse]:
-    return [
-        EventImageResponse(
-            uuid=image.uuid,
-            url=build_file_url(
-                base_url,
-                image.url,
-            ),
-            is_primary=image.is_primary,
-        )
-        for image in event.images
-    ]
 
 
 # ---------------------------------------------------------------------------
@@ -130,9 +105,14 @@ def add_category(
     status_code=status.HTTP_201_CREATED,
 )
 async def create_event_endpoint(
-    data: Annotated[str, Form(description="EventCreate JSON payload")],
-    image: Annotated[UploadFile, File(description="Cover image (jpeg/png/webp/gif, required)")],
-    video: Annotated[UploadFile | None, File(description="Promo video (mp4/mov/webm, optional)")] = None,
+    data: Annotated[
+        str,
+        Form(description="EventCreate JSON payload"),
+    ],
+    image: Annotated[
+        UploadFile,
+        File(description="Event cover image"),
+    ],
     session: Session = Depends(get_session),
     current_user: User = Depends(
         require_roles(
@@ -143,6 +123,7 @@ async def create_event_endpoint(
     ),
 ) -> EventResponse:
 
+    # Validate the JSON event data
     try:
         event_data = EventCreate.model_validate_json(data)
     except ValidationError as exc:
@@ -151,29 +132,25 @@ async def create_event_endpoint(
             detail=exc.errors(),
         )
 
+    # Create the event first so we have its UUID
     event = create_event(
         session,
         host=current_user,
         data=event_data,
     )
 
-    url = await save_upload(
-        image,
-        subdir=f"events/{event.uuid}/images",
-        allowed_types=IMAGE_CONTENT_TYPES,
+    # Upload the single event image to Cloudinary
+    cloudinary_url = await upload_image(
+        image.file,
+        folder=f"events/{event.uuid}",
     )
-    add_event_images(session, event, [url])
-    session.refresh(event)
 
-    if video and video.filename:
-        event.video_url = await save_upload(
-            video,
-            subdir=f"events/{event.uuid}/video",
-            allowed_types=VIDEO_CONTENT_TYPES,
-        )
-        session.add(event)
-        session.commit()
-        session.refresh(event)
+    # Store the Cloudinary URL directly on the event
+    event.image_url = cloudinary_url
+
+    session.add(event)
+    session.commit()
+    session.refresh(event)
 
     logger.info(
         "Host %s created event %s",
@@ -189,7 +166,6 @@ async def create_event_endpoint(
     response_model=list[EventListItem],
 )
 def list_events_endpoint(
-    request:Request,
     location: str | None = None,
     category_id: UUID | None = None,
     search: str | None = None,
@@ -223,10 +199,7 @@ def list_events_endpoint(
                 ticket.sold_quantity
                 for ticket in event.ticket_types
             ),
-           images=build_event_images(
-    event,
-    str(request.base_url),
-),
+            image_url=event.image_url,
         )
         for event in events
     ]
@@ -261,10 +234,7 @@ def list_recommended_events_endpoint(
                 ticket.sold_quantity
                 for ticket in event.ticket_types
             ),
-            images=[
-                EventImageResponse.model_validate(img)
-                for img in event.images
-            ],
+            image_url=event.image_url,
         )
         for event in events
     ]
@@ -276,7 +246,6 @@ def list_recommended_events_endpoint(
 )
 def get_event_endpoint(
     event_id: UUID,
-    request: Request,
     session: Session = Depends(get_session),
 ) -> EventResponse:
 
@@ -285,14 +254,12 @@ def get_event_endpoint(
         event_id,
     )
 
-    response = EventResponse.model_validate(event)
+    return EventResponse.model_validate(event)
 
-    response.images = build_event_images(
-        event,
-        str(request.base_url),
-    )
 
-    return response
+# ---------------------------------------------------------------------------
+# Event updates
+# ---------------------------------------------------------------------------
 
 @router.patch(
     "/{event_id}",
@@ -341,11 +308,26 @@ def publish_event_endpoint(
 ) -> EventResponse:
     """Make an event live so it appears in the public listing."""
 
-    event = get_event(session, event_id)
-    ensure_event_access(event, current_user)
-    event = publish_event(session, event)
+    event = get_event(
+        session,
+        event_id,
+    )
 
-    logger.info("User %s published event %s", current_user.uuid, event.uuid)
+    ensure_event_access(
+        event,
+        current_user,
+    )
+
+    event = publish_event(
+        session,
+        event,
+    )
+
+    logger.info(
+        "User %s published event %s",
+        current_user.uuid,
+        event.uuid,
+    )
 
     return EventResponse.model_validate(event)
 
@@ -424,135 +406,19 @@ def feature_event_endpoint(
 
 
 # ---------------------------------------------------------------------------
-# Event images
+# Event cover image
 # ---------------------------------------------------------------------------
 
-@router.post(
-    "/{event_id}/images",
-    response_model=list[EventImageResponse],
-    status_code=status.HTTP_201_CREATED,
-)
-async def upload_event_images(
-    event_id: UUID,
-    request:Request,
-    files: Annotated[list[UploadFile], File(description="One or more image files to upload")],
-    session: Session = Depends(get_session),
-    current_user: User = Depends(get_current_user),
-) -> list[EventImageResponse]:
-
-    event = get_event(
-        session,
-        event_id,
-    )
-
-    ensure_event_access(
-        event,
-        current_user,
-    )
-
-    urls = [
-        await save_upload(
-            file,
-            subdir=f"events/{event_id}/images",
-            allowed_types=IMAGE_CONTENT_TYPES,
-        )
-        for file in files
-    ]
-
-    images = add_event_images(
-        session,
-        event,
-        urls,
-    )
-
-    logger.info(
-        "User %s uploaded %d image(s) for event %s",
-        current_user.uuid,
-        len(images),
-        event_id,
-    )
-
-    return [
-    EventImageResponse(
-        uuid=image.uuid,
-        url=build_file_url(
-            str(request.base_url),
-            image.url,
-        ),
-        is_primary=image.is_primary,
-    )
-    for image in images
-]
-
-
-@router.post(
-    "/{event_id}/images/urls",
-    response_model=list[EventImageResponse],
-    status_code=status.HTTP_201_CREATED,
-)
-def add_event_image_urls(
-    event_id: UUID,
-    data: EventImageUrlsRequest,
-    session: Session = Depends(get_session),
-    current_user: User = Depends(get_current_user),
-) -> list[EventImageResponse]:
-    """Attach images to an event by URL instead of file upload."""
-
-    event = get_event(session, event_id)
-
-    ensure_event_access(event, current_user)
-
-    images = add_event_images(session, event, data.urls)
-
-    logger.info(
-        "User %s added %d image URL(s) to event %s",
-        current_user.uuid,
-        len(images),
-        event_id,
-    )
-
-    return [EventImageResponse.model_validate(image) for image in images]
-
-
-@router.delete(
-    "/{event_id}/images/{image_id}",
-    status_code=status.HTTP_204_NO_CONTENT,
-)
-def delete_event_image_endpoint(
-    event_id: UUID,
-    image_id: UUID,
-    session: Session = Depends(get_session),
-    current_user: User = Depends(get_current_user),
-) -> None:
-
-    event = get_event(
-        session,
-        event_id,
-    )
-
-    ensure_event_access(
-        event,
-        current_user,
-    )
-
-    delete_event_image(
-        session,
-        event,
-        image_id,
-    )
-
-
-# ---------------------------------------------------------------------------
-# Event video
-# ---------------------------------------------------------------------------
-
-@router.post(
-    "/{event_id}/video",
+@router.patch(
+    "/{event_id}/image",
     response_model=EventResponse,
 )
-async def upload_event_video(
+async def update_event_image(
     event_id: UUID,
-    file: UploadFile = File(...),
+    image: Annotated[
+        UploadFile,
+        File(description="New event cover image"),
+    ],
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
 ) -> EventResponse:
@@ -567,18 +433,21 @@ async def upload_event_video(
         current_user,
     )
 
-    event.video_url = await save_upload(
-        file,
-        subdir=f"events/{event_id}/video",
-        allowed_types=VIDEO_CONTENT_TYPES,
+    # Upload the replacement image to Cloudinary
+    cloudinary_url = await upload_image(
+        image.file,
+        folder=f"events/{event.uuid}",
     )
+
+    # Replace the stored URL
+    event.image_url = cloudinary_url
 
     session.add(event)
     session.commit()
     session.refresh(event)
 
     logger.info(
-        "User %s uploaded a video for event %s",
+        "User %s updated image for event %s",
         current_user.uuid,
         event_id,
     )

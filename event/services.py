@@ -12,7 +12,6 @@ from model.event import (
     Category,
     Event,
     EventCategoryLink,
-    EventImage,
     EventStatus,
     TicketType,
     UserCategoryPreference,
@@ -20,19 +19,26 @@ from model.event import (
 from model.user import AccountType, User
 
 
-def ensure_event_access(event: Event, user: User) -> None:
+def ensure_event_access(
+    event: Event,
+    user: User,
+) -> None:
     """
     Ensure the user is allowed to manage the event.
 
     Admins can manage any event.
-    Individual and organization accounts can manage their own events (including publishing).
-    All other users are denied.
+
+    Individual and organization accounts can manage
+    events they own.
     """
     if user.account_type == AccountType.admin:
         return
 
     if (
-        user.account_type in (AccountType.individual, AccountType.organization)
+        user.account_type in (
+            AccountType.individual,
+            AccountType.organization,
+        )
         and event.organizer_id == user.uuid
     ):
         return
@@ -43,13 +49,20 @@ def ensure_event_access(event: Event, user: User) -> None:
     )
 
 
+# ============================================================
+# CATEGORIES
+# ============================================================
+
+
 def create_category(
     session: Session,
     *,
     name: str,
 ) -> Category:
     existing = session.exec(
-        select(Category).where(Category.name == name)
+        select(Category).where(
+            Category.name == name
+        )
     ).first()
 
     if existing:
@@ -96,6 +109,11 @@ def _get_categories(
     return list(categories)
 
 
+# ============================================================
+# USER CATEGORY PREFERENCES
+# ============================================================
+
+
 def get_user_category_preferences(
     session: Session,
     user: User,
@@ -104,7 +122,8 @@ def get_user_category_preferences(
         select(Category)
         .join(
             UserCategoryPreference,
-            UserCategoryPreference.category_id == Category.uuid,
+            UserCategoryPreference.category_id
+            == Category.uuid,
         )
         .where(
             UserCategoryPreference.user_id == user.uuid
@@ -129,7 +148,8 @@ def set_user_category_preferences(
 
     existing_preferences = session.exec(
         select(UserCategoryPreference).where(
-            UserCategoryPreference.user_id == user.uuid
+            UserCategoryPreference.user_id
+            == user.uuid
         )
     ).all()
 
@@ -147,6 +167,11 @@ def set_user_category_preferences(
     session.commit()
 
     return categories
+
+
+# ============================================================
+# EVENTS FOR USER
+# ============================================================
 
 
 def list_events_for_user(
@@ -177,7 +202,9 @@ def list_events_for_user(
             EventCategoryLink.event_id == Event.uuid,
         )
         .where(
-            EventCategoryLink.category_id.in_(category_ids)
+            EventCategoryLink.category_id.in_(
+                category_ids
+            )
         )
     )
 
@@ -195,6 +222,11 @@ def list_events_for_user(
     )
 
 
+# ============================================================
+# CREATE EVENT
+# ============================================================
+
+
 def create_event(
     session: Session,
     *,
@@ -204,11 +236,10 @@ def create_event(
     """
     Create an event owned by the specified host.
 
-    Admins may also create events. In that case the event
-    is still associated with the admin's user ID unless the
-    domain model later introduces a separate platform-owner
-    relationship.
+    The event image is uploaded separately by the router
+    to Cloudinary and stored in Event.image_url.
     """
+
     categories = _get_categories(
         session,
         data.category_ids,
@@ -223,12 +254,12 @@ def create_event(
         event_date=data.event_date,
         duration=data.duration,
         event_type=data.event_type,
-        video_url=data.video_url,
     )
 
     session.add(event)
     session.flush()
 
+    # Create ticket types
     for ticket_type in data.ticket_types:
         session.add(
             TicketType(
@@ -239,6 +270,7 @@ def create_event(
             )
         )
 
+    # Attach categories
     for category in categories:
         session.add(
             EventCategoryLink(
@@ -251,6 +283,11 @@ def create_event(
     session.refresh(event)
 
     return event
+
+
+# ============================================================
+# GET EVENT
+# ============================================================
 
 
 def get_event(
@@ -270,6 +307,12 @@ def get_event(
 
     return event
 
+
+# ============================================================
+# LIST EVENTS
+# ============================================================
+
+
 def list_events(
     session: Session,
     *,
@@ -286,12 +329,16 @@ def list_events(
 
     if location:
         query = query.where(
-            Event.location.ilike(f"%{location}%")
+            Event.location.ilike(
+                f"%{location}%"
+            )
         )
 
     if search:
         query = query.where(
-            Event.title.ilike(f"%{search}%")
+            Event.title.ilike(
+                f"%{search}%"
+            )
         )
 
     if event_type:
@@ -319,28 +366,28 @@ def list_events(
             query
             .join(
                 EventCategoryLink,
-                EventCategoryLink.event_id == Event.uuid,
+                EventCategoryLink.event_id
+                == Event.uuid,
             )
             .where(
-                EventCategoryLink.category_id == category_id
+                EventCategoryLink.category_id
+                == category_id
             )
         )
 
-    query = query.order_by(Event.event_date)
+    query = query.order_by(
+        Event.event_date
+    )
 
-    events = session.exec(query).all()
+    return list(
+        session.exec(query).all()
+    )
 
-    print("EVENTS FOUND:", len(events))
 
-    for event in events:
-        print(
-            event.uuid,
-            event.title,
-            event.status,
-            event.event_type,
-        )
+# ============================================================
+# UPDATE EVENT
+# ============================================================
 
-    return list(events)
 
 def update_event(
     session: Session,
@@ -359,10 +406,12 @@ def update_event(
             value,
         )
 
+    # Update categories if supplied
     if data.category_ids is not None:
         existing_links = session.exec(
             select(EventCategoryLink).where(
-                EventCategoryLink.event_id == event.uuid
+                EventCategoryLink.event_id
+                == event.uuid
             )
         ).all()
 
@@ -389,39 +438,47 @@ def update_event(
     return event
 
 
+# ============================================================
+# DELETE EVENT
+# ============================================================
+
+
 def delete_event(
     session: Session,
     event: Event,
 ) -> None:
+    # Delete category links
     category_links = session.exec(
         select(EventCategoryLink).where(
-            EventCategoryLink.event_id == event.uuid
+            EventCategoryLink.event_id
+            == event.uuid
         )
     ).all()
 
     for link in category_links:
         session.delete(link)
 
-    images = session.exec(
-        select(EventImage).where(
-            EventImage.event_id == event.uuid
-        )
-    ).all()
-
-    for image in images:
-        session.delete(image)
-
+    # Delete ticket types
     ticket_types = session.exec(
         select(TicketType).where(
-            TicketType.event_id == event.uuid
+            TicketType.event_id
+            == event.uuid
         )
     ).all()
 
     for ticket_type in ticket_types:
         session.delete(ticket_type)
 
+    # Event.image_url is just a URL stored on the event.
+    # There is no EventImage database record to delete.
+
     session.delete(event)
     session.commit()
+
+
+# ============================================================
+# FEATURE EVENT
+# ============================================================
 
 
 def feature_event(
@@ -437,6 +494,11 @@ def feature_event(
     session.refresh(event)
 
     return event
+
+
+# ============================================================
+# PUBLISH EVENT
+# ============================================================
 
 
 def publish_event(
@@ -455,61 +517,9 @@ def publish_event(
     return event
 
 
-def add_event_images(
-    session: Session,
-    event: Event,
-    urls: list[str],
-) -> list[EventImage]:
-    has_primary = bool(
-        session.exec(
-            select(EventImage).where(
-                EventImage.event_id == event.uuid,
-                EventImage.is_primary == True,  # noqa: E712
-            )
-        ).first()
-    )
-
-    images: list[EventImage] = []
-
-    for index, url in enumerate(urls):
-        image = EventImage(
-            event_id=event.uuid,
-            url=url,
-            is_primary=(
-                not has_primary
-                and index == 0
-            ),
-        )
-
-        session.add(image)
-        images.append(image)
-
-    session.commit()
-
-    for image in images:
-        session.refresh(image)
-
-    return images
-
-
-def delete_event_image(
-    session: Session,
-    event: Event,
-    image_id: UUID,
-) -> None:
-    image = session.get(
-        EventImage,
-        image_id,
-    )
-
-    if not image or image.event_id != event.uuid:
-        raise AppError(
-            "Image not found",
-            status_code=404,
-        )
-
-    session.delete(image)
-    session.commit()
+# ============================================================
+# TICKET TYPES
+# ============================================================
 
 
 def get_ticket_type(
