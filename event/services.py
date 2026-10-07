@@ -226,7 +226,6 @@ def list_events_for_user(
 # CREATE EVENT
 # ============================================================
 
-
 def create_event(
     session: Session,
     *,
@@ -236,6 +235,7 @@ def create_event(
     """
     Create an event owned by the specified host.
 
+    Events are published immediately after creation.
     The event image is uploaded separately by the router
     to Cloudinary and stored in Event.image_url.
     """
@@ -254,6 +254,7 @@ def create_event(
         event_date=data.event_date,
         duration=data.duration,
         event_type=data.event_type,
+        status=EventStatus.published,
     )
 
     session.add(event)
@@ -283,7 +284,6 @@ def create_event(
     session.refresh(event)
 
     return event
-
 
 # ============================================================
 # GET EVENT
