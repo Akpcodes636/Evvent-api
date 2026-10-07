@@ -3724,3 +3724,12 @@ when serializing dict item 'detail'
 2026-10-06 21:45:58,880 - INFO - event_ticketing - GET /docs -> 200 (0.6ms)
 2026-10-06 21:46:00,846 - INFO - event_ticketing - GET /openapi.json -> 200 (1039.0ms)
 2026-10-06 21:47:45,914 - INFO - event_ticketing - Application shutdown
+2026-10-07 10:29:17,998 - INFO - event_ticketing - Application startup complete
+2026-10-07 10:29:21,991 - INFO - event_ticketing - GET / -> 200 (119.8ms)
+2026-10-07 10:29:22,230 - INFO - event_ticketing - GET /favicon.ico -> 404 (6.3ms)
+2026-10-07 10:29:28,113 - INFO - event_ticketing - GET /docs -> 200 (0.6ms)
+2026-10-07 10:29:30,581 - INFO - event_ticketing - GET /openapi.json -> 200 (440.6ms)
+2026-10-07 10:48:47,382 - INFO - event_ticketing - Application shutdown
+2026-10-07 10:48:50,466 - INFO - event_ticketing - Application startup complete
+2026-10-07 10:49:48,969 - INFO - event_ticketing - Application shutdown
+2026-10-07 10:49:56,221 - INFO - event_ticketing - Application startup complete
