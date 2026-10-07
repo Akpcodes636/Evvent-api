@@ -3733,3 +3733,110 @@ when serializing dict item 'detail'
 2026-10-07 10:48:50,466 - INFO - event_ticketing - Application startup complete
 2026-10-07 10:49:48,969 - INFO - event_ticketing - Application shutdown
 2026-10-07 10:49:56,221 - INFO - event_ticketing - Application startup complete
+2026-10-07 10:55:07,260 - INFO - event_ticketing - POST /events/ -> 401 (135.1ms)
+2026-10-07 11:02:42,212 - WARNING - event_ticketing - Failed login attempt for ewherheakpesiri+10@gmail.com
+2026-10-07 11:02:42,520 - INFO - event_ticketing - POST /auth/login -> 401 (6636.4ms)
+2026-10-07 11:04:39,868 - INFO - event_ticketing - User d16237b4-c2ba-40a6-862c-53d719df3316 (ewherheakpesiri+82@gmail.com) logged in
+2026-10-07 11:04:39,877 - INFO - event_ticketing - POST /auth/login -> 200 (3768.0ms)
+2026-10-07 11:05:10,408 - ERROR - event_ticketing - Unexpected error on POST /events/: Must supply api_key
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/main.py", line 49, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 352, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/event/controller.py", line 143, in create_event_endpoint
+    cloudinary_url = await upload_image(
+                     ^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/utils/cloudinary.py", line 23, in upload_image
+    result = await asyncio.to_thread(
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/threads.py", line 26, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/thread.py", line 86, in run
+    result = ctx.run(self.task)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/thread.py", line 73, in run
+    return fn(*args, **kwargs)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/cloudinary/uploader.py", line 203, in upload
+    return call_cacheable_api("upload", params, file=file, **options)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/cloudinary/uploader.py", line 908, in call_cacheable_api
+    result = call_api(action, params, http_headers, return_error, unsigned, file, timeout, **options)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/cloudinary/uploader.py", line 956, in call_api
+    params = utils.sign_request(params, options)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/cloudinary/utils.py", line 644, in sign_request
+    raise ValueError("Must supply api_key")
+ValueError: Must supply api_key
+2026-10-07 11:07:56,776 - INFO - event_ticketing - Application shutdown
+2026-10-07 11:08:02,077 - INFO - event_ticketing - Application startup complete
+2026-10-07 11:08:42,951 - INFO - event_ticketing - Application shutdown
+2026-10-07 11:08:48,519 - INFO - event_ticketing - Application startup complete
+2026-10-07 11:09:02,662 - INFO - event_ticketing - Application shutdown
+2026-10-07 11:09:08,744 - INFO - event_ticketing - Application startup complete
+2026-10-07 11:10:18,496 - INFO - event_ticketing - Host d16237b4-c2ba-40a6-862c-53d719df3316 created event 94adcadd-e451-4272-a9a8-7f62bd5e1a4b
+2026-10-07 11:10:19,120 - INFO - event_ticketing - POST /events/ -> 201 (65676.9ms)
+2026-10-07 11:11:33,468 - INFO - event_ticketing - Application shutdown
+2026-10-07 11:11:38,057 - INFO - event_ticketing - Application startup complete
+2026-10-07 11:14:27,552 - INFO - event_ticketing - Application shutdown
+2026-10-07 11:14:32,685 - INFO - event_ticketing - Application startup complete
+2026-10-07 11:15:05,465 - INFO - event_ticketing - Application shutdown
+2026-10-07 11:15:11,123 - INFO - event_ticketing - Application startup complete
+2026-10-07 11:15:16,583 - INFO - event_ticketing - Application shutdown
+2026-10-07 11:15:25,181 - INFO - event_ticketing - Application startup complete
+2026-10-07 11:17:50,028 - INFO - event_ticketing - Host d16237b4-c2ba-40a6-862c-53d719df3316 created event c853fe7c-07ea-4c27-b644-f1329d4bb428
+2026-10-07 11:17:50,580 - INFO - event_ticketing - POST /events/ -> 201 (14076.0ms)
