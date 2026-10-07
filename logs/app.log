@@ -3840,3 +3840,636 @@ ValueError: Must supply api_key
 2026-10-07 11:15:25,181 - INFO - event_ticketing - Application startup complete
 2026-10-07 11:17:50,028 - INFO - event_ticketing - Host d16237b4-c2ba-40a6-862c-53d719df3316 created event c853fe7c-07ea-4c27-b644-f1329d4bb428
 2026-10-07 11:17:50,580 - INFO - event_ticketing - POST /events/ -> 201 (14076.0ms)
+2026-10-07 11:38:47,104 - INFO - event_ticketing - Application shutdown
+2026-10-07 11:46:17,775 - INFO - event_ticketing - Application startup complete
+2026-10-07 11:46:24,432 - ERROR - event_ticketing - Unexpected error on GET /events/: 1 validation error for EventListItem
+image_url
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/main.py", line 52, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/cors.py", line 88, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2641, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1033, in run
+    result = context.run(func, *args)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/event/controller.py", line 189, in list_events_endpoint
+    EventListItem(
+    ~~~~~~~~~~~~~^
+        uuid=event.uuid,
+        ^^^^^^^^^^^^^^^^
+    ...<12 lines>...
+        image_url=event.image_url,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/pydantic/main.py", line 263, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 1 validation error for EventListItem
+image_url
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+2026-10-07 11:46:45,224 - ERROR - event_ticketing - Unexpected error on GET /events/: 1 validation error for EventListItem
+image_url
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/main.py", line 52, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/cors.py", line 88, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2641, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1033, in run
+    result = context.run(func, *args)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/event/controller.py", line 189, in list_events_endpoint
+    EventListItem(
+    ~~~~~~~~~~~~~^
+        uuid=event.uuid,
+        ^^^^^^^^^^^^^^^^
+    ...<12 lines>...
+        image_url=event.image_url,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/pydantic/main.py", line 263, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 1 validation error for EventListItem
+image_url
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+2026-10-07 11:56:14,922 - INFO - event_ticketing - Application shutdown
+2026-10-07 11:56:23,689 - INFO - event_ticketing - Application startup complete
+2026-10-07 11:56:37,268 - INFO - event_ticketing - Application shutdown
+2026-10-07 11:56:41,655 - INFO - event_ticketing - Application startup complete
+2026-10-07 12:03:56,283 - INFO - event_ticketing - Application shutdown
+2026-10-07 12:04:00,619 - INFO - event_ticketing - Application startup complete
+2026-10-07 12:17:20,513 - INFO - event_ticketing - Application shutdown
+2026-10-07 12:17:27,272 - INFO - event_ticketing - Application startup complete
+2026-10-07 12:20:30,951 - ERROR - event_ticketing - Unexpected error on GET /events/: 1 validation error for EventListItem
+image_url
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/main.py", line 52, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/cors.py", line 88, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2641, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1033, in run
+    result = context.run(func, *args)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/event/controller.py", line 189, in list_events_endpoint
+    EventListItem(
+    ~~~~~~~~~~~~~^
+        uuid=event.uuid,
+        ^^^^^^^^^^^^^^^^
+    ...<12 lines>...
+        image_url=event.image_url,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/pydantic/main.py", line 263, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 1 validation error for EventListItem
+image_url
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+2026-10-07 12:24:04,857 - ERROR - event_ticketing - Unexpected error on GET /events/: 1 validation error for EventListItem
+image_url
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/main.py", line 52, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/cors.py", line 88, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2641, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1033, in run
+    result = context.run(func, *args)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/event/controller.py", line 189, in list_events_endpoint
+    EventListItem(
+    ~~~~~~~~~~~~~^
+        uuid=event.uuid,
+        ^^^^^^^^^^^^^^^^
+    ...<12 lines>...
+        image_url=event.image_url,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/pydantic/main.py", line 263, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 1 validation error for EventListItem
+image_url
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+2026-10-07 12:24:59,713 - INFO - event_ticketing - Application shutdown
+2026-10-07 12:25:05,141 - INFO - event_ticketing - Application startup complete
+2026-10-07 12:25:30,215 - INFO - event_ticketing - User d16237b4-c2ba-40a6-862c-53d719df3316 (ewherheakpesiri+82@gmail.com) logged in
+2026-10-07 12:25:30,221 - INFO - event_ticketing - POST /auth/login -> 200 (6499.8ms)
+2026-10-07 12:25:57,289 - ERROR - event_ticketing - Unexpected error on GET /events/: 1 validation error for EventListItem
+image_url
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/main.py", line 52, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/cors.py", line 88, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2641, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1033, in run
+    result = context.run(func, *args)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/event/controller.py", line 189, in list_events_endpoint
+    EventListItem(
+    ~~~~~~~~~~~~~^
+        uuid=event.uuid,
+        ^^^^^^^^^^^^^^^^
+    ...<12 lines>...
+        image_url=event.image_url,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/pydantic/main.py", line 263, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 1 validation error for EventListItem
+image_url
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+2026-10-07 12:34:58,887 - ERROR - event_ticketing - Unexpected error on GET /events/: 1 validation error for EventListItem
+image_url
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/main.py", line 52, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/cors.py", line 88, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2641, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1033, in run
+    result = context.run(func, *args)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/event/controller.py", line 189, in list_events_endpoint
+    EventListItem(
+    ~~~~~~~~~~~~~^
+        uuid=event.uuid,
+        ^^^^^^^^^^^^^^^^
+    ...<12 lines>...
+        image_url=event.image_url,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/pydantic/main.py", line 263, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 1 validation error for EventListItem
+image_url
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+2026-10-07 12:35:07,817 - INFO - event_ticketing - Application shutdown
+2026-10-07 12:35:12,742 - INFO - event_ticketing - Application startup complete
+2026-10-07 12:35:42,027 - ERROR - event_ticketing - Unexpected error on GET /events/: 1 validation error for EventListItem
+image_url
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/main.py", line 52, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/cors.py", line 88, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2641, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1033, in run
+    result = context.run(func, *args)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/event/controller.py", line 189, in list_events_endpoint
+    EventListItem(
+    ~~~~~~~~~~~~~^
+        uuid=event.uuid,
+        ^^^^^^^^^^^^^^^^
+    ...<12 lines>...
+        image_url=event.image_url,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/.venv/lib/python3.14/site-packages/pydantic/main.py", line 263, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 1 validation error for EventListItem
+image_url
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+2026-10-07 12:46:10,934 - INFO - event_ticketing - GET /events/ -> 200 (6967.6ms)

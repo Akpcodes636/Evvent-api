@@ -11,10 +11,18 @@ from core.config import settings
 from core.security import create_access_token
 from event.services import set_user_category_preferences
 from logger import logger
-from model.user import AccountType, PasswordResetToken, RefreshToken, User
+from model.user import (
+    AccountType,
+    PasswordResetToken,
+    RefreshToken,
+    User,
+)
 
 
-def _hash_password(password: str, salt: bytes | None = None) -> str:
+def _hash_password(
+    password: str,
+    salt: bytes | None = None,
+) -> str:
     salt = salt or secrets.token_bytes(16)
 
     digest = hashlib.pbkdf2_hmac(
@@ -27,13 +35,22 @@ def _hash_password(password: str, salt: bytes | None = None) -> str:
     return f"{salt.hex()}${digest.hex()}"
 
 
-def _password_matches(password: str, stored_hash: str) -> bool:
-    salt_hex, digest_hex = stored_hash.split("$", maxsplit=1)
+def _password_matches(
+    password: str,
+    stored_hash: str,
+) -> bool:
+    salt_hex, digest_hex = stored_hash.split(
+        "$",
+        maxsplit=1,
+    )
 
     calculated = _hash_password(
         password,
         bytes.fromhex(salt_hex),
-    ).split("$", maxsplit=1)[1]
+    ).split(
+        "$",
+        maxsplit=1,
+    )[1]
 
     return hmac.compare_digest(
         calculated,
@@ -53,7 +70,6 @@ def register_user(
     organization: str | None = None,
     category_ids: list[UUID] | None = None,
 ) -> User:
-
     email = email.lower()
 
     existing_user = session.exec(
@@ -112,7 +128,9 @@ def bootstrap_admin(
     """
 
     existing_admin = session.exec(
-        select(User).where(User.account_type == AccountType.admin)
+        select(User).where(
+            User.account_type == AccountType.admin
+        )
     ).first()
 
     if existing_admin:
@@ -141,7 +159,6 @@ def authenticate_user(
     email: str,
     password: str,
 ) -> User:
-
     user = session.exec(
         select(User).where(
             User.email == email.lower()
@@ -170,7 +187,6 @@ def create_reset_token(
     *,
     email: str,
 ) -> tuple[User, str] | tuple[None, None]:
-
     user = session.exec(
         select(User).where(
             User.email == email.lower()
@@ -206,7 +222,6 @@ def reset_password(
     token: str,
     new_password: str,
 ) -> User:
-
     reset = session.exec(
         select(PasswordResetToken).where(
             PasswordResetToken.token == token
@@ -227,7 +242,10 @@ def reset_password(
             detail="Invalid or expired reset token",
         )
 
-    user = session.get(User, reset.user_id)
+    user = session.get(
+        User,
+        reset.user_id,
+    )
 
     if not user:
         raise HTTPException(
@@ -263,7 +281,6 @@ def update_profile(
     phone: str | None = None,
     organization: str | None = None,
 ) -> User:
-
     if email is not None:
         email = email.lower()
 
@@ -310,7 +327,6 @@ def change_password(
     current_password: str,
     new_password: str,
 ) -> None:
-
     if not _password_matches(
         current_password,
         user.password_hash,
@@ -340,7 +356,6 @@ def update_bank_details(
     bank_name: str,
     bank_account_number: str,
 ) -> User:
-
     user.bank_name = bank_name
     user.bank_account_number = bank_account_number
     user.updated_at = datetime.utcnow()
@@ -352,7 +367,9 @@ def update_bank_details(
     return user
 
 
-def _hash_refresh_token(token: str) -> str:
+def _hash_refresh_token(
+    token: str,
+) -> str:
     return hashlib.sha256(
         token.encode()
     ).hexdigest()
@@ -362,7 +379,6 @@ def _revoke_user_refresh_tokens(
     session: Session,
     user: User,
 ) -> None:
-
     now = datetime.utcnow()
 
     tokens = session.exec(
@@ -381,7 +397,6 @@ def revoke_refresh_token(
     session: Session,
     raw_refresh_token: str,
 ) -> None:
-
     token_hash = _hash_refresh_token(
         raw_refresh_token
     )
@@ -406,7 +421,6 @@ def create_refresh_token(
     session: Session,
     user: User,
 ) -> str:
-
     raw_token = secrets.token_urlsafe(64)
 
     token_hash = _hash_refresh_token(
@@ -434,7 +448,6 @@ def refresh_access_token(
     session: Session,
     raw_refresh_token: str,
 ) -> tuple[str, str]:
-
     token_hash = _hash_refresh_token(
         raw_refresh_token
     )
