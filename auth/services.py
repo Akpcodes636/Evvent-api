@@ -8,6 +8,7 @@ from fastapi import HTTPException, status
 from sqlmodel import Session, select
 
 from core.config import settings
+from core.exceptions import AppError
 from core.security import create_access_token
 from event.services import set_user_category_preferences
 from logger import logger
@@ -82,9 +83,9 @@ def register_user(
             email,
         )
 
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="An account already exists for this email",
+        raise AppError(
+            "An account with this email already exists. Please log in or use a different email.",
+            status_code=409,
         )
 
     user = User(
@@ -134,12 +135,9 @@ def bootstrap_admin(
     ).first()
 
     if existing_admin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail=(
-                "An admin already exists; ask an existing admin "
-                "to register new admins"
-            ),
+        raise AppError(
+            "Setup is already complete. Please contact an existing admin to create new admin accounts.",
+            status_code=403,
         )
 
     return register_user(
@@ -174,9 +172,9 @@ def authenticate_user(
             email.lower(),
         )
 
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid email or password",
+        raise AppError(
+            "The email or password you entered is incorrect. Please try again.",
+            status_code=401,
         )
 
     return user
@@ -237,9 +235,9 @@ def reset_password(
             "Invalid or expired password reset token used"
         )
 
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid or expired reset token",
+        raise AppError(
+            "This password reset link is invalid or has expired. Please request a new one.",
+            status_code=400,
         )
 
     user = session.get(
@@ -248,9 +246,9 @@ def reset_password(
     )
 
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid reset token",
+        raise AppError(
+            "This password reset link is no longer valid. Please request a new one.",
+            status_code=400,
         )
 
     user.password_hash = _hash_password(new_password)
@@ -292,9 +290,9 @@ def update_profile(
                 )
             ).first()
         ):
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="An account already exists for this email",
+            raise AppError(
+                "This email is already in use by another account. Please choose a different one.",
+                status_code=409,
             )
 
         user.email = email
@@ -331,9 +329,9 @@ def change_password(
         current_password,
         user.password_hash,
     ):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Current password is incorrect",
+        raise AppError(
+            "The current password you entered is incorrect. Please try again.",
+            status_code=401,
         )
 
     user.password_hash = _hash_password(new_password)
@@ -459,21 +457,21 @@ def refresh_access_token(
     ).first()
 
     if not refresh_token:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid refresh token",
+        raise AppError(
+            "Your session is invalid. Please log in again.",
+            status_code=401,
         )
 
     if refresh_token.revoked_at is not None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Refresh token has been revoked",
+        raise AppError(
+            "Your session has been ended. Please log in again.",
+            status_code=401,
         )
 
     if refresh_token.expires_at < datetime.utcnow():
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Refresh token has expired",
+        raise AppError(
+            "Your session has expired. Please log in again.",
+            status_code=401,
         )
 
     user = session.get(
@@ -482,9 +480,9 @@ def refresh_access_token(
     )
 
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="User no longer exists",
+        raise AppError(
+            "Your account could not be found. Please log in again.",
+            status_code=401,
         )
 
     # Revoke old refresh token
