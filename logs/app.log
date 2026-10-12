@@ -4473,3 +4473,37 @@ image_url
   Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
     For further information visit https://errors.pydantic.dev/2.13/v/string_type
 2026-10-07 12:46:10,934 - INFO - event_ticketing - GET /events/ -> 200 (6967.6ms)
+2026-10-07 16:10:32,525 - INFO - event_ticketing - Application startup complete
+2026-10-07 16:10:37,612 - INFO - event_ticketing - GET / -> 200 (133.5ms)
+2026-10-07 16:10:37,719 - INFO - event_ticketing - GET /favicon.ico -> 404 (17.2ms)
+2026-10-07 16:10:42,608 - INFO - event_ticketing - GET /docs -> 200 (0.8ms)
+2026-10-07 16:10:47,037 - INFO - event_ticketing - GET /openapi.json -> 200 (504.6ms)
+2026-10-09 11:59:39,163 - INFO - event_ticketing - Application startup complete
+2026-10-09 11:59:40,913 - INFO - event_ticketing - GET / -> 200 (328.5ms)
+2026-10-09 11:59:41,046 - INFO - event_ticketing - GET /favicon.ico -> 404 (8.8ms)
+2026-10-09 12:00:08,081 - INFO - event_ticketing - GET /docs -> 200 (1.3ms)
+2026-10-09 12:00:09,182 - INFO - event_ticketing - GET /openapi.json -> 200 (409.2ms)
+2026-10-09 12:01:23,438 - INFO - event_ticketing - POST /auth/admin/register -> 401 (12.8ms)
+2026-10-09 12:01:26,261 - INFO - event_ticketing - POST /auth/admin/register -> 401 (3.3ms)
+2026-10-09 12:02:13,745 - INFO - event_ticketing - POST /auth/admin/register -> 422 (5.2ms)
+2026-10-09 12:02:25,456 - INFO - event_ticketing - POST /auth/admin/register -> 401 (3.3ms)
+2026-10-09 12:03:41,515 - INFO - event_ticketing - POST /auth/admin/register -> 401 (3.3ms)
+2026-10-09 12:20:16,372 - INFO - event_ticketing - POST /auth/admin/register -> 401 (22.5ms)
+2026-10-09 12:23:35,810 - INFO - event_ticketing - POST /auth/register -> 201 (9008.2ms)
+2026-10-09 12:23:36,703 - INFO - event_ticketing - welcome email sent to ewherheakpesiri+96@gmail.com (MessageID: 1152921545413136095)
+2026-10-09 13:07:42,660 - INFO - event_ticketing - POST /events/ -> 401 (132.0ms)
+2026-10-09 13:09:57,717 - INFO - event_ticketing - User d16237b4-c2ba-40a6-862c-53d719df3316 (ewherheakpesiri+82@gmail.com) logged in
+2026-10-09 13:09:57,721 - INFO - event_ticketing - POST /auth/login -> 200 (5377.8ms)
+2026-10-09 13:10:53,379 - INFO - event_ticketing - Host d16237b4-c2ba-40a6-862c-53d719df3316 created event 8410909f-c310-4f45-a868-5fffca6726b7
+2026-10-09 13:10:54,002 - INFO - event_ticketing - POST /events/ -> 201 (13133.7ms)
+2026-10-09 14:07:42,735 - INFO - event_ticketing - GET /docs -> 200 (9.2ms)
+2026-10-09 14:07:43,799 - INFO - event_ticketing - GET /openapi.json -> 200 (8.9ms)
+2026-10-12 11:35:57,002 - INFO - event_ticketing - Application startup complete
+2026-10-12 11:35:59,721 - INFO - event_ticketing - GET / -> 200 (227.4ms)
+2026-10-12 11:35:59,855 - INFO - event_ticketing - GET /favicon.ico -> 404 (17.4ms)
+2026-10-12 11:36:04,756 - INFO - event_ticketing - GET /docs -> 200 (0.9ms)
+2026-10-12 11:36:15,681 - INFO - event_ticketing - GET /openapi.json -> 200 (1106.3ms)
+2026-10-12 11:38:28,370 - INFO - event_ticketing - User d16237b4-c2ba-40a6-862c-53d719df3316 (ewherheakpesiri+82@gmail.com) logged in
+2026-10-12 11:38:28,378 - INFO - event_ticketing - POST /auth/login -> 200 (7945.6ms)
+2026-10-12 11:39:05,244 - INFO - event_ticketing - GET /events/me -> 200 (2623.9ms)
+2026-10-12 11:40:38,034 - INFO - event_ticketing - Application shutdown

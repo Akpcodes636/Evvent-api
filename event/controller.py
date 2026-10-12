@@ -37,7 +37,6 @@ from logger import logger
 from model.event import EventStatus, EventType
 from model.user import AccountType, User
 from utils.cloudinary import upload_image
-import time
 
 
 router = APIRouter(
@@ -218,6 +217,42 @@ def list_recommended_events_endpoint(
     events = list_events_for_user(
         session,
         current_user,
+    )
+
+    return [
+        EventListItem(
+            uuid=event.uuid,
+            title=event.title,
+            description=event.description,
+            location=event.location,
+            event_date=event.event_date,
+            duration=event.duration,
+            event_type=event.event_type,
+            status=event.status,
+            featured=event.featured,
+            tickets_sold=sum(
+                ticket.sold_quantity
+                for ticket in event.ticket_types
+            ),
+            image_url=event.image_url,
+        )
+        for event in events
+    ]
+
+
+@router.get(
+    "/me",
+    response_model=list[EventListItem],
+)
+def list_my_events_endpoint(
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+) -> list[EventListItem]:
+    """Return all events owned by the authenticated user (all statuses)."""
+
+    events = list_events(
+        session,
+        host_id=current_user.uuid,
     )
 
     return [
