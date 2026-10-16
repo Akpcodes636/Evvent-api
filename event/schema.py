@@ -11,6 +11,7 @@ from model.event import EventStatus, EventType
 # Categories
 # ---------------------------------------------------------------------------
 
+
 class CategoryCreate(BaseModel):
     name: str = Field(
         min_length=1,

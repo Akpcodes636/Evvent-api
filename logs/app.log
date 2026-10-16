@@ -4507,3 +4507,644 @@ image_url
 2026-10-12 11:38:28,378 - INFO - event_ticketing - POST /auth/login -> 200 (7945.6ms)
 2026-10-12 11:39:05,244 - INFO - event_ticketing - GET /events/me -> 200 (2623.9ms)
 2026-10-12 11:40:38,034 - INFO - event_ticketing - Application shutdown
+2026-10-14 10:44:03,137 - INFO - event_ticketing - Application startup complete
+2026-10-14 10:44:12,420 - INFO - event_ticketing - GET / -> 200 (146.8ms)
+2026-10-14 10:44:12,557 - INFO - event_ticketing - GET /favicon.ico -> 404 (4.8ms)
+2026-10-14 10:44:18,011 - INFO - event_ticketing - GET /docs -> 200 (1.1ms)
+2026-10-14 10:44:19,983 - INFO - event_ticketing - GET /openapi.json -> 200 (411.8ms)
+2026-10-14 10:46:15,117 - INFO - event_ticketing - GET /bookings/me -> 401 (11.0ms)
+2026-10-16 10:33:40,208 - INFO - event_ticketing - Application startup complete
+2026-10-16 10:33:54,569 - INFO - event_ticketing - GET / -> 200 (140.9ms)
+2026-10-16 10:33:54,699 - INFO - event_ticketing - GET /favicon.ico -> 404 (4.0ms)
+2026-10-16 10:34:08,086 - INFO - event_ticketing - GET / -> 200 (1.1ms)
+2026-10-16 10:34:08,257 - INFO - event_ticketing - GET /favicon.ico -> 404 (1.6ms)
+2026-10-16 10:34:43,723 - INFO - event_ticketing - GET /docs -> 200 (0.6ms)
+2026-10-16 10:34:45,146 - INFO - event_ticketing - GET /openapi.json -> 200 (400.4ms)
+2026-10-16 10:37:16,096 - INFO - event_ticketing - GET /docs -> 200 (0.9ms)
+2026-10-16 10:37:17,354 - INFO - event_ticketing - GET /openapi.json -> 200 (5.0ms)
+2026-10-16 12:33:35,649 - INFO - event_ticketing - Application shutdown
+2026-10-16 12:33:39,436 - INFO - event_ticketing - Application startup complete
+2026-10-16 12:34:00,018 - INFO - event_ticketing - Application shutdown
+2026-10-16 12:45:01,177 - INFO - event_ticketing - Application startup complete
+2026-10-16 12:45:15,479 - INFO - event_ticketing - GET / -> 200 (88.6ms)
+2026-10-16 12:45:15,538 - INFO - event_ticketing - GET /favicon.ico -> 404 (12.3ms)
+2026-10-16 12:45:20,251 - INFO - event_ticketing - GET /docs -> 200 (1.5ms)
+2026-10-16 12:45:21,315 - INFO - event_ticketing - GET /openapi.json -> 200 (570.4ms)
+2026-10-16 12:46:29,920 - INFO - event_ticketing - User d16237b4-c2ba-40a6-862c-53d719df3316 (ewherheakpesiri+82@gmail.com) logged in
+2026-10-16 12:46:29,928 - INFO - event_ticketing - POST /auth/login -> 200 (7559.1ms)
+2026-10-16 12:47:17,621 - INFO - event_ticketing - GET /events/ -> 200 (8714.3ms)
+2026-10-16 12:49:38,335 - ERROR - event_ticketing - Database error on POST /bookings/: (psycopg2.OperationalError) could not translate host name "ep-polished-pond-ae4qiwqw-pooler.c-2.us-east-2.aws.neon.tech" to address: nodename nor servname provided, or not known
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 144, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 3319, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 1272, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/impl.py", line 178, in _do_get
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/util/langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/impl.py", line 176, in _do_get
+    return self._create_connection()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 389, in _create_connection
+    return _ConnectionRecord(self)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 674, in __init__
+    self.__connect()
+    ~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 900, in __connect
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/util/langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: could not translate host name "ep-polished-pond-ae4qiwqw-pooler.c-2.us-east-2.aws.neon.tech" to address: nodename nor servname provided, or not known
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 481, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/dependencies/utils.py", line 676, in solve_dependencies
+    solved = await run_in_threadpool(call, **solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2641, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1033, in run
+    result = context.run(func, *args)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/auth/dependencies.py", line 22, in get_current_user
+    user = session.get(User, user_id)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 3702, in get
+    return self._get_impl(
+           ~~~~~~~~~~~~~~^
+        entity,
+        ^^^^^^^
+    ...<7 lines>...
+        bind_arguments=bind_arguments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 3881, in _get_impl
+    return db_load_fn(
+        self,
+    ...<5 lines>...
+        bind_arguments=bind_arguments,
+    )
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/orm/loading.py", line 695, in load_on_pk_identity
+    session.execute(
+    ~~~~~~~~~~~~~~~^
+        q,
+        ^^
+    ...<2 lines>...
+        bind_arguments=bind_arguments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlmodel/orm/session.py", line 136, in execute
+    return super().execute(
+           ~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2373, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2261, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2113, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 1191, in _connection_for_bind
+    conn = bind.connect()
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 3295, in connect
+    return self._connection_cls(self)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 146, in __init__
+    Connection._handle_dbapi_exception_noconnection(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        err, dialect, engine
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 2450, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 144, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 3319, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 1272, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/impl.py", line 178, in _do_get
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/util/langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/impl.py", line 176, in _do_get
+    return self._create_connection()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 389, in _create_connection
+    return _ConnectionRecord(self)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 674, in __init__
+    self.__connect()
+    ~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 900, in __connect
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/util/langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate host name "ep-polished-pond-ae4qiwqw-pooler.c-2.us-east-2.aws.neon.tech" to address: nodename nor servname provided, or not known
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-10-16 12:49:38,389 - INFO - event_ticketing - POST /bookings/ -> 500 (61.6ms)
+2026-10-16 12:50:50,651 - ERROR - event_ticketing - Database error on POST /bookings/: (psycopg2.OperationalError) could not translate host name "ep-polished-pond-ae4qiwqw-pooler.c-2.us-east-2.aws.neon.tech" to address: nodename nor servname provided, or not known
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 1319, in _checkout
+    raise exc.InvalidatePoolError()
+sqlalchemy.exc.InvalidatePoolError: ()
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 144, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 3319, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 1353, in _checkout
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/util/langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 1350, in _checkout
+    fairy._connection_record.get_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 837, in get_connection
+    self.__connect()
+    ~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 900, in __connect
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/util/langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: could not translate host name "ep-polished-pond-ae4qiwqw-pooler.c-2.us-east-2.aws.neon.tech" to address: nodename nor servname provided, or not known
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 481, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/dependencies/utils.py", line 676, in solve_dependencies
+    solved = await run_in_threadpool(call, **solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2641, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1033, in run
+    result = context.run(func, *args)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/auth/dependencies.py", line 22, in get_current_user
+    user = session.get(User, user_id)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 3702, in get
+    return self._get_impl(
+           ~~~~~~~~~~~~~~^
+        entity,
+        ^^^^^^^
+    ...<7 lines>...
+        bind_arguments=bind_arguments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 3881, in _get_impl
+    return db_load_fn(
+        self,
+    ...<5 lines>...
+        bind_arguments=bind_arguments,
+    )
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/orm/loading.py", line 695, in load_on_pk_identity
+    session.execute(
+    ~~~~~~~~~~~~~~~^
+        q,
+        ^^
+    ...<2 lines>...
+        bind_arguments=bind_arguments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlmodel/orm/session.py", line 136, in execute
+    return super().execute(
+           ~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2373, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2261, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2113, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 1191, in _connection_for_bind
+    conn = bind.connect()
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 3295, in connect
+    return self._connection_cls(self)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 146, in __init__
+    Connection._handle_dbapi_exception_noconnection(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        err, dialect, engine
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 2450, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 144, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 3319, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 1353, in _checkout
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/util/langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 1350, in _checkout
+    fairy._connection_record.get_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 837, in get_connection
+    self.__connect()
+    ~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 900, in __connect
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/util/langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/pool/base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate host name "ep-polished-pond-ae4qiwqw-pooler.c-2.us-east-2.aws.neon.tech" to address: nodename nor servname provided, or not known
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-10-16 12:50:50,665 - INFO - event_ticketing - POST /bookings/ -> 500 (110390.1ms)
+2026-10-16 12:54:15,115 - INFO - event_ticketing - POST /bookings/ -> 404 (3518.6ms)
+2026-10-16 12:54:42,442 - INFO - event_ticketing - GET /events/me -> 200 (2268.0ms)
+2026-10-16 12:57:00,394 - INFO - event_ticketing - GET /events/94adcadd-e451-4272-a9a8-7f62bd5e1a4b -> 200 (1562.9ms)
+2026-10-16 12:58:02,862 - INFO - event_ticketing - User d16237b4-c2ba-40a6-862c-53d719df3316 booked event 94adcadd-e451-4272-a9a8-7f62bd5e1a4b (order 72bebefe-5f0d-42ef-a15d-f462ac50c245)
+2026-10-16 12:58:03,310 - ERROR - event_ticketing - Unexpected error on POST /bookings/: 'Event' object has no attribute 'images'
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/main.py", line 63, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/gzip.py", line 29, in __call__
+    await responder(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/gzip.py", line 130, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/gzip.py", line 46, in __call__
+    await self.app(scope, receive, self.send_with_compression)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2641, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1033, in run
+    result = context.run(func, *args)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/booking/controller.py", line 24, in create_booking_endpoint
+    return BookingResponse.from_order(order)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/booking/schema.py", line 56, in from_order
+    event=BookingEventSummary.from_event(order.event),
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/booking/schema.py", line 36, in from_event
+    images=[image.url for image in event.images],
+                                   ^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/pydantic/main.py", line 1042, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'Event' object has no attribute 'images'
+2026-10-16 14:13:52,950 - INFO - event_ticketing - Application startup complete
+2026-10-16 14:14:07,079 - INFO - event_ticketing - GET / -> 200 (108.8ms)
+2026-10-16 14:14:07,148 - INFO - event_ticketing - GET /favicon.ico -> 404 (7.0ms)
+2026-10-16 14:14:10,862 - INFO - event_ticketing - GET /docs -> 200 (1.1ms)
+2026-10-16 14:14:11,765 - INFO - event_ticketing - GET /openapi.json -> 200 (525.5ms)
+2026-10-16 14:17:07,330 - INFO - event_ticketing - User d16237b4-c2ba-40a6-862c-53d719df3316 (ewherheakpesiri+82@gmail.com) logged in
+2026-10-16 14:17:07,445 - INFO - event_ticketing - POST /auth/login -> 200 (7463.7ms)
+2026-10-16 14:17:41,220 - INFO - event_ticketing - GET /events/me -> 200 (2850.6ms)
+2026-10-16 14:18:48,021 - INFO - event_ticketing - GET /events/94adcadd-e451-4272-a9a8-7f62bd5e1a4b -> 200 (1641.5ms)
+2026-10-16 14:19:33,223 - INFO - event_ticketing - POST /bookings/ -> 404 (1905.6ms)
+2026-10-16 14:40:32,127 - INFO - event_ticketing - User 44a782c8-7a9d-4768-8cc4-3b95f3c73dc2 (ewherheakpesiri@gmail.com) logged in
+2026-10-16 14:40:32,135 - INFO - event_ticketing - POST /auth/login -> 200 (3493.9ms)
+2026-10-16 14:40:57,971 - INFO - event_ticketing - GET /events/me -> 200 (2108.9ms)
+2026-10-16 14:41:24,420 - INFO - event_ticketing - GET /events/0182cb29-e4a0-4785-b823-5fefddeb282d -> 200 (1369.6ms)
+2026-10-16 14:42:50,975 - INFO - event_ticketing - User 44a782c8-7a9d-4768-8cc4-3b95f3c73dc2 booked event 0182cb29-e4a0-4785-b823-5fefddeb282d (order 434fed0f-de59-4f85-9fd2-40e94cca7f49)
+2026-10-16 14:42:51,411 - ERROR - event_ticketing - Unexpected error on POST /bookings/: 'Event' object has no attribute 'images'
+Traceback (most recent call last):
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/main.py", line 63, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/gzip.py", line 29, in __call__
+    await responder(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/gzip.py", line 130, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/gzip.py", line 46, in __call__
+    await self.app(scope, receive, self.send_with_compression)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/fastapi/routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2641, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1033, in run
+    result = context.run(func, *args)
+  File "/Users/ewherheakpesir/Documents/Evvent-api/booking/controller.py", line 24, in create_booking_endpoint
+    return BookingResponse.from_order(order)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/booking/schema.py", line 56, in from_order
+    event=BookingEventSummary.from_event(order.event),
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/booking/schema.py", line 36, in from_event
+    images=[image.url for image in event.images],
+                                   ^^^^^^^^^^^^
+  File "/Users/ewherheakpesir/Documents/Evvent-api/venv/lib/python3.14/site-packages/pydantic/main.py", line 1042, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'Event' object has no attribute 'images'
+2026-10-16 15:01:29,510 - INFO - event_ticketing - Application shutdown
+2026-10-16 15:01:35,268 - INFO - event_ticketing - Application startup complete
+2026-10-16 15:02:08,970 - INFO - event_ticketing - User 44a782c8-7a9d-4768-8cc4-3b95f3c73dc2 booked event 0182cb29-e4a0-4785-b823-5fefddeb282d (order 4c774f9a-df03-464b-bd14-55194461eadb)
+2026-10-16 15:02:09,278 - INFO - event_ticketing - POST /bookings/ -> 201 (10438.2ms)
+2026-10-16 15:18:42,482 - INFO - event_ticketing - Application shutdown
+2026-10-16 15:18:48,964 - INFO - event_ticketing - Application startup complete
+2026-10-16 15:23:23,233 - INFO - event_ticketing - Application shutdown
+2026-10-16 15:37:26,415 - INFO - event_ticketing - Application startup complete
+2026-10-16 15:37:26,536 - INFO - event_ticketing - Application shutdown
+2026-10-16 15:37:32,603 - INFO - event_ticketing - Application startup complete
+2026-10-16 16:02:27,208 - INFO - event_ticketing - Application shutdown
+2026-10-16 16:02:40,938 - INFO - event_ticketing - Application startup complete
+2026-10-16 16:04:17,350 - INFO - event_ticketing - Application shutdown
+2026-10-16 16:04:29,855 - INFO - event_ticketing - Application startup complete
+2026-10-16 16:05:19,781 - INFO - event_ticketing - Application shutdown
+2026-10-16 16:05:37,825 - INFO - event_ticketing - Application startup complete
+2026-10-16 16:06:01,667 - INFO - event_ticketing - Application shutdown
+2026-10-16 16:06:13,595 - INFO - event_ticketing - Application startup complete
+2026-10-16 16:06:19,217 - INFO - event_ticketing - Application shutdown
+2026-10-16 16:06:31,943 - INFO - event_ticketing - Application startup complete
+2026-10-16 16:07:00,461 - INFO - event_ticketing - Application shutdown
+2026-10-16 16:07:15,176 - INFO - event_ticketing - Application startup complete
+2026-10-16 16:08:37,711 - INFO - event_ticketing - Application shutdown
+2026-10-16 16:08:53,199 - INFO - event_ticketing - Application startup complete
+2026-10-16 16:08:53,311 - INFO - event_ticketing - Application shutdown
+2026-10-16 16:09:08,720 - INFO - event_ticketing - Application startup complete
+2026-10-16 16:18:06,066 - INFO - event_ticketing - GET /docs -> 200 (11.5ms)
+2026-10-16 16:18:09,416 - INFO - event_ticketing - GET /openapi.json -> 200 (1960.2ms)
+2026-10-16 16:18:53,250 - INFO - event_ticketing - Application shutdown

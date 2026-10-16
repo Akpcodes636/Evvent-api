@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     DATABASE_URL: str
-    RESET_TOKEN_EXPIRES_MINUTES: int = 30
+    RESET_TOKEN_EXPIRES_MINUTES: int = 1440 
     JWT_SECRET: str = "change-this-development-secret-before-production"
     ACCESS_TOKEN_EXPIRES_MINUTES: int = 60
     REFRESH_TOKEN_EXPIRES_DAYS: int = 30
@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     MAILJET_FROM_EMAIL: str = "no-reply@evvent.com"
     MAILJET_FROM_NAME: str = "Evvent"
 
+    PAYSTACK_SECRET_KEY: str | None = None
+    PAYSTACK_BASE_URL: str = "https://api.paystack.co"
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

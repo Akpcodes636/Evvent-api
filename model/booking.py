@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 import uuid
 
-from sqlalchemy import Column, DateTime, Enum as SqlEnum, String
+from sqlalchemy import Column, DateTime, Enum as SqlEnum, Integer, String
 from sqlmodel import Field, Relationship, SQLModel
 
 from model.event import Event, TicketType
@@ -28,6 +28,25 @@ class PayoutStatus(str, Enum):
     paid = "paid"
 
 
+class AttendeeDetail(SQLModel, table=True):
+    """One row per ticket in an order — captures the ticket holder's details."""
+
+    __tablename__ = "attendee_details"
+
+    uuid: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True, index=True)
+    order_id: uuid.UUID = Field(foreign_key="orders.uuid", index=True)
+    ticket_index: int = Field(
+        sa_column=Column(Integer, nullable=False),
+        description="1-based position of this ticket within the order",
+    )
+    first_name: str = Field(max_length=100)
+    last_name: str = Field(max_length=100)
+    email: str = Field(sa_column=Column(String(320), nullable=False))
+    phone: str = Field(max_length=32)
+
+    order: "Order" = Relationship(back_populates="attendees")
+
+
 class Order(SQLModel, table=True):
     __tablename__ = "orders"
 
@@ -42,6 +61,10 @@ class Order(SQLModel, table=True):
         default=OrderStatus.pending,
         sa_column=Column(SqlEnum(OrderStatus, name="order_status_enum"), nullable=False, index=True),
     )
+    paystack_reference: str | None = Field(
+        default=None,
+        sa_column=Column(String(200), nullable=True, unique=True),
+    )
     created_at: datetime = Field(default_factory=datetime.utcnow, sa_column=Column(DateTime, nullable=False))
     updated_at: datetime = Field(
         default_factory=datetime.utcnow,
@@ -52,6 +75,7 @@ class Order(SQLModel, table=True):
     event: Event = Relationship()
     ticket_type: TicketType = Relationship()
     payment: "Payment" = Relationship(back_populates="order")
+    attendees: list[AttendeeDetail] = Relationship(back_populates="order")
 
 
 class Payment(SQLModel, table=True):

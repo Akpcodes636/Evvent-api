@@ -18,6 +18,7 @@ from core.exceptions import AppError
 from event.controller import categories_router, router as event_router
 from logger import logger
 from utils.uploads import UPLOAD_ROOT
+from fastapi.middleware.gzip import GZipMiddleware
 
 
 @asynccontextmanager
@@ -34,6 +35,15 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+
+# GZip compression middleware
+app.add_middleware(
+    GZipMiddleware,
+    minimum_size=1000,
+    compresslevel=5,
+)
+
+# CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -45,6 +55,7 @@ app.add_middleware(
     allow_methods=["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["Authorization", "Content-Type"],
 )
+
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
