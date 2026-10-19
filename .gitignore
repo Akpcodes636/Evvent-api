@@ -1,0 +1,36 @@
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Logs
+logs/
+*.log
+
+# Local databases
+*.db
+*.sqlite3
+
+# macOS and IDE files
+.DS_Store
+.idea/
+.vscode/
+
+# Uploaded files — use managed storage for production assets
+uploads/
