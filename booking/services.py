@@ -6,10 +6,10 @@ from datetime import datetime
 import httpx
 from sqlmodel import Session, select
 
-from booking.schema import AttendeeDetailCreate
+from booking.schema import AttendeeDetailCreate, CartAttendee, CartItemCreate, CartItemUpdate
 from core.config import settings
 from core.exceptions import AppError
-from model.booking import AttendeeDetail, Order, OrderStatus, Payment, PaymentStatus
+from model.booking import AttendeeDetail, Cart, Order, OrderStatus, Payment, PaymentStatus
 from model.event import Event, EventStatus, TicketType
 from model.user import AccountType, User
 
@@ -42,8 +42,8 @@ def _save_attendees(
             AttendeeDetail(
                 order_id=order.uuid,
                 ticket_index=i,
-                first_name=attendee.first_name,
-                last_name=attendee.last_name,
+                full_name=attendee.full_name,
+                # last_name=attendee.last_name,
                 email=str(attendee.email),
                 phone=attendee.phone,
             )
@@ -254,8 +254,7 @@ def initialize_paystack_payment(
     )
 
     email = primary_attendee.email if primary_attendee else user.email
-    first_name = primary_attendee.first_name if primary_attendee else user.first_name
-    last_name = primary_attendee.last_name if primary_attendee else user.last_name
+    customer_name = primary_attendee.full_name if primary_attendee else f"{user.first_name} {user.last_name}"
 
     payload = {
         "email": email,
@@ -263,7 +262,7 @@ def initialize_paystack_payment(
         "reference": f"EVVENT-{order.uuid}",
         "metadata": {
             "order_id": str(order.uuid),
-            "customer_name": f"{first_name} {last_name}",
+            "customer_name": customer_name,
             "event_id": str(order.event_id),
         },
         "callback_url": f"{settings.PAYSTACK_BASE_URL}/callback",
@@ -375,3 +374,169 @@ def verify_paystack_webhook(session: Session, payload: bytes, signature: str) ->
         )
     )
     session.commit()
+
+
+# ---------------------------------------------------------------------------
+# Cart (Booking Wishlist)
+# ---------------------------------------------------------------------------
+
+def add_to_cart(
+    session: Session,
+    user: User,
+    *,
+    event_id: _uuid.UUID,
+    ticket_type_id: _uuid.UUID,
+    quantity: int,
+) -> Cart:
+    """
+    Add a ticket selection to the user's cart.
+
+    If the user already has a cart item for the same event + ticket type,
+    the quantity is updated. Otherwise a new cart item is created.
+    """
+    event, ticket_type = _get_event_and_ticket_type(session, event_id, ticket_type_id)
+
+    available = ticket_type.total_quantity - ticket_type.sold_quantity
+    if quantity > available:
+        raise AppError(
+            f"Only {available} ticket(s) available for '{ticket_type.name}'",
+            status_code=400,
+        )
+
+    existing = session.exec(
+        select(Cart).where(
+            Cart.user_id == user.uuid,
+            Cart.event_id == event.uuid,
+            Cart.ticket_type_id == ticket_type.uuid,
+        )
+    ).first()
+
+    if existing:
+        existing.quantity = quantity
+        existing.updated_at = datetime.utcnow()
+        session.add(existing)
+        session.commit()
+        session.refresh(existing)
+        return existing
+
+    cart_item = Cart(
+        user_id=user.uuid,
+        event_id=event.uuid,
+        ticket_type_id=ticket_type.uuid,
+        quantity=quantity,
+    )
+    session.add(cart_item)
+    session.commit()
+    session.refresh(cart_item)
+    return cart_item
+
+
+def list_cart(session: Session, user: User) -> list[Cart]:
+    return list(
+        session.exec(
+            select(Cart)
+            .where(Cart.user_id == user.uuid)
+            .order_by(Cart.created_at.desc())
+        ).all()
+    )
+
+
+def get_cart_item(session: Session, user: User, cart_item_id: _uuid.UUID) -> Cart:
+    item = session.get(Cart, cart_item_id)
+    if not item or item.user_id != user.uuid:
+        raise AppError("Cart item not found", status_code=404)
+    return item
+
+
+def update_cart_item(
+    session: Session,
+    user: User,
+    cart_item_id: _uuid.UUID,
+    *,
+    quantity: int | None = None,
+    attendees: list | None = None,
+) -> Cart:
+    item = get_cart_item(session, user, cart_item_id)
+
+    if quantity is not None:
+        ticket_type = item.ticket_type
+        available = ticket_type.total_quantity - ticket_type.sold_quantity
+        if quantity > available:
+            raise AppError(
+                f"Only {available} ticket(s) available for '{ticket_type.name}'",
+                status_code=400,
+            )
+        item.quantity = quantity
+
+    if attendees is not None:
+        # Cap to item.quantity (max 10 forms)
+        capped = attendees[: item.quantity]
+        item.attendees = [a.model_dump() for a in capped]
+
+    item.updated_at = datetime.utcnow()
+    session.add(item)
+    session.commit()
+    session.refresh(item)
+    return item
+
+
+def remove_from_cart(session: Session, user: User, cart_item_id: _uuid.UUID) -> None:
+    item = get_cart_item(session, user, cart_item_id)
+    session.delete(item)
+    session.commit()
+
+
+def checkout_cart_item(
+    session: Session,
+    user: User,
+    cart_item_id: _uuid.UUID,
+) -> Order:
+    """
+    Convert a cart item into a confirmed order.
+
+    All attendee forms saved in the cart must be complete before checkout.
+    On success the cart item is deleted.
+    """
+    item = get_cart_item(session, user, cart_item_id)
+
+    saved = item.attendees or []
+    if len(saved) != item.quantity:
+        raise AppError(
+            f"All {item.quantity} attendee form(s) must be filled before checkout. "
+            f"Currently {len(saved)} saved.",
+            status_code=400,
+        )
+
+    # Validate each saved attendee has all required fields
+    attendee_objs: list[AttendeeDetailCreate] = []
+    for idx, raw in enumerate(saved, start=1):
+        missing = [f for f in ("full_name", "email", "phone") if not raw.get(f)]
+        if missing:
+            raise AppError(
+                f"Attendee #{idx} is missing: {', '.join(missing)}",
+                status_code=400,
+            )
+        # confirm_email defaults to email so the validator passes
+        attendee_objs.append(
+            AttendeeDetailCreate(
+                full_name=raw["full_name"],
+                email=raw["email"],
+                confirm_email=raw["email"],
+                phone=raw["phone"],
+            )
+        )
+
+    order = create_booking(
+        session,
+        user,
+        event_id=item.event_id,
+        ticket_type_id=item.ticket_type_id,
+        quantity=item.quantity,
+        attendees=attendee_objs,
+    )
+
+    # Remove the cart item now that the order is created
+    session.delete(item)
+    session.commit()
+
+    return order

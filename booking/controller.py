@@ -8,18 +8,27 @@ from booking.schema import (
     AttendeeDetailResponse,
     BookingCreate,
     BookingResponse,
+    CartItemCreate,
+    CartItemResponse,
+    CartItemUpdate,
     PaymentRequest,
     PaymentResponse,
     PaystackInitResponse,
 )
 from booking.services import (
+    add_to_cart,
     cancel_booking,
+    checkout_cart_item,
     create_booking,
     get_booking,
     get_booking_attendees,
+    get_cart_item,
     initialize_paystack_payment,
+    list_cart,
     list_user_bookings,
     pay_booking,
+    remove_from_cart,
+    update_cart_item,
     verify_paystack_webhook,
 )
 from database.session import get_session
@@ -27,6 +36,7 @@ from logger import logger
 from model.user import User
 
 router = APIRouter(prefix="/bookings", tags=["Bookings"])
+cart_router = APIRouter(prefix="/cart", tags=["Cart"])
 
 
 # ---------------------------------------------------------------------------
@@ -43,7 +53,7 @@ def create_booking_endpoint(
     Create a new booking.
 
     Supply one `attendees` entry per ticket purchased — each entry requires:
-    - `first_name`, `last_name`
+    - `full_name`,
     - `email` + `confirm_email` (must match)
     - `phone`
     """
@@ -170,4 +180,101 @@ def cancel_booking_endpoint(
 ) -> BookingResponse:
     order = cancel_booking(session, current_user, order_id)
     logger.info("User %s cancelled booking %s", current_user.uuid, order_id)
+    return BookingResponse.from_order(order)
+
+
+# ---------------------------------------------------------------------------
+# Cart endpoints
+# ---------------------------------------------------------------------------
+
+@cart_router.post("/", response_model=CartItemResponse, status_code=status.HTTP_201_CREATED)
+def add_to_cart_endpoint(
+    data: CartItemCreate,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+) -> CartItemResponse:
+    """
+    Add an event ticket selection to the cart (wishlist).
+
+    If the same event + ticket type is already in the cart, the quantity is updated.
+    Returns the cart item with attendee form slots pre-populated.
+    """
+    item = add_to_cart(
+        session,
+        current_user,
+        event_id=data.event_id,
+        ticket_type_id=data.ticket_type_id,
+        quantity=data.quantity,
+    )
+    logger.info("User %s added ticket type %s (qty %d) to cart", current_user.uuid, data.ticket_type_id, data.quantity)
+    return CartItemResponse.from_cart(item)
+
+
+@cart_router.get("/", response_model=list[CartItemResponse])
+def list_cart_endpoint(
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+) -> list[CartItemResponse]:
+    """Return all cart items for the current user."""
+    return [CartItemResponse.from_cart(item) for item in list_cart(session, current_user)]
+
+
+@cart_router.get("/{cart_item_id}", response_model=CartItemResponse)
+def get_cart_item_endpoint(
+    cart_item_id: UUID,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+) -> CartItemResponse:
+    item = get_cart_item(session, current_user, cart_item_id)
+    return CartItemResponse.from_cart(item)
+
+
+@cart_router.patch("/{cart_item_id}", response_model=CartItemResponse)
+def update_cart_item_endpoint(
+    cart_item_id: UUID,
+    data: CartItemUpdate,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+) -> CartItemResponse:
+    """
+    Update quantity and/or save attendee form progress.
+
+    Attendee list is capped at `quantity` (max 10).
+    Submit partial attendee data to save progress — checkout validates completeness.
+    """
+    item = update_cart_item(
+        session,
+        current_user,
+        cart_item_id,
+        quantity=data.quantity,
+        attendees=data.attendees,
+    )
+    return CartItemResponse.from_cart(item)
+
+
+@cart_router.delete("/{cart_item_id}", status_code=status.HTTP_204_NO_CONTENT)
+def remove_from_cart_endpoint(
+    cart_item_id: UUID,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+) -> None:
+    """Remove an item from the cart."""
+    remove_from_cart(session, current_user, cart_item_id)
+    logger.info("User %s removed cart item %s", current_user.uuid, cart_item_id)
+
+
+@cart_router.post("/{cart_item_id}/checkout", response_model=BookingResponse, status_code=status.HTTP_201_CREATED)
+def checkout_cart_item_endpoint(
+    cart_item_id: UUID,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+) -> BookingResponse:
+    """
+    Convert a cart item into a booking order.
+
+    All attendee forms must be complete (full_name, email, phone for each ticket).
+    The cart item is deleted after a successful checkout.
+    """
+    order = checkout_cart_item(session, current_user, cart_item_id)
+    logger.info("User %s checked out cart item %s → order %s", current_user.uuid, cart_item_id, order.uuid)
     return BookingResponse.from_order(order)

@@ -240,6 +240,7 @@ class EventListItem(BaseModel):
     status: EventStatus
     featured: bool
     tickets_sold: int
+    total_available: int
 
     # Cloudinary URL for the event's single cover image
     image_url: str

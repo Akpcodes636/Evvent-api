@@ -13,7 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from admin.controller import router as admin_router
 from auth.controller import router as auth_router
-from booking.controller import router as booking_router
+from booking.controller import cart_router, router as booking_router
 from core.exceptions import AppError
 from event.controller import categories_router, router as event_router
 from logger import logger
@@ -79,6 +79,7 @@ app.include_router(auth_router)
 app.include_router(event_router)
 app.include_router(categories_router)
 app.include_router(booking_router)
+app.include_router(cart_router)
 app.include_router(admin_router)
 
 

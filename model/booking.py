@@ -3,6 +3,7 @@ from enum import Enum
 import uuid
 
 from sqlalchemy import Column, DateTime, Enum as SqlEnum, Integer, String
+from sqlalchemy.dialects.postgresql import JSON
 from sqlmodel import Field, Relationship, SQLModel
 
 from model.event import Event, TicketType
@@ -28,6 +29,43 @@ class PayoutStatus(str, Enum):
     paid = "paid"
 
 
+class Cart(SQLModel, table=True):
+    """
+    Persistent booking cart (wishlist).
+
+    Each row represents one ticket-type selection saved by a user.
+    Attendee details are stored as a JSON list so users can save progress
+    and resume later. A unique constraint prevents duplicate entries for
+    the same user + event + ticket type.
+    """
+
+    __tablename__ = "carts"
+
+    uuid: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True, index=True)
+    user_id: uuid.UUID = Field(foreign_key="users.uuid", index=True)
+    event_id: uuid.UUID = Field(foreign_key="events.uuid", index=True)
+    ticket_type_id: uuid.UUID = Field(foreign_key="ticket_types.uuid", index=True)
+    quantity: int = Field(default=1, ge=1, le=10)
+    # Partial or complete attendee data saved as a list of dicts.
+    # Each dict mirrors AttendeeDetailCreate (full_name, email, phone).
+    attendees: list | None = Field(
+        default=None,
+        sa_column=Column(JSON, nullable=True),
+    )
+    created_at: datetime = Field(
+        default_factory=datetime.utcnow,
+        sa_column=Column(DateTime, nullable=False),
+    )
+    updated_at: datetime = Field(
+        default_factory=datetime.utcnow,
+        sa_column=Column(DateTime, nullable=False, onupdate=datetime.utcnow),
+    )
+
+    user: User = Relationship()
+    event: Event = Relationship()
+    ticket_type: "TicketType" = Relationship()
+
+
 class AttendeeDetail(SQLModel, table=True):
     """One row per ticket in an order — captures the ticket holder's details."""
 
@@ -39,8 +77,8 @@ class AttendeeDetail(SQLModel, table=True):
         sa_column=Column(Integer, nullable=False),
         description="1-based position of this ticket within the order",
     )
-    first_name: str = Field(max_length=100)
-    last_name: str = Field(max_length=100)
+    full_name: str = Field(max_length=100)
+    # last_name: str = Field(max_length=100)
     email: str = Field(sa_column=Column(String(320), nullable=False))
     phone: str = Field(max_length=32)
 

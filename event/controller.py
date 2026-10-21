@@ -199,6 +199,10 @@ def list_events_endpoint(
                 ticket.sold_quantity
                 for ticket in event.ticket_types
             ),
+            total_available=sum(
+                ticket.total_quantity - ticket.sold_quantity
+                for ticket in event.ticket_types
+            ),
             image_url=event.image_url,
         )
         for event in events
@@ -232,6 +236,10 @@ def list_recommended_events_endpoint(
             featured=event.featured,
             tickets_sold=sum(
                 ticket.sold_quantity
+                for ticket in event.ticket_types
+            ),
+            total_available=sum(
+                ticket.total_quantity - ticket.sold_quantity
                 for ticket in event.ticket_types
             ),
             image_url=event.image_url,
@@ -268,6 +276,10 @@ def list_my_events_endpoint(
             featured=event.featured,
             tickets_sold=sum(
                 ticket.sold_quantity
+                for ticket in event.ticket_types
+            ),
+            total_available=sum(
+                ticket.total_quantity - ticket.sold_quantity
                 for ticket in event.ticket_types
             ),
             image_url=event.image_url,
