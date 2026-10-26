@@ -66,6 +66,7 @@ class Cart(SQLModel, table=True):
     ticket_type: "TicketType" = Relationship()
 
 
+
 class AttendeeDetail(SQLModel, table=True):
     """One row per ticket in an order — captures the ticket holder's details."""
 
@@ -77,12 +78,16 @@ class AttendeeDetail(SQLModel, table=True):
         sa_column=Column(Integer, nullable=False),
         description="1-based position of this ticket within the order",
     )
-    full_name: str = Field(max_length=100)
-    # last_name: str = Field(max_length=100)
+    first_name: str = Field(max_length=100)
+    last_name: str = Field(max_length=100)
     email: str = Field(sa_column=Column(String(320), nullable=False))
     phone: str = Field(max_length=32)
 
     order: "Order" = Relationship(back_populates="attendees")
+
+    @property
+    def full_name(self) -> str:
+        return f"{self.first_name} {self.last_name}".strip()
 
 
 class Order(SQLModel, table=True):

@@ -32,18 +32,34 @@ def _get_event_and_ticket_type(
     return event, ticket_type
 
 
+
+def _split_full_name(full_name: str) -> tuple[str, str]:
+    parts = full_name.strip().split(maxsplit=1)
+
+    if not parts:
+        raise ValueError("Attendee full name cannot be empty")
+
+    first_name = parts[0]
+    last_name = parts[1] if len(parts) > 1 else ""
+
+    return first_name, last_name
+
+
+
 def _save_attendees(
     session: Session,
     order: Order,
     attendees: list[AttendeeDetailCreate],
 ) -> None:
     for i, attendee in enumerate(attendees, start=1):
+        first_name, last_name = _split_full_name(attendee.full_name)
+
         session.add(
             AttendeeDetail(
                 order_id=order.uuid,
                 ticket_index=i,
-                full_name=attendee.full_name,
-                # last_name=attendee.last_name,
+                first_name=first_name,
+                last_name=last_name,
                 email=str(attendee.email),
                 phone=attendee.phone,
             )
@@ -254,7 +270,11 @@ def initialize_paystack_payment(
     )
 
     email = primary_attendee.email if primary_attendee else user.email
-    customer_name = primary_attendee.full_name if primary_attendee else f"{user.first_name} {user.last_name}"
+    customer_name = (
+    primary_attendee.full_name
+    if primary_attendee
+    else f"{user.first_name} {user.last_name}"
+)
 
     payload = {
         "email": email,
@@ -311,6 +331,33 @@ def initialize_paystack_payment(
     }
 
 
+def _handle_feature_payment(session: Session, reference: str) -> bool:
+    """
+    Check whether *reference* belongs to an event feature fee payment and, if
+    so, publish the event and mark it as featured.
+
+    Returns True if the reference was handled, False otherwise.
+    """
+    from model.event import Event, EventStatus
+
+    event = session.exec(
+        select(Event).where(Event.feature_paystack_reference == reference)
+    ).first()
+
+    if not event:
+        return False
+
+    # Idempotent: already processed
+    if event.featured and event.status == EventStatus.published:
+        return True
+
+    event.featured = True
+    event.status = EventStatus.published
+    session.add(event)
+    session.commit()
+    return True
+
+
 def verify_paystack_webhook(session: Session, payload: bytes, signature: str) -> None:
     """
     Validate the Paystack webhook signature and fulfill the order on success.
@@ -338,6 +385,11 @@ def verify_paystack_webhook(session: Session, payload: bytes, signature: str) ->
         return
 
     reference = body.get("data", {}).get("reference", "")
+
+    # Feature fee payments use the "EVVENT-FEAT-" prefix — handle separately
+    if _handle_feature_payment(session, reference):
+        return
+
     order = session.exec(
         select(Order).where(Order.paystack_reference == reference)
     ).first()

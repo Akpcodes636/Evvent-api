@@ -1,13 +1,16 @@
 from uuid import UUID
 
-from sqlmodel import Session, select
+import httpx
+from sqlmodel import Session, select, func
 
+from core.config import settings
 from core.exceptions import AppError
 from event.schema import (
     EventCreate,
     EventUpdate,
     TicketTypeUpdate,
 )
+from model.booking import Order, OrderStatus
 from model.event import (
     Category,
     Event,
@@ -17,6 +20,7 @@ from model.event import (
     UserCategoryPreference,
 )
 from model.user import AccountType, User
+
 
 
 def ensure_event_access(
@@ -180,15 +184,26 @@ def list_events_for_user(
     *,
     status: EventStatus | None = EventStatus.published,
 ) -> list[Event]:
-    category_ids = [
+    # Categories the user explicitly set as preferences
+    pref_category_ids = {
         category.uuid
-        for category in get_user_category_preferences(
-            session,
-            user,
-        )
-    ]
+        for category in get_user_category_preferences(session, user)
+    }
 
-    if not category_ids:
+    # Categories inferred from events the user has actually attended
+    attended_category_ids = set(
+        session.exec(
+            select(EventCategoryLink.category_id)
+            .join(Order, Order.event_id == EventCategoryLink.event_id)
+            .where(Order.user_id == user.uuid)
+            .where(Order.status == OrderStatus.completed)
+            .distinct()
+        ).all()
+    )
+
+    all_category_ids = list(pref_category_ids | attended_category_ids)
+
+    if not all_category_ids:
         return list_events(
             session,
             status=status,
@@ -203,23 +218,20 @@ def list_events_for_user(
         )
         .where(
             EventCategoryLink.category_id.in_(
-                category_ids
+                all_category_ids
             )
         )
     )
 
-    if status:
-        query = query.where(
-            Event.status == status
-        )
+    if status is not None:
+        query = query.where(Event.status == status)
 
-    query = query.order_by(
-        Event.event_date
-    )
+    query = query.order_by(Event.event_date)
 
     return list(
         session.exec(query).all()
     )
+
 
 
 # ============================================================
@@ -235,9 +247,12 @@ def create_event(
     """
     Create an event owned by the specified host.
 
-    Events are published immediately after creation.
-    The event image is uploaded separately by the router
-    to Cloudinary and stored in Event.image_url.
+    Events are created as drafts by default.  The organizer must publish
+    them explicitly via POST /events/{id}/publish, or they are published
+    automatically when a feature fee payment is confirmed.
+
+    If data.featured is True the caller is responsible for initiating the
+    feature payment immediately after this function returns.
     """
 
     categories = _get_categories(
@@ -254,7 +269,8 @@ def create_event(
         event_date=data.event_date,
         duration=data.duration,
         event_type=data.event_type,
-        status=EventStatus.published,
+        status=EventStatus.draft,
+        featured=data.featured,
     )
 
     session.add(event)
@@ -383,6 +399,69 @@ def list_events(
         session.exec(query).all()
     )
 
+def list_events_paginated(
+    session: Session,
+    *,
+    page_num: int = 1,
+    page_size: int = 10,
+    location: str | None = None,
+    category_id: UUID | None = None,
+    search: str | None = None,
+    event_type: str | None = None,
+    status: EventStatus | None = None,
+    featured: bool | None = None,
+) -> tuple[list[Event], int]:
+    query = select(Event)
+
+    if location:
+        query = query.where(
+            Event.location.ilike(f"%{location}%")
+        )
+
+    if search:
+        query = query.where(
+            Event.title.ilike(f"%{search}%")
+        )
+
+    if event_type:
+        query = query.where(Event.event_type == event_type)
+
+    if status is not None:
+        query = query.where(Event.status == status)
+
+    if featured is not None:
+        query = query.where(Event.featured == featured)
+
+    if category_id:
+        query = (
+            query
+            .join(
+                EventCategoryLink,
+                EventCategoryLink.event_id == Event.uuid,
+            )
+            .where(EventCategoryLink.category_id == category_id)
+        )
+
+    # Count all matching events before applying pagination.
+    count_query = (
+        select(func.count())
+        .select_from(query.order_by(None).subquery())
+    )
+    total = session.exec(count_query).one()
+
+    # Retrieve only the requested page from the database.
+    offset = (page_num - 1) * page_size
+
+    paginated_query = (
+        query
+        .order_by(Event.event_date, Event.uuid)
+        .offset(offset)
+        .limit(page_size)
+    )
+
+    events = list(session.exec(paginated_query).all())
+
+    return events, total
 
 # ============================================================
 # UPDATE EVENT
@@ -494,6 +573,95 @@ def feature_event(
     session.refresh(event)
 
     return event
+
+
+# ============================================================
+# FEATURE PAYMENT
+# ============================================================
+
+
+def initialize_feature_payment(
+    session: Session,
+    event: Event,
+    user: User,
+) -> dict:
+    """
+    Initiate a Paystack payment so the organizer can pay the feature fee.
+
+    On success the authorization_url is returned for the frontend to redirect
+    the user.  The Paystack reference is stored on the event so the webhook
+    can identify it later.
+
+    The event is published and marked as featured automatically when Paystack
+    calls the webhook confirming the payment.
+    """
+    if not settings.PAYSTACK_SECRET_KEY:
+        raise AppError(
+            "Payment service is not configured. Please contact support.",
+            status_code=503,
+        )
+
+    if event.organizer_id != user.uuid:
+        if user.account_type != AccountType.admin:
+            raise AppError(
+                "You do not have permission to feature this event",
+                status_code=403,
+            )
+
+    reference = f"EVVENT-FEAT-{event.uuid}"
+
+    payload = {
+        "email": user.email,
+        "amount": settings.FEATURE_FEE,
+        "reference": reference,
+        "metadata": {
+            "event_id": str(event.uuid),
+            "type": "feature_fee",
+            "organizer_id": str(user.uuid),
+        },
+        "callback_url": f"{settings.PAYSTACK_BASE_URL}/callback",
+    }
+
+    try:
+        with httpx.Client(timeout=15) as client:
+            resp = client.post(
+                "https://api.paystack.co/transaction/initialize",
+                json=payload,
+                headers={
+                    "Authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}",
+                    "Content-Type": "application/json",
+                },
+            )
+            resp.raise_for_status()
+            data = resp.json()
+    except httpx.HTTPStatusError as exc:
+        raise AppError(
+            f"Payment initialization failed: {exc.response.text}",
+            status_code=502,
+        ) from exc
+    except httpx.RequestError as exc:
+        raise AppError(
+            "Could not reach payment provider. Please try again.",
+            status_code=503,
+        ) from exc
+
+    if not data.get("status"):
+        raise AppError(
+            data.get("message", "Payment initialization failed"),
+            status_code=502,
+        )
+
+    # Persist the reference so the webhook can match it to this event
+    event.feature_paystack_reference = data["data"]["reference"]
+    session.add(event)
+    session.commit()
+
+    return {
+        "event_id": event.uuid,
+        "authorization_url": data["data"]["authorization_url"],
+        "reference": data["data"]["reference"],
+        "amount": settings.FEATURE_FEE,
+    }
 
 
 # ============================================================

@@ -110,6 +110,12 @@ class EventCreate(BaseModel):
     )
     event_type: EventType
 
+    # Set to True to promote this event as featured.
+    # When True, the create response will include a Paystack payment URL.
+    # The event is created as a draft and will be published automatically
+    # once the feature fee payment is confirmed.
+    featured: bool = Field(default=False)
+
     category_ids: list[UUID] = Field(
         default_factory=list,
     )
@@ -244,3 +250,33 @@ class EventListItem(BaseModel):
 
     # Cloudinary URL for the event's single cover image
     image_url: str
+
+
+class EventCreateResponse(BaseModel):
+    """
+    Returned after creating an event.
+
+    When the event was requested to be featured, ``requires_featured_payment``
+    will be True and ``featured_payment_url`` will contain the Paystack
+    checkout URL the organizer must visit to complete the feature fee payment.
+    Once payment is confirmed the event is automatically published and marked
+    as featured.  Until then the event remains in draft status.
+
+    When ``featured=False`` in the create request, ``requires_featured_payment``
+    is False and the event is created as a draft ready to be published via
+    ``POST /events/{event_id}/publish``.
+    """
+
+    event: EventResponse
+    requires_featured_payment: bool = False
+    featured_payment_url: str | None = None
+    featured_payment_reference: str | None = None
+
+
+class FeaturePaymentInitResponse(BaseModel):
+    """Returned by POST /events/{event_id}/feature/pay for existing events."""
+
+    event_id: UUID
+    authorization_url: str
+    reference: str
+    amount: int

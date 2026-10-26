@@ -12,10 +12,12 @@ from event.schema import (
     CategoryCreate,
     CategoryResponse,
     EventCreate,
+    EventCreateResponse,
     EventListItem,
     EventResponse,
     EventUpdate,
     FeatureEventRequest,
+    FeaturePaymentInitResponse,
     TicketTypeUpdate,
 )
 from event.services import (
@@ -26,6 +28,7 @@ from event.services import (
     feature_event,
     get_event,
     get_ticket_type,
+    initialize_feature_payment,
     list_categories,
     list_events,
     list_events_for_user,
@@ -101,7 +104,7 @@ def add_category(
 
 @router.post(
     "/",
-    response_model=EventResponse,
+    response_model=EventCreateResponse,
     status_code=status.HTTP_201_CREATED,
 )
 async def create_event_endpoint(
@@ -121,7 +124,7 @@ async def create_event_endpoint(
             AccountType.organization,
         )
     ),
-) -> EventResponse:
+) -> EventCreateResponse:
 
     # Validate the JSON event data
     try:
@@ -158,7 +161,19 @@ async def create_event_endpoint(
         event.uuid,
     )
 
-    return EventResponse.model_validate(event)
+    event_response = EventResponse.model_validate(event)
+
+    # If the organizer wants this event featured, initialise the feature payment
+    if event_data.featured:
+        payment_info = initialize_feature_payment(session, event, current_user)
+        return EventCreateResponse(
+            event=event_response,
+            requires_featured_payment=True,
+            featured_payment_url=payment_info["authorization_url"],
+            featured_payment_reference=payment_info["reference"],
+        )
+
+    return EventCreateResponse(event=event_response)
 
 
 @router.get(
@@ -453,6 +468,44 @@ def feature_event_endpoint(
     return EventResponse.model_validate(event)
 
 
+@router.post(
+    "/{event_id}/feature/pay",
+    response_model=FeaturePaymentInitResponse,
+)
+def pay_to_feature_event_endpoint(
+    event_id: UUID,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+) -> FeaturePaymentInitResponse:
+    """
+    Initiate a Paystack payment to feature an existing event.
+
+    The event must belong to the authenticated user (or user must be admin).
+    Returns a Paystack authorization_url the frontend should redirect the
+    organizer to.  Once payment is confirmed the event is published and marked
+    as featured automatically via the Paystack webhook.
+    """
+
+    event = get_event(session, event_id)
+
+    ensure_event_access(event, current_user)
+
+    payment_info = initialize_feature_payment(session, event, current_user)
+
+    logger.info(
+        "User %s initiated feature payment for event %s",
+        current_user.uuid,
+        event.uuid,
+    )
+
+    return FeaturePaymentInitResponse(
+        event_id=payment_info["event_id"],
+        authorization_url=payment_info["authorization_url"],
+        reference=payment_info["reference"],
+        amount=payment_info["amount"],
+    )
+
+
 # ---------------------------------------------------------------------------
 # Event cover image
 # ---------------------------------------------------------------------------
@@ -551,3 +604,4 @@ def update_ticket_type_endpoint(
     )
 
     return EventResponse.model_validate(event)
+

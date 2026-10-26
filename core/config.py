@@ -23,6 +23,10 @@ class Settings(BaseSettings):
     PAYSTACK_SECRET_KEY: str | None = None
     PAYSTACK_BASE_URL: str = "https://api.paystack.co"
 
+    # Fee (in kobo) charged to an organizer to feature their event.
+    # Default: ₦5,000 = 500,000 kobo
+    FEATURE_FEE: int = 500000
+
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 settings = Settings()

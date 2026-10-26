@@ -109,7 +109,16 @@ def get_attendees_endpoint(
 ) -> list[AttendeeDetailResponse]:
     """Retrieve the attendee details captured for each ticket in this order."""
     attendees = get_booking_attendees(session, current_user, order_id)
-    return [AttendeeDetailResponse.model_validate(a) for a in attendees]
+    return [
+    AttendeeDetailResponse(
+        uuid=a.uuid,
+        ticket_index=a.ticket_index,
+        full_name=a.full_name,
+        email=a.email,
+        phone=a.phone,
+    )
+    for a in attendees
+]
 
 
 # ---------------------------------------------------------------------------

@@ -14,6 +14,7 @@ class EventType(str, Enum):
 
 
 class EventStatus(str, Enum):
+    draft = "draft"
     published = "published"
     completed = "completed"
     cancelled = "cancelled"
@@ -91,7 +92,7 @@ class Event(SQLModel, table=True):
     )
 
     status: EventStatus = Field(
-        default=EventStatus.published,
+        default=EventStatus.draft,
         sa_column=Column(
             SqlEnum(EventStatus, name="event_status_enum"),
             nullable=False,
@@ -100,6 +101,13 @@ class Event(SQLModel, table=True):
     )
 
     featured: bool = Field(default=False, index=True)
+
+    # Stored when an organizer initiates Paystack payment to feature this event.
+    # Cleared (kept) once the payment is confirmed and the event is featured.
+    feature_paystack_reference: str | None = Field(
+        default=None,
+        max_length=200,
+    )
 
     # One cover image per event.
     # The actual image is stored in Cloudinary.
