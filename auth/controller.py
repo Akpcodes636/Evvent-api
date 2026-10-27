@@ -20,7 +20,8 @@ from event.schema import CategoryResponse
 from event.services import get_user_category_preferences, set_user_category_preferences
 from logger import logger
 from model.user import AccountType, User
-from utils.email import send_password_reset_email, send_password_reset_success_email, send_welcome_email
+from utils.email import send_password_reset_email, send_password_reset_success_email
+from worker.tasks import task_send_welcome_email
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -33,12 +34,11 @@ def auth_root() -> MessageResponse:
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def register(
     data: RegisterRequest,
-    background_tasks: BackgroundTasks,
     session: Session = Depends(get_session),
 ) -> UserResponse:
     user = register_user(session, **data.model_dump())
-    # logger.info("Registered new %s %s (%s)", user.role, user.uuid, user.email)
-    background_tasks.add_task(send_welcome_email, user.email, user.first_name)
+    task_send_welcome_email.delay(user.email, user.first_name)
+    logger.info("Registered new user %s (%s) — welcome email queued", user.uuid, user.email)
     return UserResponse.model_validate(user)
 
 

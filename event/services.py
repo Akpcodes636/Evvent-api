@@ -619,7 +619,7 @@ def initialize_feature_payment(
             "type": "feature_fee",
             "organizer_id": str(user.uuid),
         },
-        "callback_url": f"{settings.PAYSTACK_BASE_URL}/callback",
+        "callback_url": f"{settings.FRONTEND_BASE_URL}/payment/callback",
     }
 
     try:

@@ -22,6 +22,9 @@ class Settings(BaseSettings):
 
     PAYSTACK_SECRET_KEY: str | None = None
     PAYSTACK_BASE_URL: str = "https://api.paystack.co"
+    FRONTEND_BASE_URL: str = "https://evvnt-ticketer.netlify.app"
+
+    REDIS_URL: str = "redis://localhost:6379/0"
 
     # Fee (in kobo) charged to an organizer to feature their event.
     # Default: ₦5,000 = 500,000 kobo

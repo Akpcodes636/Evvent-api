@@ -79,46 +79,46 @@ def create_booking_endpoint(
 # List / get bookings
 # ---------------------------------------------------------------------------
 
-@router.get("/me", response_model=list[BookingResponse])
-def list_my_bookings(
-    session: Session = Depends(get_session),
-    current_user: User = Depends(get_current_user),
-) -> list[BookingResponse]:
-    return [BookingResponse.from_order(o) for o in list_user_bookings(session, current_user)]
+# @router.get("/me", response_model=list[BookingResponse])
+# def list_my_bookings(
+#     session: Session = Depends(get_session),
+#     current_user: User = Depends(get_current_user),
+# ) -> list[BookingResponse]:
+#     return [BookingResponse.from_order(o) for o in list_user_bookings(session, current_user)]
 
 
-@router.get("/{order_id}", response_model=BookingResponse)
-def get_booking_endpoint(
-    order_id: UUID,
-    session: Session = Depends(get_session),
-    current_user: User = Depends(get_current_user),
-) -> BookingResponse:
-    order = get_booking(session, current_user, order_id)
-    return BookingResponse.from_order(order)
+# @router.get("/{order_id}", response_model=BookingResponse)
+# def get_booking_endpoint(
+#     order_id: UUID,
+#     session: Session = Depends(get_session),
+#     current_user: User = Depends(get_current_user),
+# ) -> BookingResponse:
+#     order = get_booking(session, current_user, order_id)
+#     return BookingResponse.from_order(order)
 
 
-# ---------------------------------------------------------------------------
-# Attendee details
-# ---------------------------------------------------------------------------
+# # ---------------------------------------------------------------------------
+# # Attendee details
+# # ---------------------------------------------------------------------------
 
-@router.get("/{order_id}/attendees", response_model=list[AttendeeDetailResponse])
-def get_attendees_endpoint(
-    order_id: UUID,
-    session: Session = Depends(get_session),
-    current_user: User = Depends(get_current_user),
-) -> list[AttendeeDetailResponse]:
-    """Retrieve the attendee details captured for each ticket in this order."""
-    attendees = get_booking_attendees(session, current_user, order_id)
-    return [
-    AttendeeDetailResponse(
-        uuid=a.uuid,
-        ticket_index=a.ticket_index,
-        full_name=a.full_name,
-        email=a.email,
-        phone=a.phone,
-    )
-    for a in attendees
-]
+# @router.get("/{order_id}/attendees", response_model=list[AttendeeDetailResponse])
+# def get_attendees_endpoint(
+#     order_id: UUID,
+#     session: Session = Depends(get_session),
+#     current_user: User = Depends(get_current_user),
+# ) -> list[AttendeeDetailResponse]:
+#     """Retrieve the attendee details captured for each ticket in this order."""
+#     attendees = get_booking_attendees(session, current_user, order_id)
+#     return [
+#     AttendeeDetailResponse(
+#         uuid=a.uuid,
+#         ticket_index=a.ticket_index,
+#         full_name=a.full_name,
+#         email=a.email,
+#         phone=a.phone,
+#     )
+#     for a in attendees
+# ]
 
 
 # ---------------------------------------------------------------------------

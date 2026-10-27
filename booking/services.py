@@ -12,6 +12,7 @@ from core.exceptions import AppError
 from model.booking import AttendeeDetail, Cart, Order, OrderStatus, Payment, PaymentStatus
 from model.event import Event, EventStatus, TicketType
 from model.user import AccountType, User
+from worker.tasks import task_send_booking_confirmation
 
 
 # ---------------------------------------------------------------------------
@@ -121,6 +122,7 @@ def create_booking(
         )
         session.commit()
         session.refresh(order)
+        task_send_booking_confirmation.delay(str(order.uuid))
 
     return order
 
@@ -223,6 +225,7 @@ def pay_booking(
     )
     session.commit()
     session.refresh(order)
+    task_send_booking_confirmation.delay(str(order.uuid))
     return order
 
 
@@ -426,6 +429,7 @@ def verify_paystack_webhook(session: Session, payload: bytes, signature: str) ->
         )
     )
     session.commit()
+    task_send_booking_confirmation.delay(str(order.uuid))
 
 
 # ---------------------------------------------------------------------------
