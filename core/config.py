@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     MAILJET_FROM_NAME: str = "Evvent"
 
     PAYSTACK_SECRET_KEY: str | None = None
-    PAYSTACK_BASE_URL: str = "https://api.paystack.co"
+    PAYSTACK_BASE_URL: str = "https://evvnt-ticketer.netlify.app/payments"
     FRONTEND_BASE_URL: str = "https://evvnt-ticketer.netlify.app"
 
     REDIS_URL: str = "redis://localhost:6379/0"

@@ -288,7 +288,7 @@ def initialize_paystack_payment(
             "customer_name": customer_name,
             "event_id": str(order.event_id),
         },
-        "callback_url": f"{settings.PAYSTACK_BASE_URL}/callback",
+        "callback_url": f"{settings.PAYSTACK_BASE_URL}/payment-callback",
     }
 
     try:
