@@ -64,3 +64,4 @@ websockets==17.0.1
 Pillow
 celery[redis]==5.4.0
 redis==5.2.1
+qrcode[pil]==8.0.0

@@ -4,6 +4,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, computed_field
 
+from model.booking import OrderStatus
 from model.event import EventStatus, EventType
 
 
@@ -280,3 +281,62 @@ class FeaturePaymentInitResponse(BaseModel):
     authorization_url: str
     reference: str
     amount: int
+
+
+# ---------------------------------------------------------------------------
+# Organizer order views
+# ---------------------------------------------------------------------------
+
+class OrganizerOrderItem(BaseModel):
+    """One row in the organizer's orders table."""
+
+    order_id: str            # e.g. #EVT-A1B2C3D4
+    event: str               # event title
+    buyer: str               # buyer full name
+    tickets: int             # quantity
+    total: str               # formatted e.g. "₦20,000" or "₦0"
+    type: str                # "Paid" | "Free"
+    status: OrderStatus
+    date: datetime
+
+
+# ---------------------------------------------------------------------------
+# Check-in
+# ---------------------------------------------------------------------------
+
+class CheckinAttendee(BaseModel):
+    """Single attendee within an event check-in list row."""
+
+    uuid: UUID
+    ticket_index: int
+    full_name: str
+    email: str
+    phone: str
+
+
+class EventAttendeeItem(BaseModel):
+    """One row in the admin/organizer check-in list for an event."""
+
+    order_id: UUID
+    order_ref: str           # short 8-char ref shown on ticket
+    buyer_name: str
+    buyer_email: str
+    ticket_type: str
+    quantity: int
+    total_amount: int
+    status: OrderStatus
+    checked_in: bool
+    checked_in_at: datetime | None
+    booked_at: datetime
+    attendees: list[CheckinAttendee]
+
+
+class CheckinRequest(BaseModel):
+    order_id: UUID
+
+
+class CheckinResponse(BaseModel):
+    order_id: UUID
+    checked_in: bool
+    checked_in_at: datetime | None
+    message: str

@@ -108,6 +108,8 @@ class Order(SQLModel, table=True):
         default=None,
         sa_column=Column(String(200), nullable=True, unique=True),
     )
+    checked_in: bool = Field(default=False, sa_column=Column("checked_in", nullable=False, server_default="false"))
+    checked_in_at: datetime | None = Field(default=None, sa_column=Column(DateTime, nullable=True))
     created_at: datetime = Field(default_factory=datetime.utcnow, sa_column=Column(DateTime, nullable=False))
     updated_at: datetime = Field(
         default_factory=datetime.utcnow,
@@ -127,6 +129,8 @@ class Payment(SQLModel, table=True):
     uuid: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True, index=True)
     order_id: uuid.UUID = Field(foreign_key="orders.uuid", unique=True, index=True)
     amount: int = Field(ge=0)
+    # 5% admin commission in kobo (0 for free orders)
+    admin_commission: int = Field(default=0, ge=0)
     status: PaymentStatus = Field(
         default=PaymentStatus.pending,
         sa_column=Column(SqlEnum(PaymentStatus, name="payment_status_enum"), nullable=False, index=True),

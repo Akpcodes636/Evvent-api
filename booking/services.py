@@ -15,6 +15,11 @@ from model.user import AccountType, User
 from worker.tasks import task_send_booking_confirmation
 
 
+def _calc_admin_commission(amount: int) -> int:
+    """Return the admin's share in kobo (5% of *amount*, rounded down)."""
+    return int(amount * settings.ADMIN_COMMISSION_RATE)
+
+
 # ---------------------------------------------------------------------------
 # Internal helpers
 # ---------------------------------------------------------------------------
@@ -116,6 +121,7 @@ def create_booking(
             Payment(
                 order_id=order.uuid,
                 amount=0,
+                admin_commission=0,
                 status=PaymentStatus.completed,
                 provider="free",
             )
@@ -218,6 +224,7 @@ def pay_booking(
         Payment(
             order_id=order.uuid,
             amount=order.total_amount,
+            admin_commission=_calc_admin_commission(order.total_amount),
             status=PaymentStatus.completed,
             provider=provider,
             reference=reference,
@@ -423,6 +430,7 @@ def verify_paystack_webhook(session: Session, payload: bytes, signature: str) ->
         Payment(
             order_id=order.uuid,
             amount=order.total_amount,
+            admin_commission=_calc_admin_commission(order.total_amount),
             status=PaymentStatus.completed,
             provider="paystack",
             reference=reference,

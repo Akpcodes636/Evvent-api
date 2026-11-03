@@ -11,6 +11,9 @@ from database.session import get_session
 from event.schema import (
     CategoryCreate,
     CategoryResponse,
+    CheckinRequest,
+    CheckinResponse,
+    EventAttendeeItem,
     EventCreate,
     EventCreateResponse,
     EventListItem,
@@ -18,9 +21,11 @@ from event.schema import (
     EventUpdate,
     FeatureEventRequest,
     FeaturePaymentInitResponse,
+    OrganizerOrderItem,
     TicketTypeUpdate,
 )
 from event.services import (
+    checkin_order,
     create_category,
     create_event,
     delete_event,
@@ -30,6 +35,8 @@ from event.services import (
     get_ticket_type,
     initialize_feature_payment,
     list_categories,
+    list_event_attendees,
+    list_event_orders,
     list_events,
     list_events_for_user,
     publish_event,
@@ -605,3 +612,87 @@ def update_ticket_type_endpoint(
 
     return EventResponse.model_validate(event)
 
+
+# ---------------------------------------------------------------------------
+# Organizer orders
+# ---------------------------------------------------------------------------
+
+@router.get(
+    "/{event_id}/orders",
+    response_model=list[OrganizerOrderItem],
+)
+def list_event_orders_endpoint(
+    event_id: UUID,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+) -> list[OrganizerOrderItem]:
+    """Return all orders for the given event. Accessible by the event organizer or an admin."""
+    event = get_event(session, event_id)
+    ensure_event_access(event, current_user)
+
+    orders = list_event_orders(session, event)
+
+    return [
+        OrganizerOrderItem(
+            order_id=f"#EVT-{str(order.uuid).upper()[:8]}",
+            event=order.event.title,
+            buyer=f"{order.user.first_name} {order.user.last_name}".strip(),
+            tickets=order.quantity,
+            total=f"₦{order.total_amount / 100:,.2f}" if order.total_amount else "₦0",
+            type="Free" if order.is_free else "Paid",
+            status=order.status,
+            date=order.created_at,
+        )
+        for order in orders
+    ]
+
+
+# ---------------------------------------------------------------------------
+# Check-in
+# ---------------------------------------------------------------------------
+
+@router.get(
+    "/{event_id}/attendees",
+    response_model=list[EventAttendeeItem],
+)
+def list_event_attendees_endpoint(
+    event_id: UUID,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+) -> list[EventAttendeeItem]:
+    """
+    Return all checked-in and pending attendees for an event.
+    Only the event organizer or an admin can access this.
+    """
+    return list_event_attendees(session, current_user, event_id)
+
+
+@router.post(
+    "/{event_id}/checkin",
+    response_model=CheckinResponse,
+)
+def checkin_endpoint(
+    event_id: UUID,
+    data: CheckinRequest,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+) -> CheckinResponse:
+    """
+    Check in an attendee by scanning their QR code.
+
+    The QR code encodes the order UUID — pass it as ``order_id``.
+    Returns 409 if the ticket has already been scanned.
+    """
+    order = checkin_order(session, current_user, event_id, data.order_id)
+    logger.info(
+        "User %s checked in order %s for event %s",
+        current_user.uuid,
+        order.uuid,
+        event_id,
+    )
+    return CheckinResponse(
+        order_id=order.uuid,
+        checked_in=order.checked_in,
+        checked_in_at=order.checked_in_at,
+        message="Checked in successfully",
+    )

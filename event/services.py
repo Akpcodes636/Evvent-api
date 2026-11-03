@@ -1,3 +1,4 @@
+from datetime import datetime
 from uuid import UUID
 
 import httpx
@@ -6,11 +7,14 @@ from sqlmodel import Session, select, func
 from core.config import settings
 from core.exceptions import AppError
 from event.schema import (
+    CheckinAttendee,
+    EventAttendeeItem,
     EventCreate,
     EventUpdate,
+    OrganizerOrderItem,
     TicketTypeUpdate,
 )
-from model.booking import Order, OrderStatus
+from model.booking import AttendeeDetail, Order, OrderStatus
 from model.event import (
     Category,
     Event,
@@ -743,3 +747,131 @@ def update_ticket_type(
     session.refresh(ticket_type)
 
     return ticket_type
+
+
+# ============================================================
+# ORGANIZER ORDERS
+# ============================================================
+
+
+def list_event_orders(
+    session: Session,
+    event: Event,
+    *,
+    status: OrderStatus | None = None,
+) -> list[Order]:
+    """Return all orders for a specific event, optionally filtered by status."""
+    query = select(Order).where(Order.event_id == event.uuid)
+
+    if status is not None:
+        query = query.where(Order.status == status)
+
+    query = query.order_by(Order.created_at.desc())
+
+    return list(session.exec(query).all())
+
+
+# ============================================================
+# CHECK-IN
+# ============================================================
+
+
+def list_event_attendees(
+    session: Session,
+    actor: User,
+    event_id: UUID,
+) -> list[EventAttendeeItem]:
+    """
+    Return all completed orders for an event, each enriched with attendee
+    details and check-in status.  Only the event organizer or an admin may
+    call this.
+    """
+    event = get_event(session, event_id)
+    ensure_event_access(event, actor)
+
+    orders = list(
+        session.exec(
+            select(Order)
+            .where(Order.event_id == event_id)
+            .where(Order.status == OrderStatus.completed)
+            .order_by(Order.created_at.desc())
+        ).all()
+    )
+
+    rows: list[EventAttendeeItem] = []
+    for order in orders:
+        attendees = list(
+            session.exec(
+                select(AttendeeDetail)
+                .where(AttendeeDetail.order_id == order.uuid)
+                .order_by(AttendeeDetail.ticket_index)
+            ).all()
+        )
+
+        buyer = order.user
+        rows.append(
+            EventAttendeeItem(
+                order_id=order.uuid,
+                order_ref=str(order.uuid).upper()[:8],
+                buyer_name=f"{buyer.first_name} {buyer.last_name}".strip(),
+                buyer_email=buyer.email,
+                ticket_type=order.ticket_type.name,
+                quantity=order.quantity,
+                total_amount=order.total_amount,
+                status=order.status,
+                checked_in=order.checked_in,
+                checked_in_at=order.checked_in_at,
+                booked_at=order.created_at,
+                attendees=[
+                    CheckinAttendee(
+                        uuid=a.uuid,
+                        ticket_index=a.ticket_index,
+                        full_name=a.full_name,
+                        email=a.email,
+                        phone=a.phone,
+                    )
+                    for a in attendees
+                ],
+            )
+        )
+
+    return rows
+
+
+def checkin_order(
+    session: Session,
+    actor: User,
+    event_id: UUID,
+    order_id: UUID,
+) -> Order:
+    """
+    Mark an order as checked in.  The QR code encodes the order UUID so
+    scanning it gives you the order_id directly.
+
+    Only the event organizer or an admin may check attendees in.
+    Raises 404 if the order doesn't belong to this event, 400 if it's not
+    a completed order, and 409 if it's already been checked in.
+    """
+    event = get_event(session, event_id)
+    ensure_event_access(event, actor)
+
+    order = session.get(Order, order_id)
+    if not order or order.event_id != event_id:
+        raise AppError("Booking not found for this event", status_code=404)
+
+    if order.status != OrderStatus.completed:
+        raise AppError(
+            f"Cannot check in a booking with status '{order.status.value}'",
+            status_code=400,
+        )
+
+    if order.checked_in:
+        raise AppError("This ticket has already been checked in", status_code=409)
+
+    order.checked_in = True
+    order.checked_in_at = datetime.utcnow()
+    order.updated_at = datetime.utcnow()
+    session.add(order)
+    session.commit()
+    session.refresh(order)
+    return order
