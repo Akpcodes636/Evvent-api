@@ -47,7 +47,7 @@ app.add_middleware(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://evvnt-ticketer.netlify.app",
+        "http://tixly-ng.netlify.app",
         "http://localhost:4200",
         "http://localhost:5173",
     ],
