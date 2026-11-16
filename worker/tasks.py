@@ -106,6 +106,8 @@ def task_send_booking_confirmation(self, order_id: str) -> None:
                     order_ref=order_ref,
                     all_attendees=all_attendees,
                     qr_code_base64=qr_code_b64,
+                    host_name=event.host_name,
+                    host_phone=event.host_phone,
                 )
         else:
             # Fallback: send to the account owner if no attendee records exist
@@ -122,6 +124,8 @@ def task_send_booking_confirmation(self, order_id: str) -> None:
                 order_ref=order_ref,
                 all_attendees=all_attendees,
                 qr_code_base64=qr_code_b64,
+                host_name=event.host_name,
+                host_phone=event.host_phone,
             )
 
         # ── 2. Notify the organizer ──────────────────────────────────────
@@ -152,3 +156,20 @@ def task_send_booking_confirmation(self, order_id: str) -> None:
     except Exception as exc:
         logger.exception("Booking confirmation email failed for order %s, retrying…", order_id)
         raise self.retry(exc=exc)
+
+
+# ---------------------------------------------------------------------------
+# Periodic: auto-complete past events (scheduled by Celery beat)
+# ---------------------------------------------------------------------------
+
+@celery_app.task(name="tasks.complete_past_events")
+def task_complete_past_events() -> int:
+    """Mark published events whose end time has passed as completed."""
+    from event.services import complete_past_events
+
+    with Session(engine) as session:
+        updated = complete_past_events(session)
+
+    if updated:
+        logger.info("Auto-completed %d past event(s)", updated)
+    return updated

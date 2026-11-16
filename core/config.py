@@ -20,8 +20,8 @@ class Settings(BaseSettings):
     MAILJET_FROM_NAME: str = "Evvent"
 
     PAYSTACK_SECRET_KEY: str | None = None
-    PAYSTACK_BASE_URL: str = "https://evvnt-ticketer.netlify.app/payments"
-    FRONTEND_BASE_URL: str = "https://evvnt-ticketer.netlify.app"
+    PAYSTACK_BASE_URL: str = "https://tixly-ng.netlify.app/payments"
+    FRONTEND_BASE_URL: str = "https://tixly-ng.netlify.app"
 
     REDIS_URL: str = "redis://localhost:6379/0"
 

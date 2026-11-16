@@ -2,7 +2,7 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile, status
 from pydantic import ValidationError
 from sqlmodel import Session
 
@@ -38,8 +38,8 @@ from event.services import (
     list_event_attendees,
     list_event_orders,
     list_events,
-    list_events_for_user,
     publish_event,
+    recommend_events_for_user,
     update_event,
     update_ticket_type,
 )
@@ -58,6 +58,25 @@ categories_router = APIRouter(
     prefix="/categories",
     tags=["Categories"],
 )
+
+
+def _to_list_item(event) -> EventListItem:
+    return EventListItem(
+        uuid=event.uuid,
+        title=event.title,
+        description=event.description,
+        location=event.location,
+        event_date=event.event_date,
+        duration=event.duration,
+        event_type=event.event_type,
+        status=event.status,
+        featured=event.featured,
+        tickets_sold=sum(t.sold_quantity for t in event.ticket_types),
+        total_available=sum(
+            t.total_quantity - t.sold_quantity for t in event.ticket_types
+        ),
+        image_url=event.image_url,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -207,26 +226,7 @@ def list_events_endpoint(
     )
 
     return [
-        EventListItem(
-            uuid=event.uuid,
-            title=event.title,
-            description=event.description,
-            location=event.location,
-            event_date=event.event_date,
-            duration=event.duration,
-            event_type=event.event_type,
-            status=event.status,
-            featured=event.featured,
-            tickets_sold=sum(
-                ticket.sold_quantity
-                for ticket in event.ticket_types
-            ),
-            total_available=sum(
-                ticket.total_quantity - ticket.sold_quantity
-                for ticket in event.ticket_types
-            ),
-            image_url=event.image_url,
-        )
+        _to_list_item(event)
         for event in events
     ]
 
@@ -236,36 +236,26 @@ def list_events_endpoint(
     response_model=list[EventListItem],
 )
 def list_recommended_events_endpoint(
+    limit: int = Query(default=20, ge=1, le=50),
     current_user: User = Depends(get_current_user),
     session: Session = Depends(get_session),
 ) -> list[EventListItem]:
+    """
+    Personalised upcoming events for the authenticated user, ranked by the
+    categories, organizers and locations of events they bought tickets for.
 
-    events = list_events_for_user(
+    Past events, events the user already has tickets for, sold-out events and
+    the user's own events are excluded automatically.
+    """
+
+    events = recommend_events_for_user(
         session,
         current_user,
+        limit=limit,
     )
 
     return [
-        EventListItem(
-            uuid=event.uuid,
-            title=event.title,
-            description=event.description,
-            location=event.location,
-            event_date=event.event_date,
-            duration=event.duration,
-            event_type=event.event_type,
-            status=event.status,
-            featured=event.featured,
-            tickets_sold=sum(
-                ticket.sold_quantity
-                for ticket in event.ticket_types
-            ),
-            total_available=sum(
-                ticket.total_quantity - ticket.sold_quantity
-                for ticket in event.ticket_types
-            ),
-            image_url=event.image_url,
-        )
+        _to_list_item(event)
         for event in events
     ]
 
@@ -286,26 +276,7 @@ def list_my_events_endpoint(
     )
 
     return [
-        EventListItem(
-            uuid=event.uuid,
-            title=event.title,
-            description=event.description,
-            location=event.location,
-            event_date=event.event_date,
-            duration=event.duration,
-            event_type=event.event_type,
-            status=event.status,
-            featured=event.featured,
-            tickets_sold=sum(
-                ticket.sold_quantity
-                for ticket in event.ticket_types
-            ),
-            total_available=sum(
-                ticket.total_quantity - ticket.sold_quantity
-                for ticket in event.ticket_types
-            ),
-            image_url=event.image_url,
-        )
+        _to_list_item(event)
         for event in events
     ]
 

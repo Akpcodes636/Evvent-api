@@ -1,4 +1,5 @@
-from datetime import datetime
+import re
+from datetime import datetime, timedelta
 from uuid import UUID
 
 import httpx
@@ -182,59 +183,166 @@ def set_user_category_preferences(
 # ============================================================
 
 
-def list_events_for_user(
+# ============================================================
+# RECOMMENDATIONS
+# ============================================================
+
+# Scoring weights for recommend_events_for_user.
+_W_CATEGORY_PURCHASED = 3   # per purchase in a matching category
+_W_CATEGORY_PREFERRED = 2   # per explicitly preferred matching category
+_W_SAME_ORGANIZER = 4       # user bought from this organizer before
+_W_SAME_LOCATION = 2        # user attended events in this location before
+_W_FEATURED = 1
+
+
+def recommend_events_for_user(
     session: Session,
     user: User,
     *,
-    status: EventStatus | None = EventStatus.published,
+    limit: int = 20,
 ) -> list[Event]:
-    # Categories the user explicitly set as preferences
-    pref_category_ids = {
-        category.uuid
-        for category in get_user_category_preferences(session, user)
-    }
+    """
+    Recommend upcoming events based on the user's purchase history.
 
-    # Categories inferred from events the user has actually attended
-    attended_category_ids = set(
+    Signals come from the user's completed orders (categories, organizers and
+    locations of events they bought tickets for) plus their explicit category
+    preferences.
+
+    Excluded automatically:
+      - events that have already started (event_date <= now)
+      - events that are not published (drafts, completed, cancelled)
+      - events the user already holds a pending or completed order for
+      - sold-out events
+      - the user's own events
+    """
+    now = datetime.utcnow()
+
+    purchased_event_ids = set(
         session.exec(
-            select(EventCategoryLink.category_id)
-            .join(Order, Order.event_id == EventCategoryLink.event_id)
+            select(Order.event_id)
             .where(Order.user_id == user.uuid)
-            .where(Order.status == OrderStatus.completed)
+            .where(Order.status.in_([OrderStatus.completed, OrderStatus.pending]))
             .distinct()
         ).all()
     )
 
-    all_category_ids = list(pref_category_ids | attended_category_ids)
+    # --- Build the user's taste profile from completed purchases ----------
+    history = session.exec(
+        select(Event)
+        .join(Order, Order.event_id == Event.uuid)
+        .where(Order.user_id == user.uuid)
+        .where(Order.status == OrderStatus.completed)
+    ).all()
 
-    if not all_category_ids:
-        return list_events(
-            session,
-            status=status,
-        )
+    category_counts: dict[UUID, int] = {}
+    organizer_ids: set[UUID] = set()
+    locations: set[str] = set()
+    for past_event in history:
+        organizer_ids.add(past_event.organizer_id)
+        locations.add(past_event.location.strip().lower())
+        for category in past_event.categories:
+            category_counts[category.uuid] = category_counts.get(category.uuid, 0) + 1
 
+    preferred_ids = {c.uuid for c in get_user_category_preferences(session, user)}
+
+    # --- Candidate pool: upcoming, published, not already bought ----------
     query = (
         select(Event)
-        .distinct()
-        .join(
-            EventCategoryLink,
-            EventCategoryLink.event_id == Event.uuid,
-        )
-        .where(
-            EventCategoryLink.category_id.in_(
-                all_category_ids
-            )
-        )
+        .where(Event.status == EventStatus.published)
+        .where(Event.event_date > now)
+        .where(Event.organizer_id != user.uuid)
     )
+    if purchased_event_ids:
+        query = query.where(Event.uuid.not_in(purchased_event_ids))
 
-    if status is not None:
-        query = query.where(Event.status == status)
+    candidates = [
+        event
+        for event in session.exec(query).all()
+        if any(t.total_quantity > t.sold_quantity for t in event.ticket_types)
+    ]
 
-    query = query.order_by(Event.event_date)
+    def score(event: Event) -> int:
+        total = 0
+        for category in event.categories:
+            total += _W_CATEGORY_PURCHASED * category_counts.get(category.uuid, 0)
+            if category.uuid in preferred_ids:
+                total += _W_CATEGORY_PREFERRED
+        if event.organizer_id in organizer_ids:
+            total += _W_SAME_ORGANIZER
+        if event.location.strip().lower() in locations:
+            total += _W_SAME_LOCATION
+        if event.featured:
+            total += _W_FEATURED
+        return total
 
-    return list(
-        session.exec(query).all()
-    )
+    # Highest score first, soonest event breaks ties. Users with no history
+    # all score 0/1, so they get featured-then-soonest upcoming events.
+    candidates.sort(key=lambda e: (-score(e), e.event_date))
+
+    return candidates[:limit]
+
+
+# ============================================================
+# AUTO-COMPLETE PAST EVENTS
+# ============================================================
+
+_DURATION_PATTERN = re.compile(
+    r"(\d+(?:\.\d+)?)\s*(hours?|hrs?|h|minutes?|mins?|m|days?|d)",
+    re.IGNORECASE,
+)
+
+# Used when an event's free-text duration can't be parsed.
+_FALLBACK_DURATION = timedelta(hours=24)
+
+
+def parse_duration(duration: str) -> timedelta | None:
+    """Parse durations such as '4 hours', '30 mins', '2 days', '1h 30m'."""
+    matches = list(_DURATION_PATTERN.finditer(duration or ""))
+    leftover = re.sub(r"[\s,&]|and", "", _DURATION_PATTERN.sub("", duration or ""))
+    if not matches or leftover:
+        return None
+
+    total = timedelta()
+    for match in matches:
+        amount = float(match.group(1))
+        unit = match.group(2).lower()
+        if unit.startswith("d"):
+            total += timedelta(days=amount)
+        elif unit.startswith("h"):
+            total += timedelta(hours=amount)
+        else:
+            total += timedelta(minutes=amount)
+
+    return total if total > timedelta() else None
+
+
+def complete_past_events(session: Session) -> int:
+    """
+    Mark published events whose end time has passed as completed.
+
+    End time = event_date + parsed duration (falls back to 24h if the
+    duration text can't be parsed). Returns the number of events updated.
+    """
+    now = datetime.utcnow()
+
+    events = session.exec(
+        select(Event)
+        .where(Event.status == EventStatus.published)
+        .where(Event.event_date <= now)
+    ).all()
+
+    updated = 0
+    for event in events:
+        duration = parse_duration(event.duration) or _FALLBACK_DURATION
+        if event.event_date + duration <= now:
+            event.status = EventStatus.completed
+            session.add(event)
+            updated += 1
+
+    if updated:
+        session.commit()
+
+    return updated
 
 
 
@@ -268,6 +376,7 @@ def create_event(
         organizer_id=host.uuid,
         title=data.title,
         host_name=data.host_name,
+        host_phone=data.host_phone,
         description=data.description,
         location=data.location,
         event_date=data.event_date,

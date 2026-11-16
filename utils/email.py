@@ -352,12 +352,18 @@ def _render_booking_confirmation_email(
     order_ref: str,
     all_attendees: list[dict],  # [{"name": str, "email": str}]
     qr_code_base64: str | None = None,
+    host_name: str | None = None,
+    host_phone: str | None = None,
 ) -> tuple[str, str, str]:
     subject = f"You're going to {event_title}"
 
     is_free = total_amount == 0
     amount_display = "Free" if is_free else f"₦{total_amount / 100:,.2f}"
     ticket_word = "ticket" if quantity == 1 else "tickets"
+
+    contact_text = (
+        f"{host_name} · {host_phone}" if host_name and host_phone else host_phone
+    )
 
     text_body = (
         f"Hi {attendee_name},\n\n"
@@ -367,7 +373,9 @@ def _render_booking_confirmation_email(
         f"Location: {event_location}\n"
         f"Duration: {event_duration}\n"
         f"Ticket: {ticket_type_name} x {quantity}\n"
-        f"Total: {amount_display}\n\n"
+        f"Total: {amount_display}\n"
+        + (f"Organizer contact: {contact_text}\n" if host_phone else "")
+        + "\n"
         "Show your QR code or booking reference at the entrance.\n\n"
         "See you there,\nThe Evvent Team"
     )
@@ -384,6 +392,16 @@ def _render_booking_confirmation_email(
         ("Duration", _e(event_duration)),
         ("Ticket", f"{_e(ticket_type_name)} &times; {int(quantity)}"),
         ("Total", total_html),
+        *(
+            [(
+                "Organizer contact",
+                (f"{_e(host_name)} &middot; " if host_name else "")
+                + f'<a href="tel:{_e(host_phone.replace(" ", ""))}" '
+                f'style="color:{INK};">{_e(host_phone)}</a>',
+            )]
+            if host_phone
+            else []
+        ),
     ])
 
     attendees = _rows([
@@ -645,6 +663,8 @@ def send_booking_confirmation_email(
     order_ref: str,
     all_attendees: list[dict],
     qr_code_base64: str | None = None,
+    host_name: str | None = None,
+    host_phone: str | None = None,
 ) -> None:
     subject, text_body, html_body = _render_booking_confirmation_email(
         attendee_name=attendee_name,
@@ -658,6 +678,8 @@ def send_booking_confirmation_email(
         order_ref=order_ref,
         all_attendees=all_attendees,
         qr_code_base64=qr_code_base64,
+        host_name=host_name,
+        host_phone=host_phone,
     )
     inline_images = (
         {"evvent_qr": base64.b64decode(qr_code_base64)} if qr_code_base64 else None

@@ -97,6 +97,14 @@ class EventCreate(BaseModel):
         min_length=1,
         max_length=200,
     )
+    host_phone: str | None = Field(
+        default=None,
+        min_length=7,
+        max_length=32,
+        pattern=r"^\+?[0-9][0-9\s\-()]{5,30}$",
+        description="Organizer contact number shown to attendees at checkout",
+        examples=["+2348012345678"],
+    )
     description: str = Field(
         min_length=1,
     )
@@ -157,6 +165,14 @@ class EventUpdate(BaseModel):
         min_length=1,
         max_length=200,
     )
+    host_phone: str | None = Field(
+        default=None,
+        min_length=7,
+        max_length=32,
+        pattern=r"^\+?[0-9][0-9\s\-()]{5,30}$",
+        description="Organizer contact number shown to attendees at checkout",
+        examples=["+2348012345678"],
+    )
     description: str | None = Field(
         default=None,
         min_length=1,
@@ -204,6 +220,7 @@ class EventResponse(BaseModel):
     uuid: UUID
     title: str
     host_name: str
+    host_phone: str | None = None
     description: str
     location: str
     event_date: datetime

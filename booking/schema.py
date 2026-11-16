@@ -89,6 +89,8 @@ class BookingEventSummary(BaseModel):
     title: str
     location: str
     event_date: datetime
+    host_name: str
+    host_phone: str | None = None
     images: list[str] = Field(default_factory=list)
 
     @classmethod
@@ -98,6 +100,8 @@ class BookingEventSummary(BaseModel):
             title=event.title,
             location=event.location,
             event_date=event.event_date,
+            host_name=event.host_name,
+            host_phone=event.host_phone,
             images=[event.image_url] if event.image_url else [],
         )
 
@@ -201,6 +205,8 @@ class CartEventSummary(BaseModel):
     title: str
     location: str
     event_date: datetime
+    host_name: str
+    host_phone: str | None = None
     image_url: str | None = None
 
     @classmethod
@@ -210,6 +216,8 @@ class CartEventSummary(BaseModel):
             title=event.title,
             location=event.location,
             event_date=event.event_date,
+            host_name=event.host_name,
+            host_phone=event.host_phone,
             image_url=event.image_url,
         )
 

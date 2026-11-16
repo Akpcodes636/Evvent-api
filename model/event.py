@@ -69,6 +69,11 @@ class Event(SQLModel, table=True):
 
     host_name: str = Field(max_length=200)
 
+    # Contact number shown to attendees (event page + checkout) so they can
+    # reach the organizer. Nullable because events created before this field
+    # existed have no number.
+    host_phone: str | None = Field(default=None, max_length=32)
+
     description: str = Field(
         sa_column=Column(Text, nullable=False)
     )
