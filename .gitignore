@@ -1,6 +1,4 @@
 # Environment variables and secrets
-.env
-.env.*
 !.env.example
 
 # Python
@@ -30,7 +28,8 @@ logs/
 # macOS and IDE files
 .DS_Store
 .idea/
-.vscode/
 
 # Uploaded files — use managed storage for production assets
 uploads/
+config.bat
+node_modules
