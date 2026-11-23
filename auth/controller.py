@@ -240,26 +240,31 @@ def admin_login(
     )
 
 
+@router.post("/admin/logout", response_model=MessageResponse)
+def admin_logout(
+    data: RefreshTokenRequest,
+    current_user: User = Depends(require_roles(AccountType.admin)),
+    session: Session = Depends(get_session),
+) -> MessageResponse:
 
-
-def admin_login_controller(
-    session: Session,
-    data: LoginRequest,
-) -> LoginResponse:
-
-    user = authenticate_admin(
-        session,
-        email=data.email,
-        password=data.password,
+    return admin_logout_controller(
+        session=session,
+        refresh_token=data.refresh_token,
     )
 
-    access_token = create_access_token(user.uuid)
-    refresh_token = create_refresh_token(session, user)
+@router.get("/admin/me", response_model=UserResponse)
+def get_admin_profile(
+    current_user: User = Depends(require_roles(AccountType.admin)),
+) -> UserResponse:
 
-    logger.info("Admin %s logged in", user.email)
+    return UserResponse.model_validate(current_user)
+def admin_logout_controller(
+    session: Session,
+    refresh_token: str,
+) -> MessageResponse:
 
-    return LoginResponse(
-        message="Admin login successful",
-        access_token=access_token,
-        refresh_token=refresh_token,
+    revoke_refresh_token(session, refresh_token)
+
+    return MessageResponse(
+        message="Admin logout successful"
     )
