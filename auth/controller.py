@@ -11,7 +11,7 @@ from auth.schema import (
 from auth.services import (
     authenticate_user, bootstrap_admin, change_password, create_refresh_token, create_reset_token,
     refresh_access_token, register_user, reset_password, revoke_refresh_token,
-    update_bank_details, update_profile,
+    update_bank_details, update_profile,authenticate_admin
 )
 from core.config import settings
 from core.security import create_access_token
@@ -207,3 +207,59 @@ def organizer_test(
         "user": str(current_user.uuid),
         "account_type": current_user.account_type,
     }
+
+
+
+@router.post("/admin/login", response_model=LoginResponse)
+def admin_login(
+    data: LoginRequest,
+    session: Session = Depends(get_session),
+) -> LoginResponse:
+
+    user = authenticate_user(session, **data.model_dump())
+
+    if user.account_type != AccountType.admin:
+        logger.warning(
+            "Non-admin account attempted admin login: %s",
+            user.email,
+        )
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Administrator access only",
+        )
+
+    access_token = create_access_token(user.uuid)
+    refresh_token = create_refresh_token(session, user)
+
+    logger.info("Admin %s logged in", user.email)
+
+    return LoginResponse(
+        message="Admin login successful",
+        access_token=access_token,
+        refresh_token=refresh_token,
+    )
+
+
+
+
+def admin_login_controller(
+    session: Session,
+    data: LoginRequest,
+) -> LoginResponse:
+
+    user = authenticate_admin(
+        session,
+        email=data.email,
+        password=data.password,
+    )
+
+    access_token = create_access_token(user.uuid)
+    refresh_token = create_refresh_token(session, user)
+
+    logger.info("Admin %s logged in", user.email)
+
+    return LoginResponse(
+        message="Admin login successful",
+        access_token=access_token,
+        refresh_token=refresh_token,
+    )

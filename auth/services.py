@@ -502,3 +502,44 @@ def refresh_access_token(
     )
 
     return new_access_token, new_refresh_token
+
+
+def create_admin(
+    session: Session,
+    *,
+    email: str,
+    first_name: str,
+    last_name: str,
+    phone: str,
+    password: str,
+) -> User:
+    return register_user(
+        session,
+        email=email,
+        first_name=first_name,
+        last_name=last_name,
+        phone=phone,
+        password=password,
+        account_type=AccountType.admin,
+    )
+
+
+def authenticate_admin(
+    session: Session,
+    *,
+    email: str,
+    password: str,
+) -> User:
+    user = authenticate_user(
+        session,
+        email=email,
+        password=password,
+    )
+
+    if user.account_type != AccountType.admin:
+        raise AppError(
+            "Administrator access only.",
+            status_code=403,
+        )
+
+    return user

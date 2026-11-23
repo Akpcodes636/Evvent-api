@@ -57,3 +57,4 @@ class RefreshToken(SQLModel, table=True):
     expires_at: datetime = Field(sa_column=Column(DateTime, nullable=False))
     revoked_at: datetime | None = Field(default=None, sa_column=Column(DateTime, nullable=True))
     created_at: datetime = Field(default_factory=datetime.utcnow, sa_column=Column(DateTime, nullable=False))
+
