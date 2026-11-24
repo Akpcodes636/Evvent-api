@@ -50,7 +50,8 @@ app.add_middleware(
         "https://evvnt-ticketer.netlify.app",
         "http://localhost:4200",
         "http://localhost:4300",
-        "https://tixly-ng.netlify.app"
+        "https://tixly-ng.netlify.app",
+        "https://tixly-admin.netlify.app/"
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
